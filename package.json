@@ -1,0 +1,29 @@
+{
+  "name": "djs-prototypes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "watch": "tsc -watch",
+    "build": "tsc",
+    "prepublish": "npm run build",
+    "release": "npm run prepublish && npm publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/source-map-support": "^0.5.10",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "discord.js": "^14.14.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.21",
+    "tslib": "^2.6.2"
+  }
+}
