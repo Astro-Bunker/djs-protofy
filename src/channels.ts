@@ -101,7 +101,7 @@ export class Channels {
 
     if (this.client.shard) {
       channel = await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-        .then(res => res?.[0])
+        .then(res => res.find(Boolean))
         .catch(() => undefined);
     } else {
       channel = await this.client.channels.fetch(id).catch(() => undefined);
