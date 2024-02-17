@@ -1,4 +1,4 @@
-import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
+import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { GetChannelType } from "../@types";
 import { compareStrings, resolveEnum, serializeRegExp } from "../utils";
@@ -18,6 +18,7 @@ export class Channels {
       getCategoryByName: { value: this.getCategoryByName },
       getInShardsById: { value: this.getInShardsById },
       getInShardsByName: { value: this.getInShardsByName },
+      getVoiceByUserId: { value: this.getVoiceByUserId },
     });
   }
 
@@ -110,5 +111,15 @@ export class Channels {
       shard.channels.getByName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIChannel ?? null)
       .catch(() => null);
+  }
+
+  getVoiceByUserId(id: string): VoiceBasedChannel | undefined {
+    if (typeof id !== "string") return;
+
+    return this.cache.find((channel) => {
+      if (!channel.isVoiceBased()) return false;
+
+      return channel.members.has(id);
+    }) as VoiceBasedChannel;
   }
 }

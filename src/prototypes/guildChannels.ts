@@ -1,4 +1,4 @@
-import { CategoryChannel, ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType } from "discord.js";
+import { CategoryChannel, ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { GetChannelType, GuildChannelTypeString } from "../@types";
 import { compareStrings, resolveEnum } from "../utils";
@@ -16,6 +16,7 @@ export class GuildChannels {
       getByUrl: { value: this.getByUrl },
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
+      getVoiceByUserId: { value: this.getVoiceByUserId },
     });
   }
 
@@ -89,5 +90,15 @@ export class GuildChannels {
 
       return name.test(channel.name);
     }) as CategoryChannel;
+  }
+
+  getVoiceByUserId(id: string): VoiceBasedChannel | undefined {
+    if (typeof id !== "string") return;
+
+    return this.cache.find((channel) => {
+      if (!channel.isVoiceBased()) return false;
+
+      return channel.members.has(id);
+    }) as VoiceBasedChannel;
   }
 }
