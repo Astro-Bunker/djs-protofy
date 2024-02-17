@@ -56,7 +56,6 @@ export class Guilds {
       shard.guilds.getByName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIGuild ?? null)
       .catch(() => null);
-
   }
 
   async getInShardsByOwnerId(id: string) {
