@@ -1,4 +1,4 @@
-import { Client, Collection, BaseGuildEmojiManager, GuildEmoji } from "discord.js";
+import { BaseGuildEmojiManager, Client, Collection, GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
 
 export class Emojis {
@@ -8,15 +8,15 @@ export class Emojis {
   constructor() {
     Object.defineProperties(BaseGuildEmojiManager.prototype, {
       getById: { value: this.getById },
-      getAllAnimated: { value: this.getAllAnimated },
-      getAllStatic: { value: this.getAllStatic },
-      getAllAvailable: { value: this.getAllAvailable },
-      getAllUnavailable: { value: this.getAllUnavailable },
-      getByAuthor: { value: this.getByAuthor },
+      getByAuthorId: { value: this.getByAuthorId },
       getByGuild: { value: this.getByGuild },
       getByName: { value: this.getByName },
-      getAllDeletable: { value: this.getAllDeletable },
-      getAllUndeletable: { value: this.getAllUndeletable },
+      getAnimateds: { value: this.getAnimateds },
+      getStatics: { value: this.getStatics },
+      getAvailables: { value: this.getAvailables },
+      getUnavailables: { value: this.getUnavailables },
+      getDeletables: { value: this.getDeletables },
+      getUndeletables: { value: this.getUndeletables },
     });
   }
 
@@ -24,31 +24,7 @@ export class Emojis {
     return this.cache.get(id);
   }
 
-  getAllAnimated() {
-    return this.cache.filter(emoji => emoji.animated);
-  }
-
-  getAllStatic() {
-    return this.cache.filter(emoji => !emoji.animated);
-  }
-
-  getAllAvailable() {
-    return this.cache.filter(emoji => emoji.available);
-  }
-
-  getAllUnavailable() {
-    return this.cache.filter(emoji => !emoji.available);
-  }
-
-  getAllDeletable() {
-    return this.cache.filter(emoji => emoji.deletable);
-  }
-
-  getAllUndeletable() {
-    return this.cache.filter(emoji => !emoji.deletable);
-  }
-
-  getByAuthor(id: string) {
+  getByAuthorId(id: string) {
     if (typeof id !== "string") return new Collection();
     return this.cache.filter(emoji => emoji.author?.id === id);
   }
@@ -69,5 +45,29 @@ export class Emojis {
       if (emoji.name)
         return name.test(emoji.name);
     });
+  }
+
+  getAnimateds() {
+    return this.cache.filter(emoji => emoji.animated);
+  }
+
+  getStatics() {
+    return this.cache.filter(emoji => !emoji.animated);
+  }
+
+  getAvailables() {
+    return this.cache.filter(emoji => emoji.available);
+  }
+
+  getUnavailables() {
+    return this.cache.filter(emoji => !emoji.available);
+  }
+
+  getDeletables() {
+    return this.cache.filter(emoji => emoji.deletable);
+  }
+
+  getUndeletables() {
+    return this.cache.filter(emoji => !emoji.deletable);
   }
 }

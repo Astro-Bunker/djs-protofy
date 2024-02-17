@@ -1,5 +1,6 @@
 import { Client, Collection, GuildEmoji, GuildEmojiManager } from "discord.js";
 import { isRegExp } from "util/types";
+import { compareStrings } from "../utils";
 
 export class GuildEmojis {
   declare cache: Collection<string, GuildEmoji>;
@@ -35,7 +36,7 @@ export class GuildEmojis {
       if (emoji.name === null) return false;
 
       if (typeof name === "string") {
-        return emoji.name === name;
+        return compareStrings(emoji.name, name);
       }
 
       return name.test(emoji.name);

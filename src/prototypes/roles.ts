@@ -1,5 +1,6 @@
 import { Client, Collection, PermissionResolvable, Role, RoleManager } from "discord.js";
 import { isRegExp } from "util/types";
+import { compareStrings } from "../utils";
 
 export class Roles {
   declare cache: Collection<string, Role>;
@@ -9,7 +10,11 @@ export class Roles {
     Object.defineProperties(RoleManager.prototype, {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
+      getByMembers: { value: this.getByMembers },
+      getByPermissions: { value: this.getByPermissions },
       getByPosition: { value: this.getByPosition },
+      getByRawPosition: { value: this.getByRawPosition },
+      getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
       getEditable: { value: this.getEditables },
       getUneditable: { value: this.getUneditables },
       getHoist: { value: this.getHoists },
@@ -18,10 +23,6 @@ export class Roles {
       getUnmanaged: { value: this.getUnmanageds },
       getMentionable: { value: this.getMentionables },
       getUnmentionable: { value: this.getUnmentionables },
-      getByMembers: { value: this.getByMembers },
-      getByPermissions: { value: this.getByPermissions },
-      getByRawPosition: { value: this.getByRawPosition },
-      getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
     });
   }
 
@@ -34,11 +35,20 @@ export class Roles {
 
     return this.cache.find(role => {
       if (typeof name === "string") {
-        return role.name === name;
+        return compareStrings(role.name, name);
       }
 
       return name.test(role.name);
     });
+  }
+
+  getByMembers(memberId: string | string[]) {
+    if (!Array.isArray(memberId)) memberId = [memberId];
+    return this.cache.filter(role => role.members.hasAll(...memberId));
+  }
+
+  getByPermissions(...permissions: PermissionResolvable[]) {
+    return this.cache.filter(role => role.permissions.has(permissions));
   }
 
   getByPosition(position: number) {
@@ -47,6 +57,10 @@ export class Roles {
 
   getByRawPosition(position: number) {
     return this.cache.find(role => role.rawPosition === position);
+  }
+
+  getByUnicodeEmoji(emoji: string) {
+    return this.cache.filter(role => role.unicodeEmoji === emoji);
   }
 
   getEditables() {
@@ -79,18 +93,5 @@ export class Roles {
 
   getUnmentionables() {
     return this.cache.filter(role => !role.mentionable);
-  }
-
-  getByUnicodeEmoji(emoji: string) {
-    return this.cache.filter(role => role.unicodeEmoji === emoji);
-  }
-
-  getByPermissions(...permissions: PermissionResolvable[]) {
-    return this.cache.filter(role => role.permissions.has(permissions));
-  }
-
-  getByMembers(memberId: string | string[]) {
-    if (!Array.isArray(memberId)) memberId = [memberId];
-    return this.cache.filter(role => role.members.hasAll(...memberId));
   }
 }

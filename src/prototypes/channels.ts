@@ -1,7 +1,7 @@
 import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
 import { isRegExp } from "util/types";
 import { GetChannelType } from "../@types";
-import { resolveEnum, serializeRegExp } from "../utils";
+import { compareStrings, resolveEnum, serializeRegExp } from "../utils";
 
 export class Channels {
   declare cache: Collection<string, Channel>;
@@ -36,11 +36,10 @@ export class Channels {
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
-          return channel.name === name;
+          return compareStrings(channel.name, name);
         }
 
-        if (name instanceof RegExp)
-          return name.test(channel.name);
+        return name.test(channel.name);
       }
     }) as GetChannelType<T>;
   }
@@ -53,10 +52,9 @@ export class Channels {
 
       if ("topic" in channel && channel.topic) {
         if (typeof topic === "string")
-          return channel.topic === topic;
+          return compareStrings(channel.topic, topic);
 
-        if (topic instanceof RegExp)
-          return topic.test(channel.topic);
+        return topic.test(channel.topic);
       }
     }) as GetChannelType<T>;
   }
@@ -88,7 +86,7 @@ export class Channels {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
       if (typeof name === "string") {
-        return channel.name === name;
+        return compareStrings(channel.name, name);
       }
 
       return name.test(channel.name);

@@ -1,6 +1,6 @@
 import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { serializeRegExp } from "../utils";
+import { compareStrings, serializeRegExp } from "../utils";
 
 export class Guilds {
   declare cache: Collection<string, Guild>;
@@ -26,7 +26,7 @@ export class Guilds {
 
     return this.cache.find(guild => {
       if (typeof name === "string") {
-        return guild.name === name;
+        return compareStrings(guild.name, name);
       }
 
       return name.test(guild.name);

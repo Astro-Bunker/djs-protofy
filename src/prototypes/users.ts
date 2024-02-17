@@ -1,6 +1,6 @@
 import { APIUser, Client, Collection, User, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { serializeRegExp } from "../utils";
+import { compareStrings, serializeRegExp } from "../utils";
 
 export class Users {
   declare cache: Collection<string, User>;
@@ -28,7 +28,7 @@ export class Users {
 
     return this.cache.find(user => {
       if (typeof name === "string") {
-        return user.displayName === name;
+        return compareStrings(user.displayName, name);
       }
 
       return name.test(user.displayName);
@@ -42,7 +42,7 @@ export class Users {
       if (user.globalName === null) return false;
 
       if (typeof name === "string") {
-        return user.globalName === name;
+        return compareStrings(user.globalName, name);
       }
 
       return name.test(user.globalName);
@@ -54,7 +54,7 @@ export class Users {
 
     return this.cache.find(user => {
       if (typeof name === "string") {
-        return user.username === name;
+        return compareStrings(user.username, name);
       }
 
       return name.test(user.username);

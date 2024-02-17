@@ -1,5 +1,6 @@
-import { Client, Collection, GuildMemberManager, GuildMember } from "discord.js";
+import { Client, Collection, GuildMember, GuildMemberManager } from "discord.js";
 import { isRegExp } from "util/types";
+import { compareStrings } from "../utils";
 
 export class GuildMembers {
   declare cache: Collection<string, GuildMember>;
@@ -25,7 +26,7 @@ export class GuildMembers {
 
     return this.cache.find(member => {
       if (typeof name === "string") {
-        return member.displayName === name;
+        return compareStrings(member.displayName, name);
       }
 
       return name.test(member.displayName);
@@ -39,7 +40,7 @@ export class GuildMembers {
       if (member.nickname === null) return false;
 
       if (typeof name === "string") {
-        return member.nickname === name;
+        return compareStrings(member.nickname, name);
       }
 
       return name.test(member.nickname);
@@ -51,7 +52,7 @@ export class GuildMembers {
 
     return this.cache.find(member => {
       if (typeof name === "string") {
-        return member.user.displayName === name;
+        return compareStrings(member.user.displayName, name);
       }
 
       return name.test(member.user.displayName);
@@ -65,7 +66,7 @@ export class GuildMembers {
       if (member.user.globalName === null) return false;
 
       if (typeof name === "string") {
-        return member.user.globalName === name;
+        return compareStrings(member.user.globalName, name);
       }
 
       return name.test(member.user.globalName);
@@ -77,7 +78,7 @@ export class GuildMembers {
 
     return this.cache.find(member => {
       if (typeof name === "string") {
-        return member.user.username === name;
+        return compareStrings(member.user.username, name);
       }
 
       return name.test(member.user.username);

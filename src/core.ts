@@ -14,14 +14,14 @@ export class DJSEasier {
     verifyDJSVersion();
 
     new Channels();
-    new GuildChannels();
-    new GuildMembers();
-    new Guilds();
-    new Users();
     new Emojis();
+    new GuildChannels();
     new GuildEmojis();
+    new GuildMembers();
     new GuildMessages();
+    new Guilds();
     new Roles();
+    new Users();
   }
 }
 
