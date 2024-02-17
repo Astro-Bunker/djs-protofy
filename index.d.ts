@@ -6,11 +6,12 @@ import type { GuildChannels } from "./src/prototypes/guildChannels";
 import { GuildMembers } from "./src/prototypes/guildMembers";
 import type { Guilds } from "./src/prototypes/guilds";
 import { Users } from "./src/prototypes/users";
+import { Roles } from "./src/prototypes/roles";
 export * from "./src";
 
 declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
-  
+
   interface GuildEmojiManager extends GuildEmojis { }
 
   interface ChannelManager extends Channels { }
@@ -20,6 +21,8 @@ declare module "discord.js" {
   interface GuildManager extends Guilds { }
 
   interface GuildMemberManager extends GuildMembers { }
+
+  interface RoleManager extends Roles { }
 
   interface UserManager extends Users { }
 }
