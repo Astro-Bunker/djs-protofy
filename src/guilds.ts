@@ -1,4 +1,4 @@
-import { APIGuild, Client, Guild, GuildManager } from "discord.js";
+import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
 
 export class Guilds {
   declare cache: GuildManager["cache"];
@@ -29,10 +29,10 @@ export class Guilds {
     });
   }
 
-  getByOwnerId(id: string | RegExp) {
+  getByOwnerId(id: string | RegExp): Collection<string, Guild> | undefined {
     if (!id) return;
 
-    return this.cache.find(guild => {
+    return this.cache.filter(guild => {
       if (typeof id === "string") {
         return guild.ownerId === id;
       }
