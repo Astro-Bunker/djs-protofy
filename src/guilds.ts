@@ -9,6 +9,7 @@ export class Guilds {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getInShardsById: { value: this.getInShardsById },
+      getByOwnerId: { value: this.getByOwnerId },
     });
   }
 
@@ -25,6 +26,18 @@ export class Guilds {
       }
 
       return name.test(guild.name);
+    });
+  }
+
+  getByOwnerId(id: string | RegExp) {
+    if (!id) return;
+
+    return this.cache.find(guild => {
+      if (typeof id === "string") {
+        return guild.ownerId === id;
+      }
+
+      return id.test(guild.ownerId);
     });
   }
 

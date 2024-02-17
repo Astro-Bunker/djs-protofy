@@ -30,6 +30,7 @@ declare module "discord.js" {
   interface GuildManager {
     getById: Guilds["getById"];
     getByName: Guilds["getByName"];
+    getByOwnerId: Guilds["getByOwnerId"];
     getInShardsById: Guilds["getInShardsById"];
   }
 }
