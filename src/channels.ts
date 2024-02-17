@@ -1,9 +1,9 @@
-import { ChannelManager, ChannelType, Collection } from "discord.js";
+import { APIChannel, ChannelManager, ChannelType, Client, Collection, createChannel } from "discord.js";
 import { resolveEnum } from "./utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
-  declare client: ChannelManager["client"];
+  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(ChannelManager.prototype, {
@@ -96,17 +96,15 @@ export class Channels {
   }
 
   async fetchById(id: string) {
-
-    let channel;
+    if (!id) return;
 
     if (this.client.shard) {
-      channel = await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-        .then(res => res.find(Boolean))
-        .catch(() => undefined);
+      return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
+        .then(res => res.find(Boolean) as APIChannel | null ?? null)
+        .then(res => res && createChannel(this.client, res))
+        .catch(() => null);
     } else {
-      channel = await this.client.channels.fetch(id).catch(() => undefined);
+      return await this.client.channels.fetch(id);
     }
-
-    return channel;
   }
 }
