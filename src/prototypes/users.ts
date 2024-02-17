@@ -8,7 +8,6 @@ export class Users {
 
   constructor() {
     Object.defineProperties(UserManager.prototype, {
-      find: { get: () => this.find },
       getById: { value: this.getById },
       getInShardsById: { value: this.getInShardsById },
       getByGlobalName: { value: this.getByGlobalName },
@@ -19,10 +18,6 @@ export class Users {
     });
   }
 
-  get find() {
-    return this.cache.find;
-  }
-
   getById(id: string) {
     return this.cache.get(id);
   }
@@ -30,7 +25,7 @@ export class Users {
   getByDisplayName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    return this.find(user => {
+    return this.cache.find(user => {
       if (typeof name === "string") {
         return user.displayName === name;
       }
@@ -42,7 +37,7 @@ export class Users {
   getByGlobalName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    return this.find(user => {
+    return this.cache.find(user => {
       if (user.globalName === null) return false;
 
       if (typeof name === "string") {
@@ -56,7 +51,7 @@ export class Users {
   getByUsername(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    return this.find(user => {
+    return this.cache.find(user => {
       if (typeof name === "string") {
         return user.username === name;
       }

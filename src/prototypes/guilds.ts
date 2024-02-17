@@ -8,7 +8,6 @@ export class Guilds {
 
   constructor() {
     Object.defineProperties(GuildManager.prototype, {
-      find: { get: () => this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByOwnerId: { value: this.getByOwnerId },
@@ -18,10 +17,6 @@ export class Guilds {
     });
   }
 
-  get find() {
-    return this.cache.find;
-  }
-
   getById(id: string) {
     return this.cache.get(id);
   }
@@ -29,7 +24,7 @@ export class Guilds {
   getByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    return this.find(guild => {
+    return this.cache.find(guild => {
       if (typeof name === "string") {
         return guild.name === name;
       }

@@ -7,7 +7,6 @@ export * from "./src";
 
 declare module "discord.js" {
   interface ChannelManager {
-    find: Channels["find"];
     getById: Channels["getById"];
     getByName: Channels["getByName"];
     getByTopic: Channels["getByTopic"];
@@ -20,7 +19,6 @@ declare module "discord.js" {
   }
 
   interface GuildChannelManager {
-    find: GuildChannels["find"];
     getById: GuildChannels["getById"];
     getByName: GuildChannels["getByName"];
     getByTopic: GuildChannels["getByTopic"];
@@ -31,7 +29,6 @@ declare module "discord.js" {
   }
 
   interface GuildManager {
-    find: Guilds["find"];
     getById: Guilds["getById"];
     getByName: Guilds["getByName"];
     getByOwnerId: Guilds["getByOwnerId"];
@@ -41,7 +38,6 @@ declare module "discord.js" {
   }
 
   interface UserManager {
-    find: Users["find"];
     getById: Users["getById"];
     getByDisplayName: Users["getByDisplayName"];
     getByGlobalName: Users["getByGlobalName"];

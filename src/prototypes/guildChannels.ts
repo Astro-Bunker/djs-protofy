@@ -8,7 +8,6 @@ export class GuildChannels {
 
   constructor() {
     Object.defineProperties(GuildChannelManager.prototype, {
-      find: { get: () => this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },
@@ -17,10 +16,6 @@ export class GuildChannels {
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
     });
-  }
-
-  get find() {
-    return this.cache.find;
   }
 
   getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
@@ -33,7 +28,7 @@ export class GuildChannels {
   getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    return this.find(channel => {
+    return this.cache.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("name" in channel && channel.name) {
@@ -50,7 +45,7 @@ export class GuildChannels {
   getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
-    return this.find(channel => {
+    return this.cache.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("topic" in channel && channel.topic) {
@@ -73,7 +68,7 @@ export class GuildChannels {
   }
 
   getByUrl(url: string) {
-    return this.find(channel => channel.url === url);
+    return this.cache.find(channel => channel.url === url);
   }
 
   getCategoryById(id: string) {
@@ -86,7 +81,7 @@ export class GuildChannels {
   getCategoryByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    return this.find(channel => {
+    return this.cache.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
       if ("name" in channel && channel.name) {
