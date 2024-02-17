@@ -1,7 +1,6 @@
 import "discord.js";
-import type { DJSProto } from "./src";
-import type Channels from "./src/channels";
-export * from "./out";
+import type { Channels } from "./src/channels";
+export * from "./src";
 
 declare module "discord.js" {
   interface ChannelManager {

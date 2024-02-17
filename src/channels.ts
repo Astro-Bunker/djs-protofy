@@ -1,13 +1,15 @@
 import { ChannelType, Client, Collection } from "discord.js";
 
-export default class Channels {
+export class Channels {
   constructor(protected client: Client) {
-    client.channels.getById = this.getChannelById;
-    client.channels.getByName = this.getChannelByName;
-    client.channels.getByTopic = this.getChannelByTopic;
-    client.channels.getByTypes = this.getChannelsByTypes;
-    client.channels.getCategoryById = this.getCategoryById;
-    client.channels.getCategoryByName = this.getCategoryByName;
+    Object.defineProperties(client.channels, {
+      getById: { value: this.getChannelById },
+      getByName: { value: this.getChannelByName },
+      getByTopic: { value: this.getChannelByTopic },
+      getByTypes: { value: this.getChannelsByTypes },
+      getCategoryById: { value: this.getCategoryById },
+      getCategoryByName: { value: this.getCategoryByName },
+    })
   }
 
   getChannelById<T extends ChannelType>(id: string, type?: T) {
@@ -35,6 +37,7 @@ export default class Channels {
 
   getChannelByTopic<T extends ChannelType>(topic: string | RegExp, type?: T) {
     if (!topic) return;
+
     return this.client.channels.cache.find(channel => {
       if (type && channel.type !== type) return false;
 
@@ -64,6 +67,7 @@ export default class Channels {
 
   getCategoryByName(name: string | RegExp) {
     if (!name) return;
+
     return this.client.channels.cache.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
@@ -77,5 +81,4 @@ export default class Channels {
       }
     });
   }
-
 }
