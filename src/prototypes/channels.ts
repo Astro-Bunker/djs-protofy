@@ -1,4 +1,4 @@
-import { APIChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
+import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
 import { isRegExp } from "util/types";
 import { GetChannelType } from "../@types";
 import { resolveEnum, serializeRegExp } from "../utils";
@@ -21,14 +21,14 @@ export class Channels {
     });
   }
 
-  getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
+  getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T): GetChannelType<T> | undefined {
     if (typeof id !== "string") return;
     const channel = this.cache.get(id);
-    if (type === undefined) return channel;
-    if (channel?.type === resolveEnum(ChannelType, type)) return channel;
+    if (type === undefined) return channel as GetChannelType<T>;
+    if (channel?.type === resolveEnum(ChannelType, type)) return channel as GetChannelType<T>;
   }
 
-  getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
+  getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T): GetChannelType<T> | undefined {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(channel => {
@@ -42,10 +42,10 @@ export class Channels {
         if (name instanceof RegExp)
           return name.test(channel.name);
       }
-    });
+    }) as GetChannelType<T>;
   }
 
-  getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
+  getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T): GetChannelType<T> | undefined {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
     return this.cache.find(channel => {
@@ -58,7 +58,7 @@ export class Channels {
         if (topic instanceof RegExp)
           return topic.test(channel.topic);
       }
-    });
+    }) as GetChannelType<T>;
   }
 
   getByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, GetChannelType<T>> {
@@ -81,21 +81,18 @@ export class Channels {
     return category;
   }
 
-  getCategoryByName(name: string | RegExp) {
+  getCategoryByName(name: string | RegExp): CategoryChannel | undefined {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
-      if ("name" in channel && channel.name) {
-        if (typeof name === "string") {
-          return channel.name === name;
-        }
-
-        if (name instanceof RegExp)
-          return name.test(channel.name);
+      if (typeof name === "string") {
+        return channel.name === name;
       }
-    });
+
+      return name.test(channel.name);
+    }) as CategoryChannel;
   }
 
   async getInShardsById(id: string) {
