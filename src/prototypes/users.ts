@@ -8,7 +8,7 @@ export class Users {
 
   constructor() {
     Object.defineProperties(UserManager.prototype, {
-      find: { value: this.find },
+      find: { get: () => this.find },
       getById: { value: this.getById },
       getInShardsById: { value: this.getInShardsById },
       getByGlobalName: { value: this.getByGlobalName },

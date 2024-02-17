@@ -1,6 +1,6 @@
 import { APIChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
-import { resolveEnum, serializeRegExp } from "../utils";
 import { isRegExp } from "util/types";
+import { resolveEnum, serializeRegExp } from "../utils";
 
 export class Channels {
   declare cache: Collection<string, Channel>;
@@ -8,7 +8,7 @@ export class Channels {
 
   constructor() {
     Object.defineProperties(ChannelManager.prototype, {
-      find: { value: this.find },
+      find: { get: () => this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },

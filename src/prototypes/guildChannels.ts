@@ -8,7 +8,7 @@ export class GuildChannels {
 
   constructor() {
     Object.defineProperties(GuildChannelManager.prototype, {
-      find: { value: this.find },
+      find: { get: () => this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },

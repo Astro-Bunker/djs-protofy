@@ -1,6 +1,6 @@
 import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
-import { serializeRegExp } from "../utils";
 import { isRegExp } from "util/types";
+import { serializeRegExp } from "../utils";
 
 export class Guilds {
   declare cache: Collection<string, Guild>;
@@ -8,7 +8,7 @@ export class Guilds {
 
   constructor() {
     Object.defineProperties(GuildManager.prototype, {
-      find: { value: this.find },
+      find: { get: () => this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByOwnerId: { value: this.getByOwnerId },
