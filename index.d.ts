@@ -1,8 +1,8 @@
 import "discord.js";
 import type { Channels } from "./src/prototypes/channels";
-import { GuildChannels } from "./src/prototypes/guildChannels";
-import { Guilds } from "./src/prototypes/guilds";
-import { Users } from "./src/prototypes/users";
+import type { GuildChannels } from "./src/prototypes/guildChannels";
+import type { Guilds } from "./src/prototypes/guilds";
+import type { Users } from "./src/prototypes/users";
 export * from "./src";
 
 declare module "discord.js" {
