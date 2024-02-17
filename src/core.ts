@@ -4,7 +4,7 @@ import { Guilds } from "./prototypes/guilds";
 import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
 
-export class DJSProto {
+export class DJSEasier {
   constructor() {
     verifyDJSVersion();
 
