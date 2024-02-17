@@ -9,9 +9,9 @@ export class GuildMessages {
   constructor() {
     Object.defineProperties(GuildMessageManager.prototype, {
       getById: { value: this.getById },
-      getByAuthorId: { value: this.getByAuthorId },
-      getByContent: { value: this.getByContent },
-      getByBots: { value: this.getByBots },
+      filterByAuthorId: { value: this.filterByAuthorId },
+      filterByContent: { value: this.filterByContent },
+      filterByAuthorIsBots: { value: this.filterByAuthorIsBots },
     });
   }
 
@@ -19,12 +19,12 @@ export class GuildMessages {
     return this.cache.get(id);
   }
 
-  getByAuthorId(id: string): Collection<string, Message> {
+  filterByAuthorId(id: string): Collection<string, Message> {
     if (typeof id !== "string") return new Collection();
     return this.cache.filter(message => message.author?.id === id);
   }
 
-  getByContent(content: string | RegExp): Collection<string, Message> {
+  filterByContent(content: string | RegExp): Collection<string, Message> {
     if (typeof content !== "string" && !isRegExp(content)) return new Collection();
 
     return this.cache.filter(message => {
@@ -36,7 +36,7 @@ export class GuildMessages {
 
   }
 
-  getByBots() {
+  filterByAuthorIsBots() {
     return this.cache.filter(message => message.author?.bot);
   }
 }
