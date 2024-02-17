@@ -1,5 +1,5 @@
 import { APIChannel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
-import { resolveEnum } from "./utils";
+import { resolveEnum } from "../utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];

@@ -1,7 +1,7 @@
-import { Channels } from "./channels";
-import { GuildChannels } from "./guildChannels";
-import { Guilds } from "./guilds";
-import { Users } from "./users";
+import { Channels } from "./prototypes/channels";
+import { GuildChannels } from "./prototypes/guildChannels";
+import { Guilds } from "./prototypes/guilds";
+import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
 
 export class DJSProto {

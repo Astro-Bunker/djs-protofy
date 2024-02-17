@@ -1,5 +1,5 @@
 import { ChannelType, Collection, GuildChannelManager } from "discord.js";
-import { resolveEnum } from "./utils";
+import { resolveEnum } from "../utils";
 
 export class GuildChannels {
   declare cache: GuildChannelManager["cache"];
