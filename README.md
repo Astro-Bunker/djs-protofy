@@ -21,7 +21,7 @@ import "djs-easier/init";
 /**
  * Observação importante
  * Importe o djs-easier apenas no arquivo principal do bot
- * \
+ */
 ```
 
 ## Exemplos de uso
