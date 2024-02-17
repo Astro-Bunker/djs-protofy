@@ -1,5 +1,6 @@
 import { APIChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
 import { isRegExp } from "util/types";
+import { GetChannelType } from "../@types";
 import { resolveEnum, serializeRegExp } from "../utils";
 
 export class Channels {
@@ -60,7 +61,7 @@ export class Channels {
     });
   }
 
-  getByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, T> {
+  getByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, GetChannelType<T>> {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
       return this.cache.filter(channel => type.includes(channel.type as T)) as any;
