@@ -1,11 +1,11 @@
-import { ChannelManager, ChannelType, Collection } from "discord.js";
+import { ChannelType, Collection, GuildChannelManager } from "discord.js";
 import { resolveEnum } from "./utils";
 
-export class Channels {
-  declare cache: ChannelManager["cache"];
+export class GuildChannels {
+  declare cache: GuildChannelManager["cache"];
 
   constructor() {
-    Object.defineProperties(ChannelManager.prototype, {
+    Object.defineProperties(GuildChannelManager.prototype, {
       getById: { value: this.getChannelById },
       getByName: { value: this.getChannelByName },
       getByTopic: { value: this.getChannelByTopic },

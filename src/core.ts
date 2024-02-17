@@ -1,12 +1,13 @@
-import { Client } from "discord.js";
 import { Channels } from "./channels";
+import { GuildChannels } from "./guildChannels";
 import { verifyDJSVersion } from "./utils";
 
 export class DJSProto {
-  constructor(protected client: Client) {
+  constructor() {
     verifyDJSVersion();
 
-    new Channels(client);
+    new Channels();
+    new GuildChannels();
   }
 }
 
