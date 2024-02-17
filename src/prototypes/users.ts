@@ -9,9 +9,9 @@ export class Users {
   constructor() {
     Object.defineProperties(UserManager.prototype, {
       getById: { value: this.getById },
-      getInShardsById: { value: this.getInShardsById },
       getByGlobalName: { value: this.getByGlobalName },
       getByUsername: { value: this.getByUsername },
+      getInShardsById: { value: this.getInShardsById },
       getInShardsByDisplayName: { value: this.getInShardsByDisplayName },
       getInShardsByGlobalName: { value: this.getInShardsByGlobalName },
       getInShardsByUsername: { value: this.getInShardsByUsername },
@@ -68,17 +68,6 @@ export class Users {
       .catch(() => null);
   }
 
-  async getInShardsByUsername(name: string | RegExp) {
-    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
-
-    const context = serializeRegExp(name);
-
-    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
-      shard.users.getByUsername(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIUser ?? null)
-      .catch(() => null);
-  }
-
   async getInShardsByDisplayName(name: string | RegExp) {
     if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
 
@@ -97,6 +86,17 @@ export class Users {
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.users.getByGlobalName(isRegExp ? RegExp(source, flags) : source), { context })
+      .then(res => res.find(Boolean) as APIUser ?? null)
+      .catch(() => null);
+  }
+
+  async getInShardsByUsername(name: string | RegExp) {
+    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
+
+    const context = serializeRegExp(name);
+
+    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
+      shard.users.getByUsername(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
