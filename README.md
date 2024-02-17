@@ -1,15 +1,17 @@
 # 📃 djs-easier
 
-Uma biblioteca criada para facilitar o uso do Discord.JS por meio dos protoypes
+A library created to make Discord.JS easier to use through prototypes.
 
-## Instalação do djs-easier
+## Installation
 
 ```sh
 npm i djs-easier
 yarn add djs-easier
 ```
 
-## Como usar
+## How to use
+
+Import `djs-easier/init` into the main file.
 
 ```js
 // ES5
@@ -17,32 +19,27 @@ require("djs-easier/init");
 
 // ES6
 import "djs-easier/init";
-
-/**
- * Observação importante
- * Importe o djs-easier apenas no arquivo principal do bot
- */
 ```
 
-## Exemplos de uso
+## Examples
 
-Buscando um usuário
+Getting a user
 
 ```js
-client.users.cache.get("userId");  // Ao invés disso...
-client.users.getById("userId"); // Faça isso
+client.users.cache.get("userId"); // Instead of
+client.users.getById("userId"); // Do it
 ```
 
-Buscando um canal de voz por um usuário
+Getting a voice channel by a user
 
 ```js
-// Ao invés disso...
+// Instead of
 client.channels.cache.find((channel) => {
   if (!channel.isVoiceBased()) return false;
   return channel.members.has(userId);
 });
 
-// Faça isso
+// Do it
 client.channels.getVoiceByUserId(userId);
 ```
 
@@ -50,15 +47,15 @@ client.channels.getVoiceByUserId(userId);
 
 ```js
 // Client
-client.channels
-client.emojis
-client.users
-client.guilds
+<Client>.channels
+<Client>.emojis
+<Client>.guilds
+<Client>.users
 
 // Guild
-guild.channels
-guild.emojis
-guild.members
-guild.roles
-<TextGuildChannel>.messages
+<Guild>.channels
+<Guild>.emojis
+<Guild>.members
+<Guild>.roles
+<GuildTextChannel>.messages
 ```
