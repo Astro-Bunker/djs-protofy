@@ -6,23 +6,24 @@ export * from "./src";
 
 declare module "discord.js" {
   interface ChannelManager {
-    getById: Channels["getChannelById"];
-    getByName: Channels["getChannelByName"];
-    getByTopic: Channels["getChannelByTopic"];
-    getByTypes: Channels["getChannelsByTypes"];
+    getById: Channels["getById"];
+    getByName: Channels["getByName"];
+    getByTopic: Channels["getByTopic"];
+    getByTypes: Channels["getByTypes"];
     getCategoryById: Channels["getCategoryById"];
     getCategoryByName: Channels["getCategoryByName"];
-    getByUrl: Channels["getChannelByUrl"];
+    getByUrl: Channels["getByUrl"];
+    fetchById: Channels["fetchById"];
   }
 
   interface GuildChannelManager {
-    getById: GuildChannels["getChannelById"];
-    getByName: GuildChannels["getChannelByName"];
-    getByTopic: GuildChannels["getChannelByTopic"];
-    getByTypes: GuildChannels["getChannelsByTypes"];
+    getById: GuildChannels["getById"];
+    getByName: GuildChannels["getByName"];
+    getByTopic: GuildChannels["getByTopic"];
+    getByTypes: GuildChannels["getByTypes"];
     getCategoryById: GuildChannels["getCategoryById"];
     getCategoryByName: GuildChannels["getCategoryByName"];
-    getByUrl: GuildChannels["getChannelByUrl"];
+    getByUrl: GuildChannels["getByUrl"];
   }
 
   interface GuildManager {
