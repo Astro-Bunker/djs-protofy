@@ -11,9 +11,9 @@ declare module "discord.js" {
     getByName: Channels["getByName"];
     getByTopic: Channels["getByTopic"];
     getByTypes: Channels["getByTypes"];
+    getByUrl: Channels["getByUrl"];
     getCategoryById: Channels["getCategoryById"];
     getCategoryByName: Channels["getCategoryByName"];
-    getByUrl: Channels["getByUrl"];
     getInShardsById: Channels["getInShardsById"];
     getInShardsByName: Channels["getInShardsByName"];
   }
@@ -23,9 +23,9 @@ declare module "discord.js" {
     getByName: GuildChannels["getByName"];
     getByTopic: GuildChannels["getByTopic"];
     getByTypes: GuildChannels["getByTypes"];
+    getByUrl: GuildChannels["getByUrl"];
     getCategoryById: GuildChannels["getCategoryById"];
     getCategoryByName: GuildChannels["getCategoryByName"];
-    getByUrl: GuildChannels["getByUrl"];
   }
 
   interface GuildManager {
@@ -39,12 +39,12 @@ declare module "discord.js" {
 
   interface UserManager {
     getById: Users["getById"];
-    getByUsername: Users["getByUsername"];
-    getByGlobalName: Users["getByGlobalName"];
     getByDisplayName: Users["getByDisplayName"];
+    getByGlobalName: Users["getByGlobalName"];
+    getByUsername: Users["getByUsername"];
     getInShardsById: Users["getInShardsById"];
-    getInShardsByUsername: Users["getInShardsByUsername"];
-    getInShardsByGlobalName: Users["getInShardsByGlobalName"];
     getInShardsByDisplayName: Users["getInShardsByDisplayName"];
+    getInShardsByGlobalName: Users["getInShardsByGlobalName"];
+    getInShardsByUsername: Users["getInShardsByUsername"];
   }
 }
