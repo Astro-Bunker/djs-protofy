@@ -1,4 +1,6 @@
 import { APIUser, Client, Collection, User, UserManager } from "discord.js";
+import { isRegExp } from "util/types";
+import { serializeRegExp } from "../utils";
 
 export class Users {
   declare cache: Collection<string, User>;
@@ -26,11 +28,11 @@ export class Users {
   }
 
   getByDisplayName(name: string | RegExp) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(user => {
       if (typeof name === "string") {
-        return user.displayName === "name";
+        return user.displayName === name;
       }
 
       return name.test(user.displayName);
@@ -38,24 +40,25 @@ export class Users {
   }
 
   getByGlobalName(name: string | RegExp) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(user => {
+      if (user.globalName === null) return false;
+
       if (typeof name === "string") {
-        return user.globalName === "name";
+        return user.globalName === name;
       }
 
-      if (user.globalName)
-        return name.test(user.globalName);
+      return name.test(user.globalName);
     });
   }
 
   getByUsername(name: string | RegExp) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(user => {
       if (typeof name === "string") {
-        return user.username === "name";
+        return user.username === name;
       }
 
       return name.test(user.username);
@@ -63,7 +66,7 @@ export class Users {
   }
 
   async getInShardsById(id: string) {
-    if (!id || !this.client.shard) return null;
+    if (typeof id !== "string" || !this.client.shard) return null;
 
     return await this.client.shard.broadcastEval((shard, id) => shard.users.getById(id), { context: id })
       .then(res => res.find(Boolean) as APIUser ?? null)
@@ -71,52 +74,34 @@ export class Users {
   }
 
   async getInShardsByUsername(name: string | RegExp) {
-    if (!name || !this.client.shard) return null;
+    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
 
-    const isRegExp = name instanceof RegExp;
-    let flags: string | undefined;
+    const context = serializeRegExp(name);
 
-    if (name instanceof RegExp) {
-      flags = name.flags;
-      name = name.source;
-    }
-
-    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
-      shard.users.getByUsername(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
+      shard.users.getByUsername(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
 
   async getInShardsByDisplayName(name: string | RegExp) {
-    if (!name || !this.client.shard) return null;
+    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
 
-    const isRegExp = name instanceof RegExp;
-    let flags: string | undefined;
+    const context = serializeRegExp(name);
 
-    if (name instanceof RegExp) {
-      flags = name.flags;
-      name = name.source;
-    }
-
-    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
-      shard.users.getByDisplayName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
+      shard.users.getByDisplayName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
 
   async getInShardsByGlobalName(name: string | RegExp) {
-    if (!name || !this.client.shard) return null;
+    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
 
-    const isRegExp = name instanceof RegExp;
-    let flags: string | undefined;
+    const context = serializeRegExp(name);
 
-    if (name instanceof RegExp) {
-      flags = name.flags;
-      name = name.source;
-    }
-
-    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
-      shard.users.getByGlobalName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
+      shard.users.getByGlobalName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }

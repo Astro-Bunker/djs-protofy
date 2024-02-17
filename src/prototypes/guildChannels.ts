@@ -1,5 +1,6 @@
 import { ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager } from "discord.js";
 import { resolveEnum } from "../utils";
+import { isRegExp } from "util/types";
 
 export class GuildChannels {
   declare cache: Collection<string, GuildBasedChannel>;
@@ -25,12 +26,12 @@ export class GuildChannels {
   getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
     if (typeof id !== "string") return;
     const channel = this.cache.get(id);
-    if (!type) return channel;
+    if (type === undefined) return channel;
     if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
   getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
@@ -47,7 +48,7 @@ export class GuildChannels {
   }
 
   getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
-    if (!topic) return;
+    if (typeof topic !== "string" && !isRegExp(topic)) return;
 
     return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
@@ -83,7 +84,7 @@ export class GuildChannels {
   }
 
   getCategoryByName(name: string | RegExp) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;

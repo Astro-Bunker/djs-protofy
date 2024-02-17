@@ -1,5 +1,6 @@
 import { APIChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
-import { resolveEnum } from "../utils";
+import { resolveEnum, serializeRegExp } from "../utils";
+import { isRegExp } from "util/types";
 
 export class Channels {
   declare cache: Collection<string, Channel>;
@@ -27,12 +28,12 @@ export class Channels {
   getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
     if (typeof id !== "string") return;
     const channel = this.cache.get(id);
-    if (!type) return channel;
+    if (type === undefined) return channel;
     if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
   getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
@@ -49,7 +50,7 @@ export class Channels {
   }
 
   getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
-    if (!topic) return;
+    if (typeof topic !== "string" && !isRegExp(topic)) return;
 
     return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
@@ -85,7 +86,7 @@ export class Channels {
   }
 
   getCategoryByName(name: string | RegExp) {
-    if (!name) return;
+    if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
@@ -102,7 +103,7 @@ export class Channels {
   }
 
   async getInShardsById(id: string) {
-    if (!id) return null;
+    if (typeof id !== "string") return null;
 
     return await this.client.shard?.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
       .then(res => res.find(Boolean) as APIChannel | undefined)
@@ -110,18 +111,12 @@ export class Channels {
   }
 
   async getInShardsByName(name: string | RegExp) {
-    if (!name || !this.client.shard) return null;
+    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
 
-    const isRegExp = name instanceof RegExp;
-    let flags: string | undefined;
+    const context = serializeRegExp(name);
 
-    if (name instanceof RegExp) {
-      flags = name.flags;
-      name = name.source;
-    }
-
-    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
-      shard.channels.getByName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
+      shard.channels.getByName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as APIChannel | null)
       .catch(() => null);
   }
