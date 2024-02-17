@@ -43,7 +43,7 @@ client.channels.cache.find((channel) => {
 client.channels.getVoiceByUserId(userId);
 ```
 
-## Supported Prototypes
+## Supported prototypes
 
 ```js
 // Client
