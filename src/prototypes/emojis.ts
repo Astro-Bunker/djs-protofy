@@ -8,9 +8,9 @@ export class Emojis {
   constructor() {
     Object.defineProperties(BaseGuildEmojiManager.prototype, {
       getById: { value: this.getById },
-      getByAuthorId: { value: this.getByAuthorId },
-      getByGuild: { value: this.getByGuild },
       getByName: { value: this.getByName },
+      filterByAuthorId: { value: this.filterByAuthorId },
+      filterByGuildId: { value: this.filterByGuildId },
       filterAnimateds: { value: this.filterAnimateds },
       filterStatics: { value: this.filterStatics },
       filterAvailables: { value: this.filterAvailables },
@@ -22,16 +22,6 @@ export class Emojis {
 
   getById(id: string) {
     return this.cache.get(id);
-  }
-
-  getByAuthorId(id: string) {
-    if (typeof id !== "string") return new Collection();
-    return this.cache.filter(emoji => emoji.author?.id === id);
-  }
-
-  getByGuild(id: string) {
-    if (typeof id !== "string") return new Collection();
-    return this.cache.filter(emoji => emoji.guild?.id === id);
   }
 
   getByName(name: string | RegExp) {
@@ -46,6 +36,16 @@ export class Emojis {
 
         return name.test(emoji.name);
     });
+  }
+
+  filterByAuthorId(id: string) {
+    if (typeof id !== "string") return new Collection();
+    return this.cache.filter(emoji => emoji.author?.id === id);
+  }
+
+  filterByGuildId(id: string) {
+    if (typeof id !== "string") return new Collection();
+    return this.cache.filter(emoji => emoji.guild?.id === id);
   }
 
   filterAnimateds() {

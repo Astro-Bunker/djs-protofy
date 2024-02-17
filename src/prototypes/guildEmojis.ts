@@ -9,7 +9,7 @@ export class GuildEmojis {
   constructor() {
     Object.defineProperties(GuildEmojiManager.prototype, {
       getById: { value: this.getById },
-      getByAuthorId: { value: this.getByAuthorId },
+      filterByAuthorId: { value: this.filterByAuthorId },
       getByName: { value: this.getByName },
       filterAnimateds: { value: this.filterAnimateds },
       filterStatics: { value: this.filterStatics },
@@ -24,11 +24,6 @@ export class GuildEmojis {
     return this.cache.get(id);
   }
 
-  getByAuthorId(id: string): Collection<string, GuildEmoji> {
-    if (typeof id !== "string") return new Collection();
-    return this.cache.filter(emoji => emoji.author?.id === id);
-  }
-
   getByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -41,6 +36,11 @@ export class GuildEmojis {
 
       return name.test(emoji.name);
     });
+  }
+
+  filterByAuthorId(id: string): Collection<string, GuildEmoji> {
+    if (typeof id !== "string") return new Collection();
+    return this.cache.filter(emoji => emoji.author?.id === id);
   }
 
   filterAnimateds() {
