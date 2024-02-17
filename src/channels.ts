@@ -1,28 +1,34 @@
 import { ChannelType, Client, Collection } from "discord.js";
+import { resolveEnum } from "./utils";
 
 export class Channels {
   constructor(protected client: Client) {
     Object.defineProperties(client.channels, {
-      getById: { value: this.getChannelById },
-      getByName: { value: this.getChannelByName },
-      getByTopic: { value: this.getChannelByTopic },
-      getByTypes: { value: this.getChannelsByTypes },
-      getCategoryById: { value: this.getCategoryById },
-      getCategoryByName: { value: this.getCategoryByName },
-    })
+      getById: { value: this.getChannelById.bind(client.channels) },
+      getByName: { value: this.getChannelByName.bind(client.channels) },
+      getByTopic: { value: this.getChannelByTopic.bind(client.channels) },
+      getByTypes: { value: this.getChannelsByTypes.bind(client.channels) },
+      getCategoryById: { value: this.getCategoryById.bind(client.channels) },
+      getCategoryByName: { value: this.getCategoryByName.bind(client.channels) },
+    });
   }
 
-  getChannelById<T extends ChannelType>(id: string, type?: T) {
+  get cache() {
+    return this.client.channels.cache;
+  }
+
+  getChannelById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
     if (typeof id !== "string") return;
-    const channel = this.client.channels.cache.get(id);
+    const channel = this.cache.get(id);
     if (!type) return channel;
-    if (channel?.type === type) return channel;
+    if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
-  getChannelByName<T extends ChannelType>(name: string | RegExp, type?: T) {
+  getChannelByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
     if (!name) return;
-    return this.client.channels.cache.find(channel => {
-      if (type && channel.type !== type) return false;
+
+    return this.cache.find(channel => {
+      if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
@@ -35,11 +41,11 @@ export class Channels {
     });
   }
 
-  getChannelByTopic<T extends ChannelType>(topic: string | RegExp, type?: T) {
+  getChannelByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
     if (!topic) return;
 
-    return this.client.channels.cache.find(channel => {
-      if (type && channel.type !== type) return false;
+    return this.cache.find(channel => {
+      if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("topic" in channel && channel.topic) {
         if (typeof topic === "string")
@@ -51,16 +57,18 @@ export class Channels {
     });
   }
 
-  getChannelsByTypes<T extends ChannelType>(type: T | T[]): Collection<string, T> {
-    if (Array.isArray(type))
-      return this.client.channels.cache.filter(channel => type.includes(channel.type as T)) as any;
+  getChannelsByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, T> {
+    if (Array.isArray(type)) {
+      type.map(value => resolveEnum(ChannelType, value))
+      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
+    }
 
-    return this.client.channels.cache.filter(channel => channel.type === type) as any;
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
   }
 
   getCategoryById(id: string) {
     if (typeof id !== "string") return;
-    const category = this.client.channels.cache.get(id);
+    const category = this.cache.get(id);
     if (category?.type !== ChannelType.GuildCategory) return;
     return category;
   }
@@ -68,7 +76,7 @@ export class Channels {
   getCategoryByName(name: string | RegExp) {
     if (!name) return;
 
-    return this.client.channels.cache.find(channel => {
+    return this.cache.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
       if ("name" in channel && channel.name) {
