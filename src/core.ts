@@ -11,9 +11,9 @@ export class DJSEasier {
 
     new Channels();
     new GuildChannels();
+    new GuildMembers();
     new Guilds();
     new Users();
-    new GuildMembers();
   }
 }
 
