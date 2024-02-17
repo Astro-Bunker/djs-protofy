@@ -3,6 +3,7 @@ import { resolveEnum } from "./utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
+  declare client: ChannelManager["client"];
 
   constructor() {
     Object.defineProperties(ChannelManager.prototype, {
@@ -91,5 +92,20 @@ export class Channels {
 
   getChannelByUrl(url: string) {
     return this.cache.find(channel => channel.url === url);
+  }
+
+  async fetchChannelById(id: string) {
+
+    let channel;
+
+    if (this.client.shard) {
+      channel = await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
+        .then(res => res?.[0])
+        .catch(() => undefined);
+    } else {
+      channel = await this.client.channels.fetch(id).catch(() => undefined);
+    }
+
+    return channel;
   }
 }
