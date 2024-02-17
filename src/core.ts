@@ -1,5 +1,6 @@
 import { Channels } from "./channels";
 import { GuildChannels } from "./guildChannels";
+import { Guilds } from "./guilds";
 import { verifyDJSVersion } from "./utils";
 
 export class DJSProto {
@@ -8,6 +9,7 @@ export class DJSProto {
 
     new Channels();
     new GuildChannels();
+    new Guilds();
   }
 }
 

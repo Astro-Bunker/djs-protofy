@@ -1,6 +1,7 @@
 import "discord.js";
 import type { Channels } from "./src/channels";
 import { GuildChannels } from "./src/guildChannels";
+import { Guilds } from "./src/guilds";
 export * from "./src";
 
 declare module "discord.js" {
@@ -22,5 +23,10 @@ declare module "discord.js" {
     getCategoryById: GuildChannels["getCategoryById"];
     getCategoryByName: GuildChannels["getCategoryByName"];
     getByUrl: GuildChannels["getChannelByUrl"];
+  }
+
+  interface GuildManager {
+    getById: Guilds["getById"];
+    getByName: Guilds["getByName"];
   }
 }
