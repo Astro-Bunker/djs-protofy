@@ -1,7 +1,6 @@
 import { APIChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
 import { resolveEnum } from "./utils";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { createChannel } = require("discord.js/src/util/Channels");
+import { createChannel } from "./djs_modules/Channels";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
