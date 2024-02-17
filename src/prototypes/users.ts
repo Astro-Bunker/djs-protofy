@@ -1,11 +1,12 @@
-import { APIUser, Client, UserManager } from "discord.js";
+import { APIUser, Client, Collection, User, UserManager } from "discord.js";
 
 export class Users {
-  declare cache: UserManager["cache"];
+  declare cache: Collection<string, User>;
   declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(UserManager.prototype, {
+      find: { value: this.find },
       getById: { value: this.getById },
       getInShardsById: { value: this.getInShardsById },
       getByGlobalName: { value: this.getByGlobalName },
@@ -16,6 +17,10 @@ export class Users {
     });
   }
 
+  get find() {
+    return this.cache.find;
+  }
+
   getById(id: string) {
     return this.cache.get(id);
   }
@@ -23,7 +28,7 @@ export class Users {
   getByDisplayName(name: string | RegExp) {
     if (!name) return;
 
-    return this.cache.find(user => {
+    return this.find(user => {
       if (typeof name === "string") {
         return user.displayName === "name";
       }
@@ -35,7 +40,7 @@ export class Users {
   getByGlobalName(name: string | RegExp) {
     if (!name) return;
 
-    return this.cache.find(user => {
+    return this.find(user => {
       if (typeof name === "string") {
         return user.globalName === "name";
       }
@@ -48,7 +53,7 @@ export class Users {
   getByUsername(name: string | RegExp) {
     if (!name) return;
 
-    return this.cache.find(user => {
+    return this.find(user => {
       if (typeof name === "string") {
         return user.username === "name";
       }
@@ -58,10 +63,10 @@ export class Users {
   }
 
   async getInShardsById(id: string) {
-    if (!id) return null;
+    if (!id || !this.client.shard) return null;
 
-    return await this.client.shard?.broadcastEval((shard, id) => shard.users.getById(id), { context: id })
-      .then(res => res.find(Boolean) as APIUser | undefined)
+    return await this.client.shard.broadcastEval((shard, id) => shard.users.getById(id), { context: id })
+      .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
 
@@ -78,7 +83,7 @@ export class Users {
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
       shard.users.getByUsername(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
-      .then(res => res.find(Boolean) as APIUser | null)
+      .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
 
@@ -95,7 +100,7 @@ export class Users {
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
       shard.users.getByDisplayName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
-      .then(res => res.find(Boolean) as APIUser | null)
+      .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
 
@@ -112,7 +117,7 @@ export class Users {
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
       shard.users.getByGlobalName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
-      .then(res => res.find(Boolean) as APIUser | null)
+      .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
 }

@@ -1,11 +1,12 @@
 import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
 
 export class Guilds {
-  declare cache: GuildManager["cache"];
+  declare cache: Collection<string, Guild>;
   declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(GuildManager.prototype, {
+      find: { value: this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByOwnerId: { value: this.getByOwnerId },
@@ -15,6 +16,10 @@ export class Guilds {
     });
   }
 
+  get find() {
+    return this.cache.find;
+  }
+
   getById(id: string) {
     return this.cache.get(id);
   }
@@ -22,7 +27,7 @@ export class Guilds {
   getByName(name: string | RegExp) {
     if (!name) return;
 
-    return this.cache.find(guild => {
+    return this.find(guild => {
       if (typeof name === "string") {
         return guild.name === name;
       }
@@ -40,20 +45,16 @@ export class Guilds {
   async getInShardsById(id: string) {
     if (!id || !this.client.shard) return null;
 
-    if (this.client.shard) {
-      return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getById(id), { context: id })
-        .then(res => res.find(Boolean) as APIGuild)
-        .catch(() => null);
-    }
-
-    return this.getById(id);
+    return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getById(id), { context: id })
+      .then(res => res.find(Boolean) as APIGuild ?? null)
+      .catch(() => null);
   }
 
   async getInShardsByName(name: string) {
     if (!name || !this.client.shard) return null;
 
     return await this.client.shard.broadcastEval((shard, name) => shard.guilds.getByName(name), { context: name })
-      .then(res => res.find(Boolean) as APIGuild)
+      .then(res => res.find(Boolean) as APIGuild ?? null)
       .catch(() => null);
 
   }

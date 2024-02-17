@@ -1,11 +1,12 @@
-import { ChannelType, Collection, GuildChannelManager } from "discord.js";
+import { ChannelType, Collection, GuildBasedChannel, GuildChannelManager } from "discord.js";
 import { resolveEnum } from "../utils";
 
 export class GuildChannels {
-  declare cache: GuildChannelManager["cache"];
+  declare cache: Collection<string, GuildBasedChannel>;
 
   constructor() {
     Object.defineProperties(GuildChannelManager.prototype, {
+      find: { value: this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },
@@ -14,6 +15,10 @@ export class GuildChannels {
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
     });
+  }
+
+  get find() {
+    return this.cache.find;
   }
 
   getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
@@ -26,7 +31,7 @@ export class GuildChannels {
   getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
     if (!name) return;
 
-    return this.cache.find(channel => {
+    return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("name" in channel && channel.name) {
@@ -43,7 +48,7 @@ export class GuildChannels {
   getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
     if (!topic) return;
 
-    return this.cache.find(channel => {
+    return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("topic" in channel && channel.topic) {
@@ -66,7 +71,7 @@ export class GuildChannels {
   }
 
   getByUrl(url: string) {
-    return this.cache.find(channel => channel.url === url);
+    return this.find(channel => channel.url === url);
   }
 
   getCategoryById(id: string) {
@@ -79,7 +84,7 @@ export class GuildChannels {
   getCategoryByName(name: string | RegExp) {
     if (!name) return;
 
-    return this.cache.find(channel => {
+    return this.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
       if ("name" in channel && channel.name) {

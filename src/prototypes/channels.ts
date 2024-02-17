@@ -1,12 +1,13 @@
-import { APIChannel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
+import { APIChannel, Channel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
 import { resolveEnum } from "../utils";
 
 export class Channels {
-  declare cache: ChannelManager["cache"];
+  declare cache: Collection<string, Channel>;
   declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(ChannelManager.prototype, {
+      find: { value: this.find },
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },
@@ -19,6 +20,10 @@ export class Channels {
     });
   }
 
+  get find() {
+    return this.cache.find;
+  }
+
   getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T) {
     if (typeof id !== "string") return;
     const channel = this.cache.get(id);
@@ -29,7 +34,7 @@ export class Channels {
   getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T) {
     if (!name) return;
 
-    return this.cache.find(channel => {
+    return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("name" in channel && channel.name) {
@@ -46,7 +51,7 @@ export class Channels {
   getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T) {
     if (!topic) return;
 
-    return this.cache.find(channel => {
+    return this.find(channel => {
       if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
 
       if ("topic" in channel && channel.topic) {
@@ -69,7 +74,7 @@ export class Channels {
   }
 
   getByUrl(url: string) {
-    return this.cache.find(channel => channel.url === url);
+    return this.find(channel => channel.url === url);
   }
 
   getCategoryById(id: string) {
@@ -82,7 +87,7 @@ export class Channels {
   getCategoryByName(name: string | RegExp) {
     if (!name) return;
 
-    return this.cache.find(channel => {
+    return this.find(channel => {
       if (channel.type !== ChannelType.GuildCategory) return false;
 
       if ("name" in channel && channel.name) {
