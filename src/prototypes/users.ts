@@ -11,6 +11,7 @@ export class Users {
       getById: { value: this.getById },
       getByGlobalName: { value: this.getByGlobalName },
       getByUsername: { value: this.getByUsername },
+      getByDisplayName: { value: this.getByDisplayName },
       getInShardsById: { value: this.getInShardsById },
       getInShardsByDisplayName: { value: this.getInShardsByDisplayName },
       getInShardsByGlobalName: { value: this.getInShardsByGlobalName },

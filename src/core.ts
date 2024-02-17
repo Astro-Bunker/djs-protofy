@@ -1,5 +1,6 @@
 import { Channels } from "./prototypes/channels";
 import { GuildChannels } from "./prototypes/guildChannels";
+import { GuildMembers } from "./prototypes/guildMembers";
 import { Guilds } from "./prototypes/guilds";
 import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
@@ -12,6 +13,7 @@ export class DJSEasier {
     new GuildChannels();
     new Guilds();
     new Users();
+    new GuildMembers();
   }
 }
 

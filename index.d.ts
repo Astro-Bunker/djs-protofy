@@ -3,6 +3,7 @@ import type { Channels } from "./src/prototypes/channels";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
 import type { Guilds } from "./src/prototypes/guilds";
 import type { Users } from "./src/prototypes/users";
+import { GuildMembers } from "./src/prototypes/guildMembers";
 export * from "./src";
 
 declare module "discord.js" {
@@ -35,6 +36,15 @@ declare module "discord.js" {
     getInShardsById: Guilds["getInShardsById"];
     getInShardsByName: Guilds["getInShardsByName"];
     getInShardsByOwnerId: Guilds["getInShardsByOwnerId"];
+  }
+
+  interface GuildMemberManager {
+    getById: GuildMembers["getById"];
+    getByDisplayName: GuildMembers["getByDisplayName"];
+    getByNickname: GuildMembers["getByNickname"];
+    getByUserDisplayName: GuildMembers["getByUserDisplayName"];
+    getByUserGlobalName: GuildMembers["getByUserGlobalName"];
+    getByUserUsername: GuildMembers["getByUserUsername"];
   }
 
   interface UserManager {
