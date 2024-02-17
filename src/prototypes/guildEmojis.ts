@@ -1,4 +1,4 @@
-import { Client, Collection, GuildEmojiManager, GuildEmoji } from "discord.js";
+import { Client, Collection, GuildEmoji, GuildEmojiManager } from "discord.js";
 import { isRegExp } from "util/types";
 
 export class GuildEmojis {
@@ -8,43 +8,19 @@ export class GuildEmojis {
   constructor() {
     Object.defineProperties(GuildEmojiManager.prototype, {
       getById: { value: this.getById },
-      getAllAnimated: { value: this.getAllAnimated },
-      getAllStatic: { value: this.getAllStatic },
-      getAllAvailable: { value: this.getAllAvailable },
-      getAllUnavailable: { value: this.getAllUnavailable },
       getByAuthorId: { value: this.getByAuthorId },
       getByName: { value: this.getByName },
-      getAllDeletable: { value: this.getAllDeletable },
-      getAllUndeletable: { value: this.getAllUndeletable },
+      getAnimated: { value: this.getAnimated },
+      getStatic: { value: this.getStatic },
+      getAvailable: { value: this.getAvailable },
+      getUnavailable: { value: this.getUnavailable },
+      getDeletable: { value: this.getDeletable },
+      getUndeletable: { value: this.getUndeletable },
     });
   }
 
   getById(id: string) {
     return this.cache.get(id);
-  }
-
-  getAllAnimated() {
-    return this.cache.filter(emoji => emoji.animated);
-  }
-
-  getAllStatic() {
-    return this.cache.filter(emoji => !emoji.animated);
-  }
-
-  getAllAvailable() {
-    return this.cache.filter(emoji => emoji.available);
-  }
-
-  getAllUnavailable() {
-    return this.cache.filter(emoji => !emoji.available);
-  }
-
-  getAllDeletable() {
-    return this.cache.filter(emoji => emoji.deletable);
-  }
-
-  getAllUndeletable() {
-    return this.cache.filter(emoji => !emoji.deletable);
   }
 
   getByAuthorId(id: string): Collection<string, GuildEmoji> {
@@ -56,12 +32,37 @@ export class GuildEmojis {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(emoji => {
+      if (emoji.name === null) return false;
+
       if (typeof name === "string") {
         return emoji.name === name;
       }
 
-      if (emoji.name)
-        return name.test(emoji.name);
+      return name.test(emoji.name);
     });
+  }
+
+  getAnimated() {
+    return this.cache.filter(emoji => emoji.animated);
+  }
+
+  getStatic() {
+    return this.cache.filter(emoji => !emoji.animated);
+  }
+
+  getAvailable() {
+    return this.cache.filter(emoji => emoji.available);
+  }
+
+  getUnavailable() {
+    return this.cache.filter(emoji => !emoji.available);
+  }
+
+  getDeletable() {
+    return this.cache.filter(emoji => emoji.deletable);
+  }
+
+  getUndeletable() {
+    return this.cache.filter(emoji => !emoji.deletable);
   }
 }

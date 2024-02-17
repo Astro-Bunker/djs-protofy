@@ -1,4 +1,4 @@
-import { Client, Collection, RoleManager, Role, PermissionsBitField } from "discord.js";
+import { Client, Collection, PermissionResolvable, Role, RoleManager } from "discord.js";
 import { isRegExp } from "util/types";
 
 export class Roles {
@@ -8,57 +8,25 @@ export class Roles {
   constructor() {
     Object.defineProperties(RoleManager.prototype, {
       getById: { value: this.getById },
-      getAllEditable: { value: this.getAllEditable },
-      getAllUneditable: { value: this.getAllUneditable },
-      getAllHoist: { value: this.getAllHoist },
-      getAllNonHoist: { value: this.getAllNonHoist },
-      getAllManaged: { value: this.getAllManaged },
-      getAllUnmanaged: { value: this.getAllUnmanaged },
-      getAllMentionable: { value: this.getAllMentionable },
-      getAllUnmentionable: { value: this.getAllUnmentionable },
       getByName: { value: this.getByName },
       getByPosition: { value: this.getByPosition },
+      getEditable: { value: this.getEditables },
+      getUneditable: { value: this.getUneditables },
+      getHoist: { value: this.getHoists },
+      getNonHoist: { value: this.getNonHoists },
+      getManaged: { value: this.getManageds },
+      getUnmanaged: { value: this.getUnmanageds },
+      getMentionable: { value: this.getMentionables },
+      getUnmentionable: { value: this.getUnmentionables },
+      getByMembers: { value: this.getByMembers },
+      getByPermissions: { value: this.getByPermissions },
       getByRawPosition: { value: this.getByRawPosition },
       getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
-      getByPermissions: { value: this.getByPermissions },
-      getByMember: { value: this.getByMember },
     });
   }
 
   getById(id: string) {
     return this.cache.get(id);
-  }
-
-  getAllEditable() {
-    return this.cache.filter(role => role.editable);
-  }
-
-  getAllUneditable() {
-    return this.cache.filter(role => !role.editable);
-  }
-
-  getAllHoist() {
-    return this.cache.filter(role => role.hoist);
-  }
-
-  getAllNonHoist() {
-    return this.cache.filter(role => !role.hoist);
-  }
-
-  getAllManaged() {
-    return this.cache.filter(role => role.managed);
-  }
-
-  getAllUnmanaged() {
-    return this.cache.filter(role => !role.managed);
-  }
-
-  getAllMentionable() {
-    return this.cache.filter(role => role.mentionable);
-  }
-
-  getAllUnmentionable() {
-    return this.cache.filter(role => !role.mentionable);
   }
 
   getByName(name: string | RegExp) {
@@ -77,6 +45,38 @@ export class Roles {
     return this.cache.find(role => role.position === position);
   }
 
+  getEditables() {
+    return this.cache.filter(role => role.editable);
+  }
+
+  getUneditables() {
+    return this.cache.filter(role => !role.editable);
+  }
+
+  getHoists() {
+    return this.cache.filter(role => role.hoist);
+  }
+
+  getNonHoists() {
+    return this.cache.filter(role => !role.hoist);
+  }
+
+  getManageds() {
+    return this.cache.filter(role => role.managed);
+  }
+
+  getUnmanageds() {
+    return this.cache.filter(role => !role.managed);
+  }
+
+  getMentionables() {
+    return this.cache.filter(role => role.mentionable);
+  }
+
+  getUnmentionables() {
+    return this.cache.filter(role => !role.mentionable);
+  }
+
   getByRawPosition(position: number) {
     return this.cache.find(role => role.rawPosition === position);
   }
@@ -85,11 +85,12 @@ export class Roles {
     return this.cache.filter(role => role.unicodeEmoji === emoji);
   }
 
-  getByPermissions(permissions: PermissionsBitField) {
-    return this.cache.filter(role => role.permissions.any(permissions));
+  getByPermissions(...permissions: PermissionResolvable[]) {
+    return this.cache.filter(role => role.permissions.has(permissions));
   }
 
-  getByMember(memberId: string) {
-    return this.cache.filter(role => role.members.has(memberId));
+  getByMembers(memberId: string | string[]) {
+    if (!Array.isArray(memberId)) memberId = [];
+    return this.cache.filter(role => role.members.hasAll(...memberId));
   }
 }
