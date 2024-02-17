@@ -10,9 +10,9 @@ export class GuildChannels {
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },
       getByTypes: { value: this.getByTypes },
+      getByUrl: { value: this.getByUrl },
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
-      getByUrl: { value: this.getByUrl },
     });
   }
 
@@ -65,6 +65,10 @@ export class GuildChannels {
     return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
   }
 
+  getByUrl(url: string) {
+    return this.cache.find(channel => channel.url === url);
+  }
+
   getCategoryById(id: string) {
     if (typeof id !== "string") return;
     const category = this.cache.get(id);
@@ -87,9 +91,5 @@ export class GuildChannels {
           return name.test(channel.name);
       }
     });
-  }
-
-  getByUrl(url: string) {
-    return this.cache.find(channel => channel.url === url);
   }
 }
