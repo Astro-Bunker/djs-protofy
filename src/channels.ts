@@ -1,5 +1,5 @@
 import { APIChannel, ChannelManager, ChannelType, Client, Collection } from "discord.js";
-import { createChannel, resolveEnum } from "./utils";
+import { resolveEnum } from "./utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
@@ -98,13 +98,8 @@ export class Channels {
   async getInShardsById(id: string) {
     if (!id) return null;
 
-    if (this.client.shard) {
-      return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-        .then(res => res.find(Boolean) as APIChannel | undefined)
-        .then(async res => res ? await createChannel(this.client, res) : null)
-        .catch(() => null);
-    }
-
-    return this.getById(id);
+    return await this.client.shard?.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
+      .then(res => res.find(Boolean) as APIChannel | undefined)
+      .catch(() => null);
   }
 }
