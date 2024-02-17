@@ -1,6 +1,7 @@
 import "discord.js";
 import type { Channels } from "./src/prototypes/channels";
 import { Emojis } from "./src/prototypes/emojis";
+import { GuildEmojis } from "./src/prototypes/guildEmojis";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
 import { GuildMembers } from "./src/prototypes/guildMembers";
 import type { Guilds } from "./src/prototypes/guilds";
@@ -9,6 +10,8 @@ export * from "./src";
 
 declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
+  
+  interface GuildEmojiManager extends GuildEmojis { }
 
   interface ChannelManager extends Channels { }
 
