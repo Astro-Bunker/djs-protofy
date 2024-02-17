@@ -2,6 +2,7 @@ import "discord.js";
 import type { Channels } from "./src/channels";
 import { GuildChannels } from "./src/guildChannels";
 import { Guilds } from "./src/guilds";
+import { Users } from "./src/users";
 export * from "./src";
 
 declare module "discord.js" {
@@ -34,5 +35,16 @@ declare module "discord.js" {
     getInShardsById: Guilds["getInShardsById"];
     getInShardsByName: Guilds["getInShardsByName"];
     getInShardsByOwnerId: Guilds["getInShardsByOwnerId"];
+  }
+
+  interface UserManager {
+    getById: Users["getById"];
+    getByUsername: Users["getByUsername"];
+    getByGlobalName: Users["getByGlobalName"];
+    getByDisplayName: Users["getByDisplayName"];
+    getInShardsById: Users["getInShardsById"];
+    getInShardsByUsername: Users["getInShardsByUsername"];
+    getInShardsByGlobalName: Users["getInShardsByGlobalName"];
+    getInShardsByDisplayName: Users["getInShardsByDisplayName"];
   }
 }
