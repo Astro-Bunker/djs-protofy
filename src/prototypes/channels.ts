@@ -96,10 +96,10 @@ export class Channels {
   }
 
   async getInShardsById(id: string) {
-    if (typeof id !== "string") return null;
+    if (typeof id !== "string" || !this.client.shard) return null;
 
-    return await this.client.shard?.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-      .then(res => res.find(Boolean) as APIChannel | undefined)
+    return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
+      .then(res => res.find(Boolean) as APIChannel ?? null)
       .catch(() => null);
   }
 
@@ -110,7 +110,7 @@ export class Channels {
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.channels.getByName(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIChannel | null)
+      .then(res => res.find(Boolean) as APIChannel ?? null)
       .catch(() => null);
   }
 }
