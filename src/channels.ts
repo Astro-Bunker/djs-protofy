@@ -100,11 +100,11 @@ export class Channels {
 
     if (this.client.shard) {
       return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-        .then(res => res.find(Boolean) as APIChannel | null ?? null)
-        .then(res => res && createChannel(this.client, res))
+        .then(res => res.find(Boolean) as APIChannel | undefined)
+        .then(res => res ? createChannel(this.client, res) : null)
         .catch(() => null);
-    } else {
-      return this.getById(id);
     }
+
+    return this.getById(id);
   }
 }
