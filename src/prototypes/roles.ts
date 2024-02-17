@@ -16,14 +16,14 @@ export class Roles {
       filterByUnicodeEmoji: { value: this.filterByUnicodeEmoji },
       filterByMembers: { value: this.filterByMembers },
       filterByPermissions: { value: this.filterByPermissions },
-      filterByEditables: { value: this.filterByEditables },
-      filterByUneditables: { value: this.filterByUneditables },
-      filterByHoists: { value: this.filterByHoists },
-      filterByNonHoists: { value: this.filterByNonHoists },
-      filterByManageds: { value: this.filterByManageds },
-      filterByUnmanageds: { value: this.filterByUnmanageds },
-      filterByMentionables: { value: this.filterByMentionables },
-      filterByUnmentionables: { value: this.filterByUnmentionables },
+      filterEditables: { value: this.filterEditables },
+      filterUneditables: { value: this.filterUneditables },
+      filterHoists: { value: this.filterHoists },
+      filterNonHoists: { value: this.filterNonHoists },
+      filterManageds: { value: this.filterManageds },
+      filterUnmanageds: { value: this.filterUnmanageds },
+      filterMentionables: { value: this.filterMentionables },
+      filterUnmentionables: { value: this.filterUnmentionables },
     });
   }
 
@@ -67,35 +67,35 @@ export class Roles {
     return this.cache.filter(role => role.unicodeEmoji === emoji);
   }
 
-  filterByEditables() {
+  filterEditables() {
     return this.cache.filter(role => role.editable);
   }
 
-  filterByUneditables() {
+  filterUneditables() {
     return this.cache.filter(role => !role.editable);
   }
 
-  filterByHoists() {
+  filterHoists() {
     return this.cache.filter(role => role.hoist);
   }
 
-  filterByNonHoists() {
+  filterNonHoists() {
     return this.cache.filter(role => !role.hoist);
   }
 
-  filterByManageds() {
+  filterManageds() {
     return this.cache.filter(role => role.managed);
   }
 
-  filterByUnmanageds() {
+  filterUnmanageds() {
     return this.cache.filter(role => !role.managed);
   }
 
-  filterByMentionables() {
+  filterMentionables() {
     return this.cache.filter(role => role.mentionable);
   }
 
-  filterByUnmentionables() {
+  filterUnmentionables() {
     return this.cache.filter(role => !role.mentionable);
   }
 }
