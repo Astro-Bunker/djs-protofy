@@ -38,11 +38,12 @@ export class Emojis {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(emoji => {
+      if (emoji.name === null) return false;
+
       if (typeof name === "string") {
         return emoji.name === name;
       }
 
-      if (emoji.name)
         return name.test(emoji.name);
     });
   }
