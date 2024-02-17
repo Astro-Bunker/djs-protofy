@@ -12,7 +12,7 @@ export class GuildEmojis {
       getAllStatic: { value: this.getAllStatic },
       getAllAvailable: { value: this.getAllAvailable },
       getAllUnavailable: { value: this.getAllUnavailable },
-      getByAuthor: { value: this.getByAuthor },
+      getByAuthorId: { value: this.getByAuthorId },
       getByName: { value: this.getByName },
       getAllDeletable: { value: this.getAllDeletable },
       getAllUndeletable: { value: this.getAllUndeletable },
@@ -47,7 +47,7 @@ export class GuildEmojis {
     return this.cache.filter(emoji => !emoji.deletable);
   }
 
-  getByAuthor(id: string) {
+  getByAuthorId(id: string): Collection<string, GuildEmoji> {
     if (typeof id !== "string") return new Collection();
     return this.cache.filter(emoji => emoji.author?.id === id);
   }

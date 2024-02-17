@@ -10,7 +10,7 @@ export * from "./src";
 
 declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
-  
+
   interface GuildEmojiManager extends GuildEmojis { }
 
   interface ChannelManager extends Channels { }
