@@ -13,7 +13,7 @@ declare module "discord.js" {
     getCategoryById: Channels["getCategoryById"];
     getCategoryByName: Channels["getCategoryByName"];
     getByUrl: Channels["getByUrl"];
-    fetchById: Channels["fetchById"];
+    getInShardsById: Channels["getInShardsById"];
   }
 
   interface GuildChannelManager {

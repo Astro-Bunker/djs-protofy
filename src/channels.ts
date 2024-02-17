@@ -14,7 +14,7 @@ export class Channels {
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
       getByUrl: { value: this.getByUrl },
-      fetchById: { value: this.fetchById },
+      getInShardsById: { value: this.getInShardsById },
     });
   }
 
@@ -95,7 +95,7 @@ export class Channels {
     return this.cache.find(channel => channel.url === url);
   }
 
-  async fetchById(id: string) {
+  async getInShardsById(id: string) {
     if (!id) return;
 
     if (this.client.shard) {
@@ -104,7 +104,7 @@ export class Channels {
         .then(res => res && createChannel(this.client, res))
         .catch(() => null);
     } else {
-      return await this.client.channels.fetch(id);
+      return this.getById(id);
     }
   }
 }
