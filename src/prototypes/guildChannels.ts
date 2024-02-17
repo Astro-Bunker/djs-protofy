@@ -12,11 +12,11 @@ export class GuildChannels {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },
-      getByTypes: { value: this.getByTypes },
       getByUrl: { value: this.getByUrl },
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
       getVoiceByUserId: { value: this.getVoiceByUserId },
+      filterByTypes: { value: this.filterByTypes },
     });
   }
 
@@ -58,15 +58,6 @@ export class GuildChannels {
     }) as GetChannelType<T>;
   }
 
-  getByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GetChannelType<T>> {
-    if (Array.isArray(type)) {
-      type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
-    }
-
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
-  }
-
   getByUrl(url: string) {
     return this.cache.find(channel => channel.url === url);
   }
@@ -100,5 +91,14 @@ export class GuildChannels {
 
       return channel.members.has(id);
     }) as VoiceBasedChannel;
+  }
+
+  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GetChannelType<T>> {
+    if (Array.isArray(type)) {
+      type.map(value => resolveEnum(ChannelType, value));
+      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
+    }
+
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
   }
 }

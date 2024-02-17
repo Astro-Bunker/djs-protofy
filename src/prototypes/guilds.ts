@@ -10,10 +10,10 @@ export class Guilds {
     Object.defineProperties(GuildManager.prototype, {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
-      getByOwnerId: { value: this.getByOwnerId },
       getInShardsById: { value: this.getInShardsById },
       getInShardsByName: { value: this.getInShardsByName },
       getInShardsByOwnerId: { value: this.getInShardsByOwnerId },
+      filterByOwnerId: { value: this.filterByOwnerId },
     });
   }
 
@@ -31,12 +31,6 @@ export class Guilds {
 
       return name.test(guild.name);
     });
-  }
-
-  getByOwnerId(id: string): Collection<string, Guild> {
-    if (typeof id !== "string") return new Collection();
-
-    return this.cache.filter(guild => guild.ownerId === id);
   }
 
   async getInShardsById(id: string) {
@@ -61,8 +55,14 @@ export class Guilds {
   async getInShardsByOwnerId(id: string) {
     if (typeof id !== "string" || !this.client.shard) return [];
 
-    return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getByOwnerId(id), { context: id })
+    return await this.client.shard.broadcastEval((shard, id) => shard.guilds.filterByOwnerId(id), { context: id })
       .then(res => res.flat())
       .catch(() => []);
+  }
+
+  filterByOwnerId(id: string): Collection<string, Guild> {
+    if (typeof id !== "string") return new Collection();
+
+    return this.cache.filter(guild => guild.ownerId === id);
   }
 }

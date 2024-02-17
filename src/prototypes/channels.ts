@@ -12,13 +12,13 @@ export class Channels {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByTopic: { value: this.getByTopic },
-      getByTypes: { value: this.getByTypes },
       getByUrl: { value: this.getByUrl },
       getCategoryById: { value: this.getCategoryById },
       getCategoryByName: { value: this.getCategoryByName },
       getInShardsById: { value: this.getInShardsById },
       getInShardsByName: { value: this.getInShardsByName },
       getVoiceByUserId: { value: this.getVoiceByUserId },
+      filterByTypes: { value: this.filterByTypes },
     });
   }
 
@@ -58,15 +58,6 @@ export class Channels {
         return topic.test(channel.topic);
       }
     }) as GetChannelType<T>;
-  }
-
-  getByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, GetChannelType<T>> {
-    if (Array.isArray(type)) {
-      type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
-    }
-
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
   }
 
   getByUrl(url: string) {
@@ -122,4 +113,14 @@ export class Channels {
       return channel.members.has(id);
     }) as VoiceBasedChannel;
   }
+
+  filterByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, GetChannelType<T>> {
+    if (Array.isArray(type)) {
+      type.map(value => resolveEnum(ChannelType, value));
+      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
+    }
+
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
+  }
+
 }

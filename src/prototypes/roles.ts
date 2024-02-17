@@ -10,19 +10,20 @@ export class Roles {
     Object.defineProperties(RoleManager.prototype, {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
-      getByMembers: { value: this.getByMembers },
-      getByPermissions: { value: this.getByPermissions },
       getByPosition: { value: this.getByPosition },
-      getByRawPosition: { value: this.getByRawPosition },
       getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
-      getEditable: { value: this.getEditables },
-      getUneditable: { value: this.getUneditables },
-      getHoist: { value: this.getHoists },
-      getNonHoist: { value: this.getNonHoists },
-      getManaged: { value: this.getManageds },
-      getUnmanaged: { value: this.getUnmanageds },
-      getMentionable: { value: this.getMentionables },
-      getUnmentionable: { value: this.getUnmentionables },
+      getByRawPosition: { value: this.getByRawPosition },
+      filterByUnicodeEmoji: { value: this.filterByUnicodeEmoji },
+      filterByMembers: { value: this.filterByMembers },
+      filterByPermissions: { value: this.filterByPermissions },
+      filterByEditables: { value: this.filterByEditables },
+      filterByUneditables: { value: this.filterByUneditables },
+      filterByHoists: { value: this.filterByHoists },
+      filterByNonHoists: { value: this.filterByNonHoists },
+      filterByManageds: { value: this.filterByManageds },
+      filterByUnmanageds: { value: this.filterByUnmanageds },
+      filterByMentionables: { value: this.filterByMentionables },
+      filterByUnmentionables: { value: this.filterByUnmentionables },
     });
   }
 
@@ -42,15 +43,6 @@ export class Roles {
     });
   }
 
-  getByMembers(memberId: string | string[]) {
-    if (!Array.isArray(memberId)) memberId = [memberId];
-    return this.cache.filter(role => role.members.hasAll(...memberId));
-  }
-
-  getByPermissions(...permissions: PermissionResolvable[]) {
-    return this.cache.filter(role => role.permissions.has(permissions));
-  }
-
   getByPosition(position: number) {
     return this.cache.find(role => role.position === position);
   }
@@ -58,40 +50,52 @@ export class Roles {
   getByRawPosition(position: number) {
     return this.cache.find(role => role.rawPosition === position);
   }
-
   getByUnicodeEmoji(emoji: string) {
+    return this.cache.find(role => role.unicodeEmoji === emoji);
+  }
+
+  filterByMembers(memberId: string | string[]) {
+    if (!Array.isArray(memberId)) memberId = [memberId];
+    return this.cache.filter(role => role.members.hasAll(...memberId));
+  }
+
+  filterByPermissions(...permissions: PermissionResolvable[]) {
+    return this.cache.filter(role => role.permissions.has(permissions));
+  }
+
+  filterByUnicodeEmoji(emoji: string) {
     return this.cache.filter(role => role.unicodeEmoji === emoji);
   }
 
-  getEditables() {
+  filterByEditables() {
     return this.cache.filter(role => role.editable);
   }
 
-  getUneditables() {
+  filterByUneditables() {
     return this.cache.filter(role => !role.editable);
   }
 
-  getHoists() {
+  filterByHoists() {
     return this.cache.filter(role => role.hoist);
   }
 
-  getNonHoists() {
+  filterByNonHoists() {
     return this.cache.filter(role => !role.hoist);
   }
 
-  getManageds() {
+  filterByManageds() {
     return this.cache.filter(role => role.managed);
   }
 
-  getUnmanageds() {
+  filterByUnmanageds() {
     return this.cache.filter(role => !role.managed);
   }
 
-  getMentionables() {
+  filterByMentionables() {
     return this.cache.filter(role => role.mentionable);
   }
 
-  getUnmentionables() {
+  filterByUnmentionables() {
     return this.cache.filter(role => !role.mentionable);
   }
 }
