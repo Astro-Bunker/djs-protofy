@@ -4,6 +4,10 @@
 
 A library created to make Discord.JS easier to use through prototypes.
 
+## Requirements
+
+- discord.js version 14 or above
+
 ## Installation
 
 ```sh
