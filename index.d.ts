@@ -32,5 +32,7 @@ declare module "discord.js" {
     getByName: Guilds["getByName"];
     getByOwnerId: Guilds["getByOwnerId"];
     getInShardsById: Guilds["getInShardsById"];
+    getInShardsByName: Guilds["getInShardsByName"];
+    getInShardsByOwnerId: Guilds["getInShardsByOwnerId"];
   }
 }

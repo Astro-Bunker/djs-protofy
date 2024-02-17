@@ -8,8 +8,10 @@ export class Guilds {
     Object.defineProperties(GuildManager.prototype, {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
-      getInShardsById: { value: this.getInShardsById },
       getByOwnerId: { value: this.getByOwnerId },
+      getInShardsById: { value: this.getInShardsById },
+      getInShardsByName: { value: this.getInShardsByName },
+      getInShardsByOwnerId: { value: this.getInShardsByOwnerId },
     });
   }
 
@@ -42,16 +44,32 @@ export class Guilds {
   }
 
   async getInShardsById(id: string) {
-    if (!id) return null;
+    if (!id || !this.client.shard) return null;
 
     if (this.client.shard) {
       return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getById(id), { context: id })
         .then(res => res.find(Boolean) as APIGuild)
-        // @ts-expect-error ts(2673)
-        .then(res => res ? new Guild(this.client, res) : null)
         .catch(() => null);
     }
 
     return this.getById(id);
+  }
+
+  async getInShardsByName(name: string) {
+    if (!name || !this.client.shard) return null;
+
+    return await this.client.shard.broadcastEval((shard, name) => shard.guilds.getByName(name), { context: name })
+      .then(res => res.find(Boolean) as APIGuild)
+      .catch(() => null);
+
+  }
+
+  async getInShardsByOwnerId(id: string) {
+    if (!id || !this.client.shard) return null;
+
+    return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getByOwnerId(id), { context: id })
+      .then(res => res.filter(Boolean))
+      .catch(() => null);
+
   }
 }
