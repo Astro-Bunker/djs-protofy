@@ -31,16 +31,10 @@ export class Guilds {
     });
   }
 
-  getByOwnerId(id: string | RegExp): Collection<string, Guild> | undefined {
-    if (!id) return;
+  getByOwnerId(id: string): Collection<string, Guild> {
+    if (!id) return new Collection();
 
-    return this.cache.filter(guild => {
-      if (typeof id === "string") {
-        return guild.ownerId === id;
-      }
-
-      return id.test(guild.ownerId);
-    });
+    return this.cache.filter(guild => guild.ownerId === id);
   }
 
   async getInShardsById(id: string) {
@@ -65,11 +59,10 @@ export class Guilds {
   }
 
   async getInShardsByOwnerId(id: string) {
-    if (!id || !this.client.shard) return null;
+    if (!id || !this.client.shard) return [];
 
     return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getByOwnerId(id), { context: id })
-      .then(res => res.filter(Boolean))
-      .catch(() => null);
-
+      .then(res => res.flat())
+      .catch(() => []);
   }
 }
