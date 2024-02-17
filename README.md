@@ -1,12 +1,12 @@
 # 📃 djs-easier
 
-[![Supported DJS Version](https://img.shields.io/github/package-json/dependency-version/Saphire-Bunker/djs-easier/dev/discord.js?style=for-the-badge)](https://github.com)
+[![Supported DJS Version](https://img.shields.io/github/package-json/dependency-version/Saphire-Bunker/djs-easier/dev/discord.js?style=for-the-badge)](https://github.com/discordjs/discord.js)
 
 A library created to make Discord.JS easier to use through prototypes.
 
 ## Requirements
 
-- discord.js version 14 or above
+- [discord.js](https://github.com/discordjs/discord.js) version 14 or above
 
 ## Installation
 
