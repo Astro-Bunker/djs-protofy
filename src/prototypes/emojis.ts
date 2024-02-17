@@ -11,12 +11,12 @@ export class Emojis {
       getByAuthorId: { value: this.getByAuthorId },
       getByGuild: { value: this.getByGuild },
       getByName: { value: this.getByName },
-      getAnimateds: { value: this.getAnimateds },
-      getStatics: { value: this.getStatics },
-      getAvailables: { value: this.getAvailables },
-      getUnavailables: { value: this.getUnavailables },
-      getDeletables: { value: this.getDeletables },
-      getUndeletables: { value: this.getUndeletables },
+      filterAnimateds: { value: this.filterAnimateds },
+      filterStatics: { value: this.filterStatics },
+      filterAvailables: { value: this.filterAvailables },
+      filterUnavailables: { value: this.filterUnavailables },
+      filterDeletables: { value: this.filterDeletables },
+      filterUndeletables: { value: this.filterUndeletables },
     });
   }
 
@@ -48,27 +48,27 @@ export class Emojis {
     });
   }
 
-  getAnimateds() {
+  filterAnimateds() {
     return this.cache.filter(emoji => emoji.animated);
   }
 
-  getStatics() {
+  filterStatics() {
     return this.cache.filter(emoji => !emoji.animated);
   }
 
-  getAvailables() {
+  filterAvailables() {
     return this.cache.filter(emoji => emoji.available);
   }
 
-  getUnavailables() {
+  filterUnavailables() {
     return this.cache.filter(emoji => !emoji.available);
   }
 
-  getDeletables() {
+  filterDeletables() {
     return this.cache.filter(emoji => emoji.deletable);
   }
 
-  getUndeletables() {
+  filterUndeletables() {
     return this.cache.filter(emoji => !emoji.deletable);
   }
 }
