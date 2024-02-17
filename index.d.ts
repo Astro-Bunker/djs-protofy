@@ -10,5 +10,6 @@ declare module "discord.js" {
     getByTypes: Channels["getChannelsByTypes"];
     getCategoryById: Channels["getCategoryById"];
     getCategoryByName: Channels["getCategoryByName"];
+    getByUrl: Channels["getChannelByUrl"];
   }
 }

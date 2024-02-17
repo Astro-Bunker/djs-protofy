@@ -1,4 +1,4 @@
-import { Client, version } from "discord.js";
+import { Client } from "discord.js";
 import { Channels } from "./channels";
 import { verifyDJSVersion } from "./utils";
 

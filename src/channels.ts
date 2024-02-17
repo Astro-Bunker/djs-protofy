@@ -10,6 +10,7 @@ export class Channels {
       getByTypes: { value: this.getChannelsByTypes.bind(client.channels) },
       getCategoryById: { value: this.getCategoryById.bind(client.channels) },
       getCategoryByName: { value: this.getCategoryByName.bind(client.channels) },
+      getByUrl: { value: this.getChannelByUrl.bind(client.channels) },
     });
   }
 
@@ -59,7 +60,7 @@ export class Channels {
 
   getChannelsByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, T> {
     if (Array.isArray(type)) {
-      type.map(value => resolveEnum(ChannelType, value))
+      type.map(value => resolveEnum(ChannelType, value));
       return this.cache.filter(channel => type.includes(channel.type as T)) as any;
     }
 
@@ -88,5 +89,9 @@ export class Channels {
           return name.test(channel.name);
       }
     });
+  }
+
+  getChannelByUrl(url: string) {
+    return this.cache.find(channel => channel.url === url);
   }
 }
