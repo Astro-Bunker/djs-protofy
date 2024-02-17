@@ -4,9 +4,22 @@ import type { GuildChannels } from "./src/prototypes/guildChannels";
 import type { Guilds } from "./src/prototypes/guilds";
 import type { Users } from "./src/prototypes/users";
 import { GuildMembers } from "./src/prototypes/guildMembers";
+import { Emojis } from "./src/prototypes/emojis";
 export * from "./src";
 
 declare module "discord.js" {
+  interface BaseGuildEmojiManager {
+    getAllAnimated: Emojis["getAllAnimated"];
+    getAllStatic: Emojis["getAllStatic"];
+    getAllAvailable: Emojis["getAllAvailable"];
+    getAllUnavailable: Emojis["getAllUnavailable"];
+    getByAuthor: Emojis["getByAuthor"];
+    getByGuild: Emojis["getByGuild"];
+    getByName: Emojis["getByName"];
+    getAllDeletable: Emojis["getAllDeletable"];
+    getAllUndeletable: Emojis["getAllUndeletable"];
+  }
+
   interface ChannelManager {
     getById: Channels["getById"];
     getByName: Channels["getByName"];
