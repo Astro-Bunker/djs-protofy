@@ -104,12 +104,20 @@ export class Channels {
       .catch(() => null);
   }
 
-  async getInShardsByName(name: string) {
-    if (!name) return null;
+  async getInShardsByName(name: string | RegExp) {
+    if (!name || !this.client.shard) return null;
 
-    return await this.client.shard?.broadcastEval((shard, name) => shard.channels.getByName(name), { context: name })
-      .then(res => res.find(Boolean) as APIChannel | undefined)
+    const isRegExp = name instanceof RegExp;
+    let flags: string | undefined;
+
+    if (name instanceof RegExp) {
+      flags = name.flags;
+      name = name.source;
+    }
+
+    return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
+      shard.channels.getByName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+      .then(res => res.find(Boolean) as APIChannel | null)
       .catch(() => null);
   }
-
 }
