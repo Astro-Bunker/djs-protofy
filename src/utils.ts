@@ -16,7 +16,7 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
     s2 = s2.toLowerCase();
   }
 
-  return s1.includes(s2);
+  return s1 === s2;
 }
 
 export function resolveEnum<T extends EnumLike<any, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T] {
