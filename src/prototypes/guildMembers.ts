@@ -36,7 +36,7 @@ export class GuildMembers {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(member => {
-      if (!member.nickname) return false;
+      if (member.nickname === null) return false;
 
       if (typeof name === "string") {
         return member.nickname === name;
