@@ -90,7 +90,7 @@ export class Roles {
   }
 
   getByMembers(memberId: string | string[]) {
-    if (!Array.isArray(memberId)) memberId = [];
+    if (!Array.isArray(memberId)) memberId = [memberId];
     return this.cache.filter(role => role.members.hasAll(...memberId));
   }
 }
