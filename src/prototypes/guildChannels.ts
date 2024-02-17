@@ -1,8 +1,9 @@
-import { ChannelType, Collection, GuildBasedChannel, GuildChannelManager } from "discord.js";
+import { ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager } from "discord.js";
 import { resolveEnum } from "../utils";
 
 export class GuildChannels {
   declare cache: Collection<string, GuildBasedChannel>;
+  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(GuildChannelManager.prototype, {
