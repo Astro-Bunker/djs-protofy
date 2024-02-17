@@ -15,6 +15,7 @@ export class Channels {
       getCategoryByName: { value: this.getCategoryByName },
       getByUrl: { value: this.getByUrl },
       getInShardsById: { value: this.getInShardsById },
+      getInShardsByName: { value: this.getInShardsByName },
     });
   }
 
@@ -102,4 +103,13 @@ export class Channels {
       .then(res => res.find(Boolean) as APIChannel | undefined)
       .catch(() => null);
   }
+
+  async getInShardsByName(name: string) {
+    if (!name) return null;
+
+    return await this.client.shard?.broadcastEval((shard, name) => shard.channels.getByName(name), { context: name })
+      .then(res => res.find(Boolean) as APIChannel | undefined)
+      .catch(() => null);
+  }
+
 }
