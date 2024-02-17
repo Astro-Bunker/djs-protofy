@@ -84,5 +84,4 @@ export class GuildMembers {
       return name.test(member.user.username);
     });
   }
-
 }
