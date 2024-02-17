@@ -45,6 +45,10 @@ export class Roles {
     return this.cache.find(role => role.position === position);
   }
 
+  getByRawPosition(position: number) {
+    return this.cache.find(role => role.rawPosition === position);
+  }
+
   getEditables() {
     return this.cache.filter(role => role.editable);
   }
@@ -75,10 +79,6 @@ export class Roles {
 
   getUnmentionables() {
     return this.cache.filter(role => !role.mentionable);
-  }
-
-  getByRawPosition(position: number) {
-    return this.cache.find(role => role.rawPosition === position);
   }
 
   getByUnicodeEmoji(emoji: string) {
