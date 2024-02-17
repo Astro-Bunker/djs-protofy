@@ -7,12 +7,12 @@ export class Users {
   constructor() {
     Object.defineProperties(UserManager.prototype, {
       getById: { value: this.getById },
-      getByUsername: { value: this.getByUsername },
-      getByGlobalName: { value: this.getByGlobalName },
       getInShardsById: { value: this.getInShardsById },
-      getInShardsByUsername: { value: this.getInShardsByUsername },
-      getInShardsByGlobalName: { value: this.getInShardsByGlobalName },
+      getByGlobalName: { value: this.getByGlobalName },
+      getByUsername: { value: this.getByUsername },
       getInShardsByDisplayName: { value: this.getInShardsByDisplayName },
+      getInShardsByGlobalName: { value: this.getInShardsByGlobalName },
+      getInShardsByUsername: { value: this.getInShardsByUsername },
     });
   }
 
@@ -20,15 +20,15 @@ export class Users {
     return this.cache.get(id);
   }
 
-  getByUsername(name: string | RegExp) {
+  getByDisplayName(name: string | RegExp) {
     if (!name) return;
 
     return this.cache.find(user => {
       if (typeof name === "string") {
-        return user.username === "name";
+        return user.displayName === "name";
       }
 
-      return name.test(user.username);
+      return name.test(user.displayName);
     });
   }
 
@@ -45,15 +45,15 @@ export class Users {
     });
   }
 
-  getByDisplayName(name: string | RegExp) {
+  getByUsername(name: string | RegExp) {
     if (!name) return;
 
     return this.cache.find(user => {
       if (typeof name === "string") {
-        return user.displayName === "name";
+        return user.username === "name";
       }
 
-      return name.test(user.displayName);
+      return name.test(user.username);
     });
   }
 
@@ -65,7 +65,7 @@ export class Users {
       .catch(() => null);
   }
 
-  async getInShardsByGlobalName(name: string | RegExp) {
+  async getInShardsByUsername(name: string | RegExp) {
     if (!name || !this.client.shard) return null;
 
     const isRegExp = name instanceof RegExp;
@@ -77,7 +77,7 @@ export class Users {
     }
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
-      shard.users.getByGlobalName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+      shard.users.getByUsername(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
       .then(res => res.find(Boolean) as APIUser | null)
       .catch(() => null);
   }
@@ -99,7 +99,7 @@ export class Users {
       .catch(() => null);
   }
 
-  async getInShardsByUsername(name: string | RegExp) {
+  async getInShardsByGlobalName(name: string | RegExp) {
     if (!name || !this.client.shard) return null;
 
     const isRegExp = name instanceof RegExp;
@@ -111,7 +111,7 @@ export class Users {
     }
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, name }) =>
-      shard.users.getByUsername(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
+      shard.users.getByGlobalName(isRegExp ? RegExp(name, flags) : name), { context: { name, isRegExp, flags } })
       .then(res => res.find(Boolean) as APIUser | null)
       .catch(() => null);
   }
