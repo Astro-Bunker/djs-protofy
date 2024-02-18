@@ -1,4 +1,4 @@
-# 📃 djs-easier
+# 📃 djs-protofy
 
 [![Supported DJS Version](https://img.shields.io/github/package-json/dependency-version/Saphire-Bunker/djs-easier/dev/discord.js?style=for-the-badge)](https://github.com/discordjs/discord.js)
 
