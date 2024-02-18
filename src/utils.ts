@@ -14,8 +14,8 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
   if (typeof s1 !== "string" || typeof s2 !== "string") return false;
 
   if (ignoreCase) {
-    s1 = s1?.toLowerCase();
-    s2 = s2?.toLowerCase();
+    s1 = s1.toLowerCase();
+    s2 = s2.toLowerCase();
   }
 
   return s1 === s2;

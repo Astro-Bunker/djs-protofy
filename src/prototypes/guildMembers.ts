@@ -15,6 +15,7 @@ export class GuildMembers {
       getByUserGlobalName: { value: this.getByUserGlobalName },
       getByUserUsername: { value: this.getByUserUsername },
       searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
       _searchByString: { value: this._searchByString },
     });
   }
@@ -87,14 +88,24 @@ export class GuildMembers {
     });
   }
 
-  searchBy(query: string | Search) {
+  searchBy(query: string | RegExp | Search) {
     if (typeof query === "string") return this._searchByString(query);
+    if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find((member) => compareStrings(query.id!, member.id) ||
-      compareStrings(query.displayName!, member.displayName) ||
-      compareStrings(query.nickname!, member.nickname!) ||
-      compareStrings(query.globalName!, member.user.globalName!) ||
-      compareStrings(query.username!, member.user.username));
+    return this.cache.find((member) =>
+      (query.id && compareStrings(query.id, member.id)) ||
+      (query.displayName && compareStrings(query.displayName, member.displayName)) ||
+      (query.nickname && member.nickname && compareStrings(query.nickname, member.nickname)) ||
+      (query.globalName && member.user.globalName && compareStrings(query.globalName, member.user.globalName)) ||
+      (query.username && compareStrings(query.username, member.user.username)));
+  }
+
+  protected _searchByRegExp(query: RegExp) {
+    return this.cache.find((member) => query.test(member.id) ||
+      query.test(member.displayName) ||
+      query.test(member.user.username) ||
+      (member.nickname && query.test(member.nickname)) ||
+      (member.user.globalName && query.test(member.user.globalName)));
   }
 
   protected _searchByString(query: string) {
