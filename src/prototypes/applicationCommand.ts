@@ -7,6 +7,7 @@ export class AppCommand {
 
   constructor() {
     Object.defineProperties(ApplicationCommand.prototype, {
+      getMention: { value: this.getMention },
       mention: { get() { return `</${this.name}:${this.id}>`; } },
       toString: { value: this.toString },
     });
