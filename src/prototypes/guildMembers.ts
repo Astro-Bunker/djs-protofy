@@ -136,13 +136,13 @@ export class GuildMembers {
   }
 
   protected _searchByString(query: string) {
-    return this.cache.find((member) => [
-      member.id,
-      member.displayName.toLowerCase(),
-      member.nickname?.toLowerCase(),
-      member.user.globalName?.toLowerCase(),
-      member.user.username.toLowerCase(),
-    ].includes(query.toLowerCase()));
+    return this.cache.get(query) ??
+      this.cache.find((member) => [
+        member.displayName.toLowerCase(),
+        member.nickname?.toLowerCase(),
+        member.user.globalName?.toLowerCase(),
+        member.user.username.toLowerCase(),
+      ].includes(query.toLowerCase()));
   }
 }
 

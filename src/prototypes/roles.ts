@@ -130,10 +130,10 @@ export class Roles {
   }
 
   protected _searchByString(query: string) {
-    return this.cache.find((role) => [
-      role.id,
-      role.name,
-    ].includes(query.toLowerCase()));
+    return this.cache.get(query) ??
+      this.cache.find((role) => [
+        role.name,
+      ].includes(query.toLowerCase()));
   }
 }
 

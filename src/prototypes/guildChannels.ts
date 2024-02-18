@@ -106,8 +106,8 @@ export class GuildChannels {
   }
 
   searchBy(query: string | RegExp | Search) {
-    if (typeof query === "string") return;
-    if (isRegExp(query)) return;
+    if (typeof query === "string") return this._searchByString(query);
+    if (isRegExp(query)) return this._searchByRegExp(query);
 
     return this.cache.find(channel =>
       (
@@ -139,11 +139,11 @@ export class GuildChannels {
   }
 
   protected _searchByString(query: string) {
-    return this.cache.find((channel) => [
-      channel.id,
-      channel.name,
-      ("topic" in channel && channel.topic) && channel.topic,
-    ].includes(query.toLowerCase()));
+    return this.cache.get(query) ??
+      this.cache.find((channel) => [
+        channel.name,
+        ("topic" in channel && channel.topic) && channel.topic,
+      ].includes(query.toLowerCase()));
   }
 
 }
