@@ -26,6 +26,8 @@ declare module "discord.js" {
 
   interface GuildEmojiManager extends GuildEmojis { }
 
+  interface GuildMember extends GMember { }
+
   interface GuildMemberManager extends GuildMembers { }
 
   interface GuildMessageManager extends GuildMessages { }
