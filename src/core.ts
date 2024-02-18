@@ -7,6 +7,7 @@ import { GuildEmojis } from "./prototypes/guildEmojis";
 import { GuildMembers } from "./prototypes/guildMembers";
 import { GuildMessages } from "./prototypes/guildMessages";
 import { Guilds } from "./prototypes/guilds";
+import { DjsMessage } from "./prototypes/message";
 import { Messages } from "./prototypes/messages";
 import { Roles } from "./prototypes/roles";
 import { Users } from "./prototypes/users";
@@ -28,6 +29,7 @@ export class DJSProtofy {
     new Messages();
     new Roles();
     new Users();
+    new DjsMessage();
   }
 }
 

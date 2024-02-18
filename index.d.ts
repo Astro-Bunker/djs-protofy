@@ -11,9 +11,11 @@ import type { Guilds } from "./src/prototypes/guilds";
 import type { Messages } from "./src/prototypes/messages";
 import type { Roles } from "./src/prototypes/roles";
 import type { Users } from "./src/prototypes/users";
+import { DjsMessage } from "./src/prototypes/message";
 export * from "./src";
 
 declare module "discord.js" {
+
   interface ApplicationCommand extends AppCommand { }
 
   interface ApplicationCommandManager extends ApplicationCommands { }
@@ -33,6 +35,8 @@ declare module "discord.js" {
   interface GuildMessageManager extends GuildMessages { }
 
   interface GuildManager extends Guilds { }
+
+  interface Message extends DjsMessage { }
 
   interface MessageManager extends Messages { }
 

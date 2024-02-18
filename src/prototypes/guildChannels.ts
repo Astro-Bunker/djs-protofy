@@ -17,6 +17,9 @@ export class GuildChannels {
       getCategoryByName: { value: this.getCategoryByName },
       getVoiceByUserId: { value: this.getVoiceByUserId },
       filterByTypes: { value: this.filterByTypes },
+      searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
@@ -101,4 +104,43 @@ export class GuildChannels {
 
     return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, ChannelWithType<T>>;
   }
+
+  searchBy(query: string | RegExp | Search) {
+    if (typeof query === "string") return;
+    if (isRegExp(query)) return;
+
+    return this.cache.find(channel =>
+      (
+        query.id && (
+          typeof query.id === "string" ?
+            compareStrings(query.id, channel.id) :
+            query.id.test(channel.id)
+        )
+      ) || (
+        query.name && (
+          typeof query.name === "string" ?
+            compareStrings(query.name, channel.name) :
+            query.name.test(channel.name)
+        )
+      ));
+  }
+
+  protected _searchByRegExp(query: RegExp) {
+    return this.cache.find((channel) =>
+      query.test(channel.id) ||
+      query.test(channel.name));
+  }
+
+  protected _searchByString(query: string) {
+    return this.cache.find((channel) => [
+      channel.id,
+      channel.name,
+    ].includes(query.toLowerCase()));
+  }
+
+}
+
+interface Search {
+  id?: string | RegExp
+  name?: string | RegExp
 }
