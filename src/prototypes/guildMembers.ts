@@ -127,7 +127,8 @@ export class GuildMembers {
   }
 
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((member) => query.test(member.id) ||
+    return this.cache.find((member) =>
+      query.test(member.id) ||
       query.test(member.displayName) ||
       query.test(member.user.username) ||
       (member.nickname && query.test(member.nickname)) ||

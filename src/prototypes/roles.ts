@@ -99,4 +99,42 @@ export class Roles {
   filterUnmentionables() {
     return this.cache.filter(role => !role.mentionable);
   }
+
+  searchBy(query: string | RegExp | Search) {
+    if (typeof query === "string") return;
+    if (isRegExp(query)) return;
+
+    return this.cache.find(role =>
+      (
+        query.id && (
+          typeof query.id === "string" ?
+            compareStrings(query.id, role.id) :
+            query.id.test(role.id)
+        )
+      ) || (
+        query.name && (
+          typeof query.name === "string" ?
+            compareStrings(query.name, role.name) :
+            query.name.test(role.name)
+        )
+      ));
+  }
+
+  protected _searchByRegExp(query: RegExp) {
+    return this.cache.find((role) =>
+      query.test(role.id) ||
+      query.test(role.name));
+  }
+
+  protected _searchByString(query: string) {
+    return this.cache.find((role) => [
+      role.id,
+      role.name,
+    ].includes(query.toLowerCase()));
+  }
+}
+
+interface Search {
+  id?: string | RegExp
+  name?: string | RegExp
 }

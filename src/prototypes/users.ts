@@ -135,7 +135,8 @@ export class Users {
   }
 
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((user) => query.test(user.id) ||
+    return this.cache.find((user) =>
+      query.test(user.id) ||
       query.test(user.displayName) ||
       query.test(user.username) ||
       (user.globalName && query.test(user.globalName)));
