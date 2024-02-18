@@ -33,7 +33,6 @@ export class GuildMessages {
 
       return content.test(message.content);
     });
-
   }
 
   filterByAuthorIsBots() {

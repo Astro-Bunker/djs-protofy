@@ -29,7 +29,6 @@ export class Messages {
 
       return content.test(message.content);
     });
-
   }
 
   filterByAuthorIsBots() {

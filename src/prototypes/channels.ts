@@ -122,5 +122,4 @@ export class Channels {
 
     return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
   }
-
 }

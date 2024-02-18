@@ -1,5 +1,6 @@
 import "discord.js";
 import type { AppCommand } from "./src/prototypes/applicationCommand";
+import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { Channels } from "./src/prototypes/channels";
 import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
@@ -14,6 +15,8 @@ export * from "./src";
 
 declare module "discord.js" {
   interface ApplicationCommand extends AppCommand { }
+
+  interface ApplicationCommandManager extends ApplicationCommands { }
 
   interface BaseGuildEmojiManager extends Emojis { }
 

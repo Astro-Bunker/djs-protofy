@@ -1,4 +1,5 @@
 import { AppCommand } from "./prototypes/applicationCommand";
+import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { Channels } from "./prototypes/channels";
 import { Emojis } from "./prototypes/emojis";
 import { GuildChannels } from "./prototypes/guildChannels";
@@ -15,6 +16,8 @@ export class DJSEasier {
   constructor() {
     verifyDJSVersion();
 
+    new AppCommand();
+    new ApplicationCommands();
     new Channels();
     new Emojis();
     new GuildChannels();
@@ -25,7 +28,6 @@ export class DJSEasier {
     new Messages();
     new Roles();
     new Users();
-    new AppCommand();
   }
 }
 

@@ -6,11 +6,7 @@ export class AppCommand {
 
   constructor() {
     Object.defineProperties(ApplicationCommand.prototype, {
-      mention: {
-        get() {
-          return this.toString();
-        },
-      },
+      mention: { get() { return this.toString(); } },
       toString: { value: this.toString },
     });
   }

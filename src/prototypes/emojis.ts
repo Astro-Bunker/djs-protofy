@@ -34,7 +34,7 @@ export class Emojis {
         return emoji.name === name;
       }
 
-        return name.test(emoji.name);
+      return name.test(emoji.name);
     });
   }
 
