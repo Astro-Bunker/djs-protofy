@@ -101,4 +101,59 @@ export class Users {
       .then(res => res.find(Boolean) as APIUser ?? null)
       .catch(() => null);
   }
+
+  searchBy(query: string | RegExp | Search) {
+    if (typeof query === "string") return this._searchByString(query);
+    if (isRegExp(query)) return this._searchByRegExp(query);
+
+    return this.cache.find((user) =>
+      (
+        query.id && (
+          typeof query.id === "string" ?
+            compareStrings(query.id, user.id) :
+            query.id.test(user.id)
+        )
+      ) || (
+        query.displayName && (
+          typeof query.displayName === "string" ?
+            compareStrings(query.displayName, user.displayName) :
+            query.displayName.test(user.displayName)
+        )
+      ) || (
+        query.globalName && user.globalName && (
+          typeof query.globalName === "string" ?
+            compareStrings(query.globalName, user.globalName) :
+            query.globalName.test(user.globalName)
+        )
+      ) || (
+        query.username && (
+          typeof query.username === "string" ?
+            compareStrings(query.username, user.username) :
+            query.username.test(user.username)
+        )
+      ));
+  }
+
+  protected _searchByRegExp(query: RegExp) {
+    return this.cache.find((user) => query.test(user.id) ||
+      query.test(user.displayName) ||
+      query.test(user.username) ||
+      (user.globalName && query.test(user.globalName)));
+  }
+
+  protected _searchByString(query: string) {
+    return this.cache.find((user) => [
+      user.id,
+      user.displayName.toLowerCase(),
+      user.globalName?.toLowerCase(),
+      user.username.toLowerCase(),
+    ].includes(query.toLowerCase()));
+  }
+}
+
+interface Search {
+  id?: string | RegExp
+  displayName?: string | RegExp
+  globalName?: string | RegExp
+  username?: string | RegExp
 }

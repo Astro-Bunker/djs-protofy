@@ -93,11 +93,37 @@ export class GuildMembers {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return this.cache.find((member) =>
-      (query.id && compareStrings(query.id, member.id)) ||
-      (query.displayName && compareStrings(query.displayName, member.displayName)) ||
-      (query.nickname && member.nickname && compareStrings(query.nickname, member.nickname)) ||
-      (query.globalName && member.user.globalName && compareStrings(query.globalName, member.user.globalName)) ||
-      (query.username && compareStrings(query.username, member.user.username)));
+      (
+        query.id && (
+          typeof query.id === "string" ?
+            compareStrings(query.id, member.id) :
+            query.id.test(member.id)
+        )
+      ) || (
+        query.displayName && (
+          typeof query.displayName === "string" ?
+            compareStrings(query.displayName, member.displayName) :
+            query.displayName.test(member.displayName)
+        )
+      ) || (
+        query.globalName && member.user.globalName && (
+          typeof query.globalName === "string" ?
+            compareStrings(query.globalName, member.user.globalName) :
+            query.globalName.test(member.user.globalName)
+        )
+      ) || (
+        query.nickname && member.nickname && (
+          typeof query.nickname === "string" ?
+            compareStrings(query.nickname, member.nickname) :
+            query.nickname.test(member.nickname)
+        )
+      ) || (
+        query.username && (
+          typeof query.username === "string" ?
+            compareStrings(query.username, member.user.username) :
+            query.username.test(member.user.username)
+        )
+      ));
   }
 
   protected _searchByRegExp(query: RegExp) {
@@ -120,9 +146,9 @@ export class GuildMembers {
 }
 
 interface Search {
-  id?: string
-  displayName?: string
-  globalName?: string
-  nickname?: string
-  username?: string
+  id?: string | RegExp
+  displayName?: string | RegExp
+  globalName?: string | RegExp
+  nickname?: string | RegExp
+  username?: string | RegExp
 }
