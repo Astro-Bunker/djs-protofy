@@ -18,14 +18,14 @@ pnpm i djs-protofy
 
 ## How to use
 
-Import `djs-easier/init` into the main file.
+Import `djs-protofy/init` into the main file.
 
 ```js
 // ES5
-require("djs-easier/init");
+require("djs-protofy/init");
 
 // ES6
-import "djs-easier/init";
+import "djs-protofy/init";
 ```
 
 ## Examples
@@ -33,8 +33,8 @@ import "djs-easier/init";
 Getting a user
 
 ```js
-client.users.cache.get("userId"); // Instead of
-client.users.getById("userId"); // Do it
+client.users.cache.get(string); // Instead of
+client.users.getById(string); // Do it
 ```
 
 Getting a voice channel by a user
@@ -43,24 +43,9 @@ Getting a voice channel by a user
 // Instead of
 client.channels.cache.find((channel) => {
   if (!channel.isVoiceBased()) return false;
-  return channel.members.has(userId);
+  return channel.members.has(string);
 });
 
 // Do it
-client.channels.getVoiceByUserId(userId);
-```
-
-## Supported prototypes
-
-```js
-<Client>.channels
-<Client>.emojis
-<Client>.guilds
-<Client>.users
-
-<Guild>.channels
-<Guild>.emojis
-<Guild>.members
-<Guild>.roles
-<GuildTextChannel>.messages
+client.channels.getVoiceByUserId(string);
 ```
