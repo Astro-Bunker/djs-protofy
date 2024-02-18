@@ -12,7 +12,7 @@ import { Roles } from "./prototypes/roles";
 import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
 
-export class DJSEasier {
+export class DJSProtofy {
   constructor() {
     verifyDJSVersion();
 

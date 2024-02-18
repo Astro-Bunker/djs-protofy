@@ -11,8 +11,9 @@ A library created to make Discord.JS easier to use through prototypes.
 ## Installation
 
 ```sh
-npm i djs-easier
-yarn add djs-easier
+npm i djs-protofy
+yarn add djs-protofy
+pnpm i djs-protofy
 ```
 
 ## How to use
@@ -52,13 +53,11 @@ client.channels.getVoiceByUserId(userId);
 ## Supported prototypes
 
 ```js
-// Client
 <Client>.channels
 <Client>.emojis
 <Client>.guilds
 <Client>.users
 
-// Guild
 <Guild>.channels
 <Guild>.emojis
 <Guild>.members

@@ -1,3 +1,3 @@
-import { DJSEasier } from "./core";
+import { DJSProtofy } from "./core";
 
-new DJSEasier();
+new DJSProtofy();
