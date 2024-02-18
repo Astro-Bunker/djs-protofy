@@ -1,4 +1,4 @@
-import { AppCommand } from "./prototypes/apllicationCommand";
+import { AppCommand } from "./prototypes/applicationCommand";
 import { Channels } from "./prototypes/channels";
 import { Emojis } from "./prototypes/emojis";
 import { GuildChannels } from "./prototypes/guildChannels";

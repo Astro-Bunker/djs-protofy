@@ -1,5 +1,5 @@
 import "discord.js";
-import type { AppCommand } from "./src/prototypes/apllicationCommand";
+import type { AppCommand } from "./src/prototypes/applicationCommand";
 import type { Channels } from "./src/prototypes/channels";
 import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
