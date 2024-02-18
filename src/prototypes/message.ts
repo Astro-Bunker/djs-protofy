@@ -10,7 +10,10 @@ export class DjsMessage {
 
   constructor() {
     Object.defineProperties(Message.prototype, {
+      parseChannelMentions: { value: this.parseChannelMentions },
       parseMemberMentions: { value: this.parseMemberMentions },
+      parseRoleMentions: { value: this.parseRoleMentions },
+      parseUserMentions: { value: this.parseUserMentions },
     });
   }
 
@@ -34,15 +37,12 @@ export class DjsMessage {
   }
 
   async parseMemberMentions(): Promise<Collection<string, GuildMember>> {
-    if (!this.guild || !this.mentions.members) return new Collection();
+    if (!this.content || !this.guild || !this.mentions.members) return new Collection();
 
     if (!guilds.has(this.guild.id)) {
       await this.guild.members.fetch().catch(() => null);
       guilds.add(this.guild.id);
     }
-
-    if (!this.content.length)
-      return this.mentions.members || new Collection();
 
     const queries = new Set(this.content.trim().split(/\s+/g));
 
@@ -79,7 +79,7 @@ export class DjsMessage {
   }
 
   async parseUserMentions(): Promise<Collection<string, User>> {
-    if (!this.content.length) return new Collection();
+    if (!this.content) return new Collection();
 
     const ids = this.content.match(/\d{17,}/g);
 
