@@ -122,19 +122,27 @@ export class GuildChannels {
             compareStrings(query.name, channel.name) :
             query.name.test(channel.name)
         )
+      ) || (
+        query.name && "topic" in channel && channel.topic && (
+          typeof query.name === "string" ?
+            compareStrings(query.name, channel.topic) :
+            query.name.test(channel.topic)
+        )
       ));
   }
 
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((channel) =>
       query.test(channel.id) ||
-      query.test(channel.name));
+      query.test(channel.name) ||
+      (("topic" in channel && channel.topic) && query.test(channel.topic)));
   }
 
   protected _searchByString(query: string) {
     return this.cache.find((channel) => [
       channel.id,
       channel.name,
+      ("topic" in channel && channel.topic) && channel.topic,
     ].includes(query.toLowerCase()));
   }
 
