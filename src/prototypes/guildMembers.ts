@@ -14,6 +14,8 @@ export class GuildMembers {
       getByUserDisplayName: { value: this.getByUserDisplayName },
       getByUserGlobalName: { value: this.getByUserGlobalName },
       getByUserUsername: { value: this.getByUserUsername },
+      searchBy: { value: this.searchBy },
+      _searchByString: { value: this._searchByString },
     });
   }
 
@@ -84,4 +86,32 @@ export class GuildMembers {
       return name.test(member.user.username);
     });
   }
+
+  searchBy(query: string | Search) {
+    if (typeof query === "string") return this._searchByString(query);
+
+    return this.cache.find((member) => compareStrings(query.id!, member.id) ||
+      compareStrings(query.displayName!, member.displayName) ||
+      compareStrings(query.nickname!, member.nickname!) ||
+      compareStrings(query.globalName!, member.user.globalName!) ||
+      compareStrings(query.username!, member.user.username));
+  }
+
+  protected _searchByString(query: string) {
+    return this.cache.find((member) => [
+      member.id,
+      member.displayName.toLowerCase(),
+      member.nickname?.toLowerCase(),
+      member.user.globalName?.toLowerCase(),
+      member.user.username.toLowerCase(),
+    ].includes(query.toLowerCase()));
+  }
+}
+
+interface Search {
+  id?: string
+  displayName?: string
+  globalName?: string
+  nickname?: string
+  username?: string
 }
