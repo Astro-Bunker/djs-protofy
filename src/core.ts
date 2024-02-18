@@ -1,3 +1,4 @@
+import { ApplicationCommands } from "./prototypes/apllicationCommands";
 import { Channels } from "./prototypes/channels";
 import { Emojis } from "./prototypes/emojis";
 import { GuildChannels } from "./prototypes/guildChannels";
@@ -24,6 +25,7 @@ export class DJSEasier {
     new Messages();
     new Roles();
     new Users();
+    new ApplicationCommands();
   }
 }
 
