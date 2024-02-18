@@ -1,29 +1,32 @@
 import "discord.js";
 import type { Channels } from "./src/prototypes/channels";
-import { Emojis } from "./src/prototypes/emojis";
-import { GuildEmojis } from "./src/prototypes/guildEmojis";
+import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
-import { GuildMembers } from "./src/prototypes/guildMembers";
+import type { GuildEmojis } from "./src/prototypes/guildEmojis";
+import type { GuildMembers } from "./src/prototypes/guildMembers";
+import type { GuildMessages } from "./src/prototypes/guildMessages";
 import type { Guilds } from "./src/prototypes/guilds";
-import { Users } from "./src/prototypes/users";
-import { Roles } from "./src/prototypes/roles";
-import { GuildMessages } from "./src/prototypes/guildMessages";
+import type { Messages } from "./src/prototypes/messages";
+import type { Roles } from "./src/prototypes/roles";
+import type { Users } from "./src/prototypes/users";
 export * from "./src";
 
 declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
 
   interface ChannelManager extends Channels { }
-  
-  interface GuildEmojiManager extends GuildEmojis { }
 
   interface GuildChannelManager extends GuildChannels { }
 
-  interface GuildManager extends Guilds { }
+  interface GuildEmojiManager extends GuildEmojis { }
+
+  interface GuildMemberManager extends GuildMembers { }
 
   interface GuildMessageManager extends GuildMessages { }
 
-  interface GuildMemberManager extends GuildMembers { }
+  interface GuildManager extends Guilds { }
+
+  interface MessageManager extends Messages { }
 
   interface RoleManager extends Roles { }
 
