@@ -24,6 +24,9 @@ export class Roles {
       filterUnmanageds: { value: this.filterUnmanageds },
       filterMentionables: { value: this.filterMentionables },
       filterUnmentionables: { value: this.filterUnmentionables },
+      searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
