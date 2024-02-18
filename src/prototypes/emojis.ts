@@ -2,7 +2,7 @@ import { BaseGuildEmojiManager, Client, Collection, GuildEmoji } from "discord.j
 import { isRegExp } from "util/types";
 
 export class Emojis {
-  declare cache: Collection<string, GuildEmoji>;
+  declare cache: BaseGuildEmojiManager["cache"];
   declare client: Client<true>;
 
   constructor() {
@@ -39,12 +39,12 @@ export class Emojis {
   }
 
   filterByAuthorId(id: string) {
-    if (typeof id !== "string") return new Collection();
+    if (typeof id !== "string") return new Collection<string, GuildEmoji>();
     return this.cache.filter(emoji => emoji.author?.id === id);
   }
 
   filterByGuildId(id: string) {
-    if (typeof id !== "string") return new Collection();
+    if (typeof id !== "string") return new Collection<string, GuildEmoji>();
     return this.cache.filter(emoji => emoji.guild?.id === id);
   }
 

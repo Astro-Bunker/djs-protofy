@@ -3,7 +3,7 @@ import { isRegExp } from "util/types";
 import { compareStrings, serializeRegExp } from "../utils";
 
 export class Guilds {
-  declare cache: Collection<string, Guild>;
+  declare cache: GuildManager["cache"];
   declare client: Client<true>;
 
   constructor() {
@@ -60,8 +60,8 @@ export class Guilds {
       .catch(() => []);
   }
 
-  filterByOwnerId(id: string): Collection<string, Guild> {
-    if (typeof id !== "string") return new Collection();
+  filterByOwnerId(id: string) {
+    if (typeof id !== "string") return new Collection<string, Guild>();
 
     return this.cache.filter(guild => guild.ownerId === id);
   }

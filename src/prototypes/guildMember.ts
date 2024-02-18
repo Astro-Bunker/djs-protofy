@@ -1,10 +1,10 @@
-import { Guild, GuildMember, GuildMemberRoleManager, PermissionFlagsBits, PermissionsBitField } from "discord.js";
+import { GuildMember, PermissionFlagsBits } from "discord.js";
 
 export class GMember {
   declare id: string;
-  declare guild: Guild;
-  declare permissions: Readonly<PermissionsBitField>;
-  declare roles: GuildMemberRoleManager;
+  declare guild: GuildMember["guild"];
+  declare permissions: GuildMember["permissions"];
+  declare roles: GuildMember["roles"];
 
   constructor() {
     Object.defineProperties(GuildMember.prototype, {

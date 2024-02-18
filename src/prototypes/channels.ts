@@ -1,10 +1,10 @@
-import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
+import { APIChannel, CategoryChannel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelWithType } from "../@types";
 import { compareStrings, resolveEnum, serializeRegExp } from "../utils";
 
 export class Channels {
-  declare cache: Collection<string, Channel>;
+  declare cache: ChannelManager["cache"];
   declare client: Client<true>;
 
   constructor() {
@@ -117,9 +117,9 @@ export class Channels {
   filterByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, ChannelWithType<T>> {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
+      return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, ChannelWithType<T>>;
     }
 
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, ChannelWithType<T>>;
   }
 }

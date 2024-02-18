@@ -3,7 +3,7 @@ import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class Roles {
-  declare cache: Collection<string, Role>;
+  declare cache: RoleManager["cache"];
   declare client: Client<true>;
 
   constructor() {
@@ -55,7 +55,7 @@ export class Roles {
     return this.cache.find(role => role.unicodeEmoji === emoji);
   }
 
-  filterByMembersId(memberId: string | string[]) {
+  filterByMembersId(memberId: string | string[]): Collection<string, Role> {
     if (!Array.isArray(memberId)) memberId = [memberId];
     return this.cache.filter(role => role.members.hasAll(...memberId));
   }

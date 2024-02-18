@@ -3,7 +3,7 @@ import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class GuildEmojis {
-  declare cache: Collection<string, GuildEmoji>;
+  declare cache: GuildEmojiManager["cache"];
   declare client: Client<true>;
 
   constructor() {
@@ -38,8 +38,8 @@ export class GuildEmojis {
     });
   }
 
-  filterByAuthorId(id: string): Collection<string, GuildEmoji> {
-    if (typeof id !== "string") return new Collection();
+  filterByAuthorId(id: string) {
+    if (typeof id !== "string") return new Collection<string, GuildEmoji>();
     return this.cache.filter(emoji => emoji.author?.id === id);
   }
 

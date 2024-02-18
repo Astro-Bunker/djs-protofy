@@ -1,9 +1,9 @@
-import { Client, Collection, GuildMember, GuildMemberManager } from "discord.js";
+import { Client, GuildMemberManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class GuildMembers {
-  declare cache: Collection<string, GuildMember>;
+  declare cache: GuildMemberManager["cache"];
   declare client: Client<true>;
 
   constructor() {

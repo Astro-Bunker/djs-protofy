@@ -1,10 +1,10 @@
-import { CategoryChannel, ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
+import { CategoryChannel, ChannelType, Client, Collection, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelWithType, GuildChannelTypeString } from "../@types";
 import { compareStrings, resolveEnum } from "../utils";
 
 export class GuildChannels {
-  declare cache: Collection<string, GuildBasedChannel>;
+  declare cache: GuildChannelManager["cache"];
   declare client: Client<true>;
 
   constructor() {
@@ -96,9 +96,9 @@ export class GuildChannels {
   filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>> {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as any;
+      return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, ChannelWithType<T>>;
     }
 
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as any;
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, ChannelWithType<T>>;
   }
 }

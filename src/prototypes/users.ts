@@ -1,9 +1,9 @@
-import { APIUser, Client, Collection, User, UserManager } from "discord.js";
+import { APIUser, Client, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, serializeRegExp } from "../utils";
 
 export class Users {
-  declare cache: Collection<string, User>;
+  declare cache: UserManager["cache"];
   declare client: Client<true>;
 
   constructor() {
