@@ -14,7 +14,7 @@ export class Roles {
       getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
       getByRawPosition: { value: this.getByRawPosition },
       filterByUnicodeEmoji: { value: this.filterByUnicodeEmoji },
-      filterByMembers: { value: this.filterByMembers },
+      filterByMembersId: { value: this.filterByMembersId },
       filterByPermissions: { value: this.filterByPermissions },
       filterEditables: { value: this.filterEditables },
       filterUneditables: { value: this.filterUneditables },
@@ -50,11 +50,12 @@ export class Roles {
   getByRawPosition(position: number) {
     return this.cache.find(role => role.rawPosition === position);
   }
+
   getByUnicodeEmoji(emoji: string) {
     return this.cache.find(role => role.unicodeEmoji === emoji);
   }
 
-  filterByMembers(memberId: string | string[]) {
+  filterByMembersId(memberId: string | string[]) {
     if (!Array.isArray(memberId)) memberId = [memberId];
     return this.cache.filter(role => role.members.hasAll(...memberId));
   }
