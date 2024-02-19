@@ -1,7 +1,5 @@
 import { Channel, Client, Collection, GuildMember, Message, Role, User } from "discord.js";
 
-const guilds = new Set<string>();
-
 export class DjsMessage {
   declare guild: Message["guild"];
   declare mentions: Message["mentions"];
@@ -39,9 +37,11 @@ export class DjsMessage {
   async parseMemberMentions(): Promise<Collection<string, GuildMember>> {
     if (!this.content || !this.guild || !this.mentions.members) return new Collection();
 
-    if (!guilds.has(this.guild.id)) {
+    // @ts-expect-error ts(2339)
+    if (!this.guild._membersHasAlreadyBeenFetched) {
       await this.guild.members.fetch().catch(() => null);
-      guilds.add(this.guild.id);
+      // @ts-expect-error ts(2339)
+      this.guild._membersHasAlreadyBeenFetched = true;
     }
 
     const queries = new Set(this.content.trim().split(/\s+/g));
