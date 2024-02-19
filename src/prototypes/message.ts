@@ -55,7 +55,7 @@ export class SMessage {
     } else {
       const user = Array.from(new Set(this.content.match(/\d{17,}/g)));
 
-      if (user.length) await this.guild.members.fetch({ user });
+      if (user.length) await this.guild.members.fetch({ user, time: 1000 }).catch(() => null);
     }
 
     const queries = new Set(this.content.trim().split(/\s+/g));
