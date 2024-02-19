@@ -12,6 +12,7 @@ export class DjsMessage {
       parseMemberMentions: { value: this.parseMemberMentions },
       parseRoleMentions: { value: this.parseRoleMentions },
       parseUserMentions: { value: this.parseUserMentions },
+      parseAllMentions: { value: this.parseAllMentions },
     });
   }
 
@@ -94,5 +95,13 @@ export class DjsMessage {
     }
 
     return this.mentions.users;
+  }
+
+  async parseAllMentions() {
+    this.parseChannelMentions();
+    this.parseRoleMentions();
+    await this.parseMemberMentions();
+    await this.parseUserMentions();
+    return;
   }
 }
