@@ -104,8 +104,8 @@ export class Roles {
   }
 
   searchBy(query: string | RegExp | Search) {
-    if (typeof query === "string") return;
-    if (isRegExp(query)) return;
+    if (typeof query === "string") return this._searchByString(query);
+    if (isRegExp(query)) return this._searchByRegExp(query);
 
     return this.cache.find(role =>
       (

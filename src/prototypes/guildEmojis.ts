@@ -17,6 +17,9 @@ export class GuildEmojis {
       filterUnavailables: { value: this.filterUnavailables },
       filterDeletables: { value: this.filterDeletables },
       filterUndeletables: { value: this.filterUndeletables },
+      searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
@@ -66,4 +69,42 @@ export class GuildEmojis {
   filterUndeletables() {
     return this.cache.filter(emoji => !emoji.deletable);
   }
+
+  searchBy(query: string | RegExp | Search) {
+    if (typeof query === "string") return this._searchByString(query);
+    if (isRegExp(query)) return this._searchByRegExp(query);
+
+    return this.cache.find(emoji =>
+      (
+        query.id && (
+          typeof query.id === "string" ?
+            compareStrings(query.id, emoji.id) :
+            query.id.test(emoji.id)
+        )
+      ) || (
+        query.name && emoji.name && (
+          typeof query.name === "string" ?
+            compareStrings(query.name, emoji.name) :
+            query.name.test(emoji.name)
+        )
+      ));
+  }
+
+  protected _searchByRegExp(query: RegExp) {
+    return this.cache.find((emoji) =>
+      query.test(emoji.id) ||
+      (emoji.name && query.test(emoji.name)));
+  }
+
+  protected _searchByString(query: string) {
+    return this.cache.get(query) ??
+      this.cache.find((emoji) => [
+        emoji.name,
+      ].includes(query.toLowerCase()));
+  }
+}
+
+interface Search {
+  id?: string | RegExp
+  name?: string | RegExp
 }

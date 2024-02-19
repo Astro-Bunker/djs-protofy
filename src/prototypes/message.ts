@@ -87,8 +87,7 @@ export class DjsMessage {
 
     const users = await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
 
-    for (const user of users) {
-      if (!user) continue;
+    for (const user of users.filter(Boolean) as User[]) {
       if (this.mentions.users.has(user.id)) continue;
 
       this.mentions.users.set(user.id, user);

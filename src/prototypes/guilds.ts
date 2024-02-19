@@ -14,6 +14,9 @@ export class Guilds {
       getInShardsByName: { value: this.getInShardsByName },
       getInShardsByOwnerId: { value: this.getInShardsByOwnerId },
       filterByOwnerId: { value: this.filterByOwnerId },
+      searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
@@ -65,4 +68,49 @@ export class Guilds {
 
     return this.cache.filter(guild => guild.ownerId === id);
   }
+
+  searchBy(query: string | RegExp | Search) {
+    if (typeof query === "string") return this._searchByString(query);
+    if (isRegExp(query)) return this._searchByRegExp(query);
+
+    return this.cache.find(guild =>
+      (
+        query.id && (
+          typeof query.id === "string" ?
+            compareStrings(query.id, guild.id) :
+            query.id.test(guild.id)
+        )
+      ) || (
+        query.name && (
+          typeof query.name === "string" ?
+            compareStrings(query.name, guild.name) :
+            query.name.test(guild.name)
+        )
+      ) || (
+        query.ownerId && (
+          typeof query.ownerId === "string" ?
+            compareStrings(query.ownerId, guild.ownerId) :
+            query.ownerId.test(guild.ownerId)
+        )
+      ));
+  }
+
+  protected _searchByRegExp(query: RegExp) {
+    return this.cache.find((guild) =>
+      query.test(guild.id) ||
+      query.test(guild.name));
+  }
+
+  protected _searchByString(query: string) {
+    return this.cache.get(query) ??
+      this.cache.find((guild) => [
+        guild.name,
+      ].includes(query.toLowerCase()));
+  }
+}
+
+interface Search {
+  id?: string | RegExp
+  name?: string | RegExp
+  ownerId?: string | RegExp
 }
