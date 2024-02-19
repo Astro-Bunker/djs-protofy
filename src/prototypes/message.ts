@@ -33,10 +33,9 @@ export class SMessage {
 
       const channel = (this.guild ?? this.client).channels.searchBy(query);
 
-      if (channel?.id) {
-        if (this.mentions.channels.has(channel.id)) continue;
-        this.mentions.channels.set(channel.id, channel);
-      }
+      if (!channel || this.mentions.channels.has(channel.id)) continue;
+
+      this.mentions.channels.set(channel.id, channel);
     }
 
     return this.mentions.channels;
@@ -64,10 +63,10 @@ export class SMessage {
       if (this.mentions.members!.has(query)) continue;
 
       const member = this.guild.members.searchBy(query);
-      if (member?.id) {
-        if (this.mentions.members!.has(member.id)) continue;
-        this.mentions.members!.set(member.id, member);
-      }
+
+      if (!member || this.mentions.members!.has(member.id)) continue;
+
+      this.mentions.members!.set(member.id, member);
     }
 
     return this.mentions.members!;
@@ -83,10 +82,9 @@ export class SMessage {
 
       const role = this.guild.roles.searchBy(query);
 
-      if (role?.id) {
-        if (this.mentions.roles.has(role.id)) continue;
-        this.mentions.roles.set(role.id, role);
-      }
+      if (!role || this.mentions.roles.has(role.id)) continue;
+
+      this.mentions.roles.set(role.id, role);
     }
 
     return this.mentions.roles;
@@ -97,10 +95,16 @@ export class SMessage {
 
     if (!ids) return this.mentions.users;
 
-    const users = await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
+    await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
 
-    for (const user of users.filter(Boolean) as User[]) {
-      if (this.mentions.users.has(user.id)) continue;
+    const queries = new Set(this.content.trim().split(/\s+/g));
+
+    for (const query of queries) {
+      if (this.mentions.users.has(query)) continue;
+
+      const user = this.client.users.searchBy(query);
+
+      if (!user || this.mentions.users.has(user.id)) continue;
 
       this.mentions.users.set(user.id, user);
     }
