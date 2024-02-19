@@ -1,6 +1,6 @@
 import { ApplicationCommand } from "discord.js";
 
-export class AppCommand {
+export class SApplicationCommand {
   declare id: string;
   declare name: string;
   declare mention: string;

@@ -1,6 +1,6 @@
 import { GuildMember, PermissionFlagsBits } from "discord.js";
 
-export class GMember {
+export class SGuildMember {
   declare id: string;
   declare guild: GuildMember["guild"];
   declare permissions: GuildMember["permissions"];

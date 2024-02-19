@@ -1,10 +1,10 @@
-import { Channel, Client, Collection, GuildMember, Message, Role, User } from "discord.js";
+import { Channel, Collection, GatewayIntentBits, GuildMember, Message, Role, User } from "discord.js";
 
-export class DjsMessage {
+export class SMessage {
+  declare client: Message["client"];
+  declare content: Message["content"];
   declare guild: Message["guild"];
   declare mentions: Message["mentions"];
-  declare content: Message["content"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(Message.prototype, {
@@ -17,23 +17,21 @@ export class DjsMessage {
   }
 
   async parseMentions() {
-    this.parseChannelMentions();
-    this.parseRoleMentions();
     await Promise.all([
+      new Promise(r => r(this.parseChannelMentions())),
+      new Promise(r => r(this.parseRoleMentions())),
       this.parseMemberMentions(),
       this.parseUserMentions(),
     ]);
   }
 
   parseChannelMentions(): Collection<string, Channel> {
-    if (!this.guild) return new Collection();
-
     const queries = new Set(this.content.trim().split(/\s+/g));
 
     for (const query of queries) {
       if (this.mentions.channels.has(query)) continue;
 
-      const channel = this.guild.channels.searchBy(query);
+      const channel = (this.guild ?? this.client).channels.searchBy(query);
 
       if (channel?.id) {
         if (this.mentions.channels.has(channel.id)) continue;
@@ -45,32 +43,38 @@ export class DjsMessage {
   }
 
   async parseMemberMentions(): Promise<Collection<string, GuildMember>> {
-    if (!this.content || !this.guild || !this.mentions.members) return new Collection();
+    if (!this.guild) return this.mentions.members ?? new Collection();
 
-    // @ts-expect-error ts(2339)
-    if (!this.guild._membersHasAlreadyBeenFetched) {
-      await this.guild.members.fetch().catch(() => null);
+    if (this.client.options.intents.has(GatewayIntentBits.GuildMembers)) {
       // @ts-expect-error ts(2339)
-      this.guild._membersHasAlreadyBeenFetched = true;
+      if (!this.guild._membersHasAlreadyBeenFetched) {
+        await this.guild.members.fetch().catch(() => null);
+        // @ts-expect-error ts(2339)
+        this.guild._membersHasAlreadyBeenFetched = true;
+      }
+    } else {
+      const user = Array.from(new Set(this.content.match(/\d{17,}/g)));
+
+      if (user.length) await this.guild.members.fetch({ user });
     }
 
     const queries = new Set(this.content.trim().split(/\s+/g));
 
     for (const query of queries) {
-      if (this.mentions.members.has(query)) continue;
+      if (this.mentions.members!.has(query)) continue;
 
       const member = this.guild.members.searchBy(query);
       if (member?.id) {
-        if (this.mentions.members.has(member.id)) continue;
-        this.mentions.members.set(member.id, member);
+        if (this.mentions.members!.has(member.id)) continue;
+        this.mentions.members!.set(member.id, member);
       }
     }
 
-    return this.mentions.members || new Collection();
+    return this.mentions.members ?? new Collection();
   }
 
   parseRoleMentions(): Collection<string, Role> {
-    if (!this.guild) return new Collection();
+    if (!this.guild) return this.mentions.roles;
 
     const queries = new Set(this.content.trim().split(/\s+/g));
 
@@ -89,11 +93,9 @@ export class DjsMessage {
   }
 
   async parseUserMentions(): Promise<Collection<string, User>> {
-    if (!this.content) return new Collection();
-
     const ids = this.content.match(/\d{17,}/g);
 
-    if (!ids) return new Collection();
+    if (!ids) return this.mentions.users;
 
     const users = await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
 

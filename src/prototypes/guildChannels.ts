@@ -145,7 +145,6 @@ export class GuildChannels {
         ("topic" in channel && channel.topic) && channel.topic,
       ].includes(query.toLowerCase()));
   }
-
 }
 
 interface Search {

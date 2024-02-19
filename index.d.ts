@@ -1,21 +1,22 @@
 import "discord.js";
-import type { AppCommand } from "./src/prototypes/applicationCommand";
+import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { Channels } from "./src/prototypes/channels";
 import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
 import type { GuildEmojis } from "./src/prototypes/guildEmojis";
+import type { SGuildMember } from "./src/prototypes/guildMember";
 import type { GuildMembers } from "./src/prototypes/guildMembers";
 import type { GuildMessages } from "./src/prototypes/guildMessages";
 import type { Guilds } from "./src/prototypes/guilds";
+import type { SMessage } from "./src/prototypes/message";
 import type { Messages } from "./src/prototypes/messages";
 import type { Roles } from "./src/prototypes/roles";
 import type { Users } from "./src/prototypes/users";
-import { DjsMessage } from "./src/prototypes/message";
 export * from "./src";
 
 declare module "discord.js" {
-  interface ApplicationCommand extends AppCommand { }
+  interface ApplicationCommand extends SApplicationCommand { }
 
   interface ApplicationCommandManager extends ApplicationCommands { }
 
@@ -27,7 +28,7 @@ declare module "discord.js" {
 
   interface GuildEmojiManager extends GuildEmojis { }
 
-  interface GuildMember extends GMember { }
+  interface GuildMember extends SGuildMember { }
 
   interface GuildMemberManager extends GuildMembers { }
 
@@ -35,7 +36,7 @@ declare module "discord.js" {
 
   interface GuildManager extends Guilds { }
 
-  interface Message extends DjsMessage { }
+  interface Message extends SMessage { }
 
   interface MessageManager extends Messages { }
 
