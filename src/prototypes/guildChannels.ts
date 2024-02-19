@@ -140,8 +140,8 @@ export class GuildChannels {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((channel) => [
-        channel.name,
-        ("topic" in channel && channel.topic) && channel.topic,
+        channel.name.toLowerCase(),
+        "topic" in channel && channel.topic?.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }

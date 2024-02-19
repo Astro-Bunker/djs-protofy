@@ -132,7 +132,7 @@ export class Roles {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((role) => [
-        role.name,
+        role.name.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }

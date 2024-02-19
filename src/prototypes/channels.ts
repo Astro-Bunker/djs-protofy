@@ -158,8 +158,8 @@ export class Channels {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((channel) => [
-        ("name" in channel && channel.name) && channel.name,
-        ("topic" in channel && channel.topic) && channel.topic,
+        "name" in channel && channel.name?.toLowerCase(),
+        "topic" in channel && channel.topic?.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }

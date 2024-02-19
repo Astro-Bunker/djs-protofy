@@ -99,7 +99,7 @@ export class GuildEmojis {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((emoji) => [
-        emoji.name,
+        emoji.name?.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }

@@ -104,7 +104,7 @@ export class Guilds {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((guild) => [
-        guild.name,
+        guild.name.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }

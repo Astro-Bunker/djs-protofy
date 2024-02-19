@@ -105,7 +105,7 @@ export class Emojis {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((emoji) => [
-        emoji.name,
+        emoji.name?.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }
