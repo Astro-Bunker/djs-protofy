@@ -1,6 +1,6 @@
 import { CategoryChannel, ChannelType, Client, Collection, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
-import { ChannelWithType, GuildChannelTypeString } from "../@types";
+import { GuildChannelTypeString, GuildChannelWithType } from "../@types";
 import { compareStrings, resolveEnum } from "../utils";
 
 export class GuildChannels {
@@ -23,13 +23,13 @@ export class GuildChannels {
     });
   }
 
-  getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T): ChannelWithType<T> | undefined {
+  getById<T extends GuildChannelType | GuildChannelTypeString>(id: string, type?: T): GuildChannelWithType<T> | undefined {
     const channel = this.cache.get(id);
-    if (type === undefined) return channel as ChannelWithType<T>;
-    if (channel?.type === resolveEnum(ChannelType, type)) return channel as ChannelWithType<T>;
+    if (type === undefined) return channel as GuildChannelWithType<T>;
+    if (channel?.type === resolveEnum(ChannelType, type)) return channel as GuildChannelWithType<T>;
   }
 
-  getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T): ChannelWithType<T> | undefined {
+  getByName<T extends GuildChannelType | GuildChannelTypeString>(name: string | RegExp, type?: T): GuildChannelWithType<T> | undefined {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(channel => {
@@ -42,10 +42,10 @@ export class GuildChannels {
 
         return name.test(channel.name);
       }
-    }) as ChannelWithType<T>;
+    }) as GuildChannelWithType<T>;
   }
 
-  getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T): ChannelWithType<T> | undefined {
+  getByTopic<T extends GuildChannelType | GuildChannelTypeString>(topic: string | RegExp, type?: T): GuildChannelWithType<T> | undefined {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
     return this.cache.find(channel => {
@@ -57,7 +57,7 @@ export class GuildChannels {
 
         return topic.test(channel.topic);
       }
-    }) as ChannelWithType<T>;
+    }) as GuildChannelWithType<T>;
   }
 
   getByUrl(url: string) {
@@ -95,13 +95,13 @@ export class GuildChannels {
     }) as VoiceBasedChannel;
   }
 
-  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>> {
+  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GuildChannelWithType<T>> {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, ChannelWithType<T>>;
+      return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, GuildChannelWithType<T>>;
     }
 
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, ChannelWithType<T>>;
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, GuildChannelWithType<T>>;
   }
 
   searchBy(query: string | RegExp | Search) {

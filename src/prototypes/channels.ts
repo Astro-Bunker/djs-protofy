@@ -1,6 +1,6 @@
 import { APIChannel, CategoryChannel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
-import { ChannelWithType } from "../@types";
+import { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, resolveEnum, serializeRegExp } from "../utils";
 
 export class Channels {
@@ -22,13 +22,13 @@ export class Channels {
     });
   }
 
-  getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T): ChannelWithType<T> | undefined {
+  getById<T extends ChannelType | ChannelTypeString>(id: string, type?: T): ChannelWithType<T> | undefined {
     const channel = this.cache.get(id);
     if (type === undefined) return channel as ChannelWithType<T>;
     if (channel?.type === resolveEnum(ChannelType, type)) return channel as ChannelWithType<T>;
   }
 
-  getByName<T extends ChannelType | keyof typeof ChannelType>(name: string | RegExp, type?: T): ChannelWithType<T> | undefined {
+  getByName<T extends ChannelType | ChannelTypeString>(name: string | RegExp, type?: T): ChannelWithType<T> | undefined {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(channel => {
@@ -44,7 +44,7 @@ export class Channels {
     }) as ChannelWithType<T>;
   }
 
-  getByTopic<T extends ChannelType | keyof typeof ChannelType>(topic: string | RegExp, type?: T): ChannelWithType<T> | undefined {
+  getByTopic<T extends ChannelType | ChannelTypeString>(topic: string | RegExp, type?: T): ChannelWithType<T> | undefined {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
     return this.cache.find(channel => {
@@ -113,7 +113,7 @@ export class Channels {
     }) as VoiceBasedChannel;
   }
 
-  filterByTypes<T extends ChannelType | keyof typeof ChannelType>(type: T | T[]): Collection<string, ChannelWithType<T>> {
+  filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>> {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
       return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, ChannelWithType<T>>;
