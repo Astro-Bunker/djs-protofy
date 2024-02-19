@@ -43,4 +43,9 @@ declare module "discord.js" {
   interface RoleManager extends Roles { }
 
   interface UserManager extends Users { }
+
+  interface Collection<K, V> {
+    keysToArray(): K[]
+    valuesToArray(): V[]
+  }
 }

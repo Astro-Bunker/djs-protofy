@@ -1,6 +1,7 @@
 import { SApplicationCommand } from "./prototypes/applicationCommand";
 import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { Channels } from "./prototypes/channels";
+import { SCollection } from "./prototypes/collection";
 import { Emojis } from "./prototypes/emojis";
 import { GuildChannels } from "./prototypes/guildChannels";
 import { GuildEmojis } from "./prototypes/guildEmojis";
@@ -21,6 +22,7 @@ export class DJSProtofy {
     new SApplicationCommand();
     new ApplicationCommands();
     new Channels();
+    new SCollection();
     new Emojis();
     new GuildChannels();
     new GuildEmojis();
