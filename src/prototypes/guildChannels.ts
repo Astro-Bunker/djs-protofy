@@ -24,7 +24,6 @@ export class GuildChannels {
   }
 
   getById<T extends ChannelType | keyof typeof ChannelType>(id: string, type?: T): ChannelWithType<T> | undefined {
-    if (typeof id !== "string") return;
     const channel = this.cache.get(id);
     if (type === undefined) return channel as ChannelWithType<T>;
     if (channel?.type === resolveEnum(ChannelType, type)) return channel as ChannelWithType<T>;
