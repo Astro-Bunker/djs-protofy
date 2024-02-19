@@ -2,7 +2,7 @@ import { ApplicationCommand } from "discord.js";
 
 export class AppCommand {
   declare id: string;
-  declare name: ApplicationCommand["name"];
+  declare name: string;
   declare mention: string;
 
   constructor() {
