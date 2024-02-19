@@ -8,12 +8,21 @@ export class DjsMessage {
 
   constructor() {
     Object.defineProperties(Message.prototype, {
+      parseMentions: { value: this.parseMentions },
       parseChannelMentions: { value: this.parseChannelMentions },
       parseMemberMentions: { value: this.parseMemberMentions },
       parseRoleMentions: { value: this.parseRoleMentions },
       parseUserMentions: { value: this.parseUserMentions },
-      parseAllMentions: { value: this.parseAllMentions },
     });
+  }
+
+  async parseMentions() {
+    this.parseChannelMentions();
+    this.parseRoleMentions();
+    await Promise.all([
+      this.parseMemberMentions(),
+      this.parseUserMentions(),
+    ]);
   }
 
   parseChannelMentions(): Collection<string, Channel> {
@@ -95,13 +104,5 @@ export class DjsMessage {
     }
 
     return this.mentions.users;
-  }
-
-  async parseAllMentions() {
-    this.parseChannelMentions();
-    this.parseRoleMentions();
-    await this.parseMemberMentions();
-    await this.parseUserMentions();
-    return;
   }
 }
