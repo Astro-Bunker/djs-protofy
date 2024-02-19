@@ -93,9 +93,7 @@ export class SMessage {
   async parseUserMentions(): Promise<Collection<string, User>> {
     const ids = this.content.match(/\d{17,}/g);
 
-    if (!ids) return this.mentions.users;
-
-    await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
+    if (ids) await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
 
     const queries = new Set(this.content.trim().split(/\s+/g));
 
