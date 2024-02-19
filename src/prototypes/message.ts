@@ -70,7 +70,7 @@ export class SMessage {
       }
     }
 
-    return this.mentions.members ?? new Collection();
+    return this.mentions.members!;
   }
 
   parseRoleMentions(): Collection<string, Role> {
