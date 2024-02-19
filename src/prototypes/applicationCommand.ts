@@ -14,7 +14,7 @@ export class SApplicationCommand {
   }
 
   getMention(): `</${string}:${string}>`;
-  getMention<G extends string>(subGroup: G): `</${string} ${G}:${string}>`;
+  getMention<S extends string>(subCommand: S): `</${string} ${S}:${string}>`;
   getMention<G extends string, S extends string>(subGroup: G, subCommand: S): `</${string} ${G} ${S}:${string}>`;
   getMention(subGroup?: string, subCommand?: string) {
     if (subCommand)
