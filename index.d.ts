@@ -15,7 +15,6 @@ import { DjsMessage } from "./src/prototypes/message";
 export * from "./src";
 
 declare module "discord.js" {
-
   interface ApplicationCommand extends AppCommand { }
 
   interface ApplicationCommandManager extends ApplicationCommands { }

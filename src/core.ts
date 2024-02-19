@@ -4,6 +4,7 @@ import { Channels } from "./prototypes/channels";
 import { Emojis } from "./prototypes/emojis";
 import { GuildChannels } from "./prototypes/guildChannels";
 import { GuildEmojis } from "./prototypes/guildEmojis";
+import { GMember } from "./prototypes/guildMember";
 import { GuildMembers } from "./prototypes/guildMembers";
 import { GuildMessages } from "./prototypes/guildMessages";
 import { Guilds } from "./prototypes/guilds";
@@ -23,13 +24,14 @@ export class DJSProtofy {
     new Emojis();
     new GuildChannels();
     new GuildEmojis();
+    new GMember();
     new GuildMembers();
     new GuildMessages();
     new Guilds();
+    new DjsMessage();
     new Messages();
     new Roles();
     new Users();
-    new DjsMessage();
   }
 }
 
