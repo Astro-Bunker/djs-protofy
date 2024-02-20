@@ -1,7 +1,7 @@
 import { CategoryChannel, ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { GuildChannelTypeString, GuildChannelWithType } from "../@types";
-import { compareStrings, resolveEnum } from "../utils";
+import { compareStrings, exists, resolveEnum } from "../utils";
 
 export class GuildChannels {
   declare cache: GuildChannelManager["cache"];
@@ -28,7 +28,7 @@ export class GuildChannels {
   getById<T extends GuildChannelType | GuildChannelTypeString>(id: string, type: T): GuildChannelWithType<T> | undefined;
   getById(id: string, type?: GuildChannelType | GuildChannelTypeString) {
     const channel = this.cache.get(id);
-    if (type === undefined) return channel;
+    if (!exists(type)) return channel;
     if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
@@ -37,8 +37,10 @@ export class GuildChannels {
   getByName(name: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
+    const resolvedType = exists(type) && resolveEnum(ChannelType, type);
+
     return this.cache.find(channel => {
-      if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
+      if (type && channel.type !== resolvedType) return false;
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
@@ -55,8 +57,10 @@ export class GuildChannels {
   getByTopic(topic: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
+    const resolvedType = exists(type) && resolveEnum(ChannelType, type);
+
     return this.cache.find(channel => {
-      if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
+      if (type && channel.type !== resolvedType) return false;
 
       if ("topic" in channel && channel.topic) {
         if (typeof topic === "string")
@@ -72,7 +76,7 @@ export class GuildChannels {
   getByUrl(url: string, type?: ChannelType | GuildChannelTypeString) {
     type = resolveEnum(ChannelType, type as ChannelType);
 
-    return this.cache.find(channel => channel.url === url && (type ? channel.type === type : true));
+    return this.cache.find(channel => channel.url === url && (exists(type) ? channel.type === type : true));
   }
 
   getCategoryById(id: string) {

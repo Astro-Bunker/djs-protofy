@@ -1,7 +1,7 @@
 import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, createBroadcastedChannel, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, createBroadcastedChannel, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
@@ -30,7 +30,7 @@ export class Channels {
   getById<T extends ChannelType | ChannelTypeString>(id: string, type: T): ChannelWithType<T> | undefined;
   getById(id: string, type?: ChannelType | ChannelTypeString) {
     const channel = this.cache.get(id);
-    if (type === undefined) return channel;
+    if (!exists(type)) return channel;
     if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
@@ -39,10 +39,10 @@ export class Channels {
   getByName(name: string | RegExp, type?: ChannelType | ChannelTypeString) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
-    type = resolveEnum(ChannelType, type as ChannelType);
+    if (exists(type)) type = resolveEnum(ChannelType, type);
 
     return this.cache.find(channel => {
-      if (type && channel.type !== type) return false;
+      if (exists(type) !== undefined && channel.type !== type) return false;
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
@@ -59,10 +59,10 @@ export class Channels {
   getByTopic(topic: string | RegExp, type?: ChannelType | ChannelTypeString) {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
-    type = resolveEnum(ChannelType, type as ChannelType);
+    if (exists(type)) type = resolveEnum(ChannelType, type);
 
     return this.cache.find(channel => {
-      if (type && channel.type !== type) return false;
+      if (exists(type) && channel.type !== type) return false;
 
       if ("topic" in channel && channel.topic) {
         if (typeof topic === "string")
@@ -76,9 +76,9 @@ export class Channels {
   getByUrl(url: string): Channel | undefined;
   getByUrl<T extends ChannelType | ChannelTypeString>(url: string, type: T): ChannelWithType<T> | undefined;
   getByUrl(url: string, type?: ChannelType | ChannelTypeString) {
-    type = resolveEnum(ChannelType, type as ChannelType);
+    if (exists(type)) type = resolveEnum(ChannelType, type);
 
-    return this.cache.find(channel => channel.url === url && (type ? channel.type === type : true));
+    return this.cache.find(channel => channel.url === url && (exists(type) ? channel.type === type : true));
   }
 
   getCategoryById(id: string) {
@@ -104,11 +104,17 @@ export class Channels {
   async getInShardsById(id: string): Promise<Channel | null>;
   async getInShardsById(id: string, allowApiChannel: true): Promise<APIChannel | Channel | null>;
   async getInShardsById(id: string, allowApiChannel?: boolean) {
-    if (typeof id !== "string" || !this.client.shard) return null;
+    if (typeof id !== "string") return null;
+
+    const channel = this.getById(id);
+
+    if (channel) return channel;
+
+    if (!this.client.shard) return null;
 
     return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-      .then(res => res.find(Boolean))
-      .then(data => data ? createBroadcastedChannel(this.client, data as any)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedChannel(this.client, data)
         ?? (allowApiChannel ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
@@ -116,14 +122,18 @@ export class Channels {
   async getInShardsByName(name: string | RegExp): Promise<Channel | null>;
   async getInShardsByName(name: string | RegExp, allowApiChannel: true): Promise<APIChannel | Channel | null>;
   async getInShardsByName(name: string | RegExp, allowApiChannel?: boolean) {
-    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
+    if (typeof name !== "string" && !isRegExp(name)) return null;
+
+    const channel = this.getByName(name);
+    if (channel) return channel;
+    if (!this.client.shard) return null;
 
     const context = serializeRegExp(name);
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.channels.getByName(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean))
-      .then(data => data ? createBroadcastedChannel(this.client, data as any)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedChannel(this.client, data)
         ?? (allowApiChannel ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }

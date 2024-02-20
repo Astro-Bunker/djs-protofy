@@ -1,6 +1,6 @@
 import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, serializeRegExp } from "../utils";
+import { compareStrings, createBroadcastedGuild, serializeRegExp, to_snake_case } from "../utils";
 
 export class Guilds {
   declare cache: GuildManager["cache"];
@@ -37,22 +37,40 @@ export class Guilds {
     });
   }
 
-  async getInShardsById(id: string) {
-    if (typeof id !== "string" || !this.client.shard) return null;
+  async getInShardsById(id: string): Promise<Guild | null>;
+  async getInShardsById(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
+  async getInShardsById(id: string, allowApiGuild?: boolean) {
+    if (typeof id !== "string") return null;
+
+    const guild = this.getById(id);
+    if (guild) return guild;
+
+    if (!this.client.shard) return null;
 
     return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getById(id), { context: id })
-      .then(res => res.find(Boolean) as APIGuild ?? null)
-      .catch(() => null);
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedGuild(this.client, data)
+        ?? (allowApiGuild ? to_snake_case(data) : null) : null)
+      .catch(console.error);
   }
 
-  async getInShardsByName(name: string | RegExp) {
-    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
+  async getInShardsByName(id: string): Promise<Guild | null>;
+  async getInShardsByName(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
+  async getInShardsByName(name: string | RegExp, allowApiGuild?: boolean) {
+    if (typeof name !== "string" && !isRegExp(name)) return null;
+
+    const guild = this.getByName(name);
+    if (guild) return guild;
+
+    if (!this.client.shard) return null;
 
     const context = serializeRegExp(name);
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.guilds.getByName(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIGuild ?? null)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedGuild(this.client, data)
+        ?? (allowApiGuild ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 

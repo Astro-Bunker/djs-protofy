@@ -1,4 +1,4 @@
-import { APIChannel, Channel, Client, EnumLike, version } from "discord.js";
+import { APIChannel, APIGuild, Channel, Client, EnumLike, Guild, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 // @ts-expect-error ts(7016)
@@ -21,6 +21,10 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
   }
 
   return s1 === s2;
+}
+
+export function exists<O>(o: O): o is NonNullable<O> {
+  return o !== undefined && o !== null;
 }
 
 export function resolveEnum<T extends EnumLike<any, any>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
@@ -63,18 +67,84 @@ export function to_snake_case(u: string | Record<string, unknown>) {
   return newObject;
 }
 
-export function createBroadcastedChannel(client: Client<true>, data: APIChannel): Channel | undefined {
-  if ("availableTags" in data) delete data.availableTags;
-  if ("guild" in data) delete data.guild;
-  if ("member" in data) delete data.member;
+export function createBroadcastedChannel(client: Client<true>, data: Channel | APIChannel): Channel | undefined;
+export function createBroadcastedChannel(client: Client<true>, data: Record<string, any>): Channel | undefined {
   if ("messages" in data) delete data.messages;
   if ("permissionOverwrites" in data) delete data.permissionOverwrites;
   if ("recipients" in data) delete data.recipients;
-  if ("threadMetadata" in data) delete data.threadMetadata;
+  // if ("threadMetadata" in data) delete data.threadMetadata;
 
   data = to_snake_case(data);
 
+  // const clone = Object.assign(Object.create(data), data);
+  const guild = client.guilds.getById(data.guild_id);
+
+  if ("guild" in data && typeof data.guild === "string") {
+    if (guild) {
+      data.guild = guild;
+    } else {
+      delete data.guild;
+    }
+  }
+
+  if ("member" in data && typeof data.member === "string") {
+    if (guild) {
+      data.member = guild.members.getById(data.member);
+    } else {
+      delete data.member;
+    }
+  }
+
   try {
-    return createChannel(client, data, null, { allowUnknownGuild: true });
-  } catch { }
+    return createChannel(client, data, guild, { allowUnknownGuild: true });
+  } catch (error: any) {
+    client.emit("error", error);
+  }
+}
+
+export function createBroadcastedGuild(client: Client<true>, data: Guild | APIGuild): Guild | undefined;
+export function createBroadcastedGuild(client: Client<true>, data: Record<string, any>): Guild | undefined {
+  data = to_snake_case(data);
+
+  const clone = Object.assign(Object.create(data), data);
+  const guild = client.guilds.getById(data.id);
+
+  if ("emojis" in data && Array.isArray(data.emojis)) {
+    data.emojis = [];
+    for (const id of clone.emojis) {
+      const result = client.emojis.getById(id);
+      if (result) data.emojis.push(result);
+    }
+  }
+
+  if ("members" in data && Array.isArray(data.members)) {
+    if (guild) {
+      data.members = [];
+      for (const id of clone.members) {
+        const result = guild.members.getById(id);
+        if (result) data.members.push(result);
+      }
+    } else {
+      delete data.members;
+    }
+  }
+
+  if ("roles" in data && Array.isArray(data.roles)) {
+    if (guild) {
+      data.roles = [];
+      for (const id of clone.roles) {
+        const result = guild.roles.getById(id);
+        if (result) data.roles.push(result);
+      }
+    } else {
+      delete data.roles;
+    }
+  }
+
+  try {
+    // @ts-expect-error ts(2673)
+    return new Guild(client, data);
+  } catch (error: any) {
+    client.emit("error", error);
+  }
 }
