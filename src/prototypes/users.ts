@@ -16,6 +16,9 @@ export class Users {
       getInShardsByDisplayName: { value: this.getInShardsByDisplayName },
       getInShardsByGlobalName: { value: this.getInShardsByGlobalName },
       getInShardsByUsername: { value: this.getInShardsByUsername },
+      searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
