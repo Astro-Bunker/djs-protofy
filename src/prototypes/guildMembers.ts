@@ -156,7 +156,7 @@ export class GuildMembers {
         member.displayName?.toLowerCase(),
         member.nickname?.toLowerCase(),
         member.user.globalName?.toLowerCase(),
-        member.user.username.toLowerCase(),
+        member.user.username?.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }

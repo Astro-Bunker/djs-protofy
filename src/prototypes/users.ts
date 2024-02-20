@@ -165,7 +165,7 @@ export class Users {
       this.cache.find((user) => [
         user.displayName?.toLowerCase(),
         user.globalName?.toLowerCase(),
-        user.username.toLowerCase(),
+        user.username?.toLowerCase(),
       ].includes(query.toLowerCase()));
   }
 }
