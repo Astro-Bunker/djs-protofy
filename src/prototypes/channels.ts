@@ -1,7 +1,7 @@
-import { APIChannel, CategoryChannel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
+import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, resolveEnum, serializeRegExp } from "../utils";
+import { compareStrings, createBroadcastedChannel, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
@@ -19,20 +19,29 @@ export class Channels {
       getInShardsByName: { value: this.getInShardsByName },
       getVoiceByUserId: { value: this.getVoiceByUserId },
       filterByTypes: { value: this.filterByTypes },
+      searchBy: { value: this.searchBy },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
-  getById<T extends ChannelType | ChannelTypeString>(id: string, type?: T): ChannelWithType<T> | undefined {
+  getById(id: string): Channel | undefined;
+  getById<T extends ChannelType | ChannelTypeString>(id: string, type: T): ChannelWithType<T> | undefined;
+  getById(id: string, type?: ChannelType | ChannelTypeString) {
     const channel = this.cache.get(id);
-    if (type === undefined) return channel as ChannelWithType<T>;
-    if (channel?.type === resolveEnum(ChannelType, type)) return channel as ChannelWithType<T>;
+    if (type === undefined) return channel;
+    if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
-  getByName<T extends ChannelType | ChannelTypeString>(name: string | RegExp, type?: T): ChannelWithType<T> | undefined {
+  getByName(name: string | RegExp): Channel | undefined;
+  getByName<T extends ChannelType | ChannelTypeString>(name: string | RegExp, type: T): ChannelWithType<T> | undefined;
+  getByName(name: string | RegExp, type?: ChannelType | ChannelTypeString) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
+    type = resolveEnum(ChannelType, type as ChannelType);
+
     return this.cache.find(channel => {
-      if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
+      if (type && channel.type !== type) return false;
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
@@ -41,14 +50,18 @@ export class Channels {
 
         return name.test(channel.name);
       }
-    }) as ChannelWithType<T>;
+    });
   }
 
-  getByTopic<T extends ChannelType | ChannelTypeString>(topic: string | RegExp, type?: T): ChannelWithType<T> | undefined {
+  getByTopic(topic: string | RegExp): Channel | undefined;
+  getByTopic<T extends ChannelType | ChannelTypeString>(topic: string | RegExp, type: T): ChannelWithType<T> | undefined;
+  getByTopic(topic: string | RegExp, type?: ChannelType | ChannelTypeString) {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
+    type = resolveEnum(ChannelType, type as ChannelType);
+
     return this.cache.find(channel => {
-      if (type && channel.type !== resolveEnum(ChannelType, type)) return false;
+      if (type && channel.type !== type) return false;
 
       if ("topic" in channel && channel.topic) {
         if (typeof topic === "string")
@@ -56,11 +69,15 @@ export class Channels {
 
         return topic.test(channel.topic);
       }
-    }) as ChannelWithType<T>;
+    });
   }
 
-  getByUrl(url: string) {
-    return this.cache.find(channel => channel.url === url);
+  getByUrl(url: string): Channel | undefined;
+  getByUrl<T extends ChannelType | ChannelTypeString>(url: string, type: T): ChannelWithType<T> | undefined;
+  getByUrl(url: string, type?: ChannelType | ChannelTypeString) {
+    type = resolveEnum(ChannelType, type as ChannelType);
+
+    return this.cache.find(channel => channel.url === url && (type ? channel.type === type : true));
   }
 
   getCategoryById(id: string) {
@@ -83,22 +100,30 @@ export class Channels {
     }) as CategoryChannel;
   }
 
-  async getInShardsById(id: string) {
+  async getInShardsById(id: string): Promise<Channel | null>;
+  async getInShardsById(id: string, allowApiChannel: true): Promise<APIChannel | Channel | null>;
+  async getInShardsById(id: string, allowApiChannel?: boolean) {
     if (typeof id !== "string" || !this.client.shard) return null;
 
     return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
-      .then(res => res.find(Boolean) as APIChannel ?? null)
+      .then(res => res.find(Boolean))
+      .then(data => data ? createBroadcastedChannel(this.client, data as any)
+        ?? (allowApiChannel ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 
-  async getInShardsByName(name: string | RegExp) {
+  async getInShardsByName(name: string | RegExp): Promise<Channel | null>;
+  async getInShardsByName(name: string | RegExp, allowApiChannel: true): Promise<APIChannel | Channel | null>;
+  async getInShardsByName(name: string | RegExp, allowApiChannel?: boolean) {
     if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
 
     const context = serializeRegExp(name);
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.channels.getByName(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIChannel ?? null)
+      .then(res => res.find(Boolean))
+      .then(data => data ? createBroadcastedChannel(this.client, data as any)
+        ?? (allowApiChannel ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 
@@ -112,13 +137,14 @@ export class Channels {
     }) as VoiceBasedChannel;
   }
 
-  filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>> {
+  filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>>;
+  filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]) {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, ChannelWithType<T>>;
+      return this.cache.filter(channel => type.includes(channel.type as T));
     }
 
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, ChannelWithType<T>>;
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type));
   }
 
   searchBy(query: string | RegExp | Search) {

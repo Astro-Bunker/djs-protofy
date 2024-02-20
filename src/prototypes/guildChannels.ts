@@ -1,4 +1,4 @@
-import { CategoryChannel, ChannelType, Client, Collection, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
+import { CategoryChannel, ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { GuildChannelTypeString, GuildChannelWithType } from "../@types";
 import { compareStrings, resolveEnum } from "../utils";
@@ -23,13 +23,17 @@ export class GuildChannels {
     });
   }
 
-  getById<T extends GuildChannelType | GuildChannelTypeString>(id: string, type?: T): GuildChannelWithType<T> | undefined {
+  getById(id: string): GuildBasedChannel | undefined;
+  getById<T extends GuildChannelType | GuildChannelTypeString>(id: string, type: T): GuildChannelWithType<T> | undefined;
+  getById(id: string, type?: GuildChannelType | GuildChannelTypeString) {
     const channel = this.cache.get(id);
-    if (type === undefined) return channel as GuildChannelWithType<T>;
-    if (channel?.type === resolveEnum(ChannelType, type)) return channel as GuildChannelWithType<T>;
+    if (type === undefined) return channel;
+    if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
-  getByName<T extends GuildChannelType | GuildChannelTypeString>(name: string | RegExp, type?: T): GuildChannelWithType<T> | undefined {
+  getByName(name: string | RegExp): GuildBasedChannel | undefined;
+  getByName<T extends GuildChannelType | GuildChannelTypeString>(name: string | RegExp, type: T): GuildChannelWithType<T> | undefined;
+  getByName(name: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(channel => {
@@ -42,10 +46,12 @@ export class GuildChannels {
 
         return name.test(channel.name);
       }
-    }) as GuildChannelWithType<T>;
+    });
   }
 
-  getByTopic<T extends GuildChannelType | GuildChannelTypeString>(topic: string | RegExp, type?: T): GuildChannelWithType<T> | undefined {
+  getByTopic(topic: string | RegExp): GuildBasedChannel | undefined;
+  getByTopic<T extends GuildChannelType | GuildChannelTypeString>(topic: string | RegExp, type: T): GuildChannelWithType<T> | undefined;
+  getByTopic(topic: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
     if (typeof topic !== "string" && !isRegExp(topic)) return;
 
     return this.cache.find(channel => {
@@ -57,11 +63,15 @@ export class GuildChannels {
 
         return topic.test(channel.topic);
       }
-    }) as GuildChannelWithType<T>;
+    });
   }
 
-  getByUrl(url: string) {
-    return this.cache.find(channel => channel.url === url);
+  getByUrl(url: string): GuildBasedChannel | undefined;
+  getByUrl<T extends GuildChannelType | GuildChannelTypeString>(url: string, type: T): GuildChannelWithType<T> | undefined;
+  getByUrl(url: string, type?: ChannelType | GuildChannelTypeString) {
+    type = resolveEnum(ChannelType, type as ChannelType);
+
+    return this.cache.find(channel => channel.url === url && (type ? channel.type === type : true));
   }
 
   getCategoryById(id: string) {
@@ -94,13 +104,14 @@ export class GuildChannels {
     }) as VoiceBasedChannel;
   }
 
-  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GuildChannelWithType<T>> {
+  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GuildChannelWithType<T>>;
+  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]){
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T)) as Collection<string, GuildChannelWithType<T>>;
+      return this.cache.filter(channel => type.includes(channel.type as T));
     }
 
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type)) as Collection<string, GuildChannelWithType<T>>;
+    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type));
   }
 
   searchBy(query: string | RegExp | Search) {
