@@ -163,7 +163,7 @@ export class Users {
   protected _searchByString(query: string) {
     return this.cache.get(query) ??
       this.cache.find((user) => [
-        user.displayName.toLowerCase(),
+        user.displayName?.toLowerCase(),
         user.globalName?.toLowerCase(),
         user.username.toLowerCase(),
       ].includes(query.toLowerCase()));
