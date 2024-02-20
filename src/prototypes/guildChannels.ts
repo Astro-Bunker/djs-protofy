@@ -64,14 +64,13 @@ export class GuildChannels {
     return this.cache.find(channel => channel.url === url);
   }
 
-  getCategoryById(id: string): CategoryChannel | undefined {
-    if (typeof id !== "string") return;
+  getCategoryById(id: string) {
     const category = this.cache.get(id);
     if (category?.type !== ChannelType.GuildCategory) return;
     return category;
   }
 
-  getCategoryByName(name: string | RegExp): CategoryChannel | undefined {
+  getCategoryByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(channel => {

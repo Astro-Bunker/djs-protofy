@@ -64,7 +64,6 @@ export class Channels {
   }
 
   getCategoryById(id: string) {
-    if (typeof id !== "string") return;
     const category = this.cache.get(id);
     if (category?.type !== ChannelType.GuildCategory) return;
     return category;
