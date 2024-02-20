@@ -42,8 +42,8 @@ export class Guilds {
   async getInShardsById(id: string, allowApiGuild?: boolean) {
     if (typeof id !== "string") return null;
 
-    const guild = this.getById(id);
-    if (guild) return guild;
+    const exists = this.getById(id);
+    if (exists) return exists;
 
     if (!this.client.shard) return null;
 
@@ -59,8 +59,8 @@ export class Guilds {
   async getInShardsByName(name: string | RegExp, allowApiGuild?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const guild = this.getByName(name);
-    if (guild) return guild;
+    const exists = this.getByName(name);
+    if (exists) return exists;
 
     if (!this.client.shard) return null;
 

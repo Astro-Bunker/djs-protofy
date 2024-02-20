@@ -106,9 +106,8 @@ export class Channels {
   async getInShardsById(id: string, allowApiChannel?: boolean) {
     if (typeof id !== "string") return null;
 
-    const channel = this.getById(id);
-
-    if (channel) return channel;
+    const exists = this.getById(id);
+    if (exists) return exists;
 
     if (!this.client.shard) return null;
 
@@ -124,8 +123,9 @@ export class Channels {
   async getInShardsByName(name: string | RegExp, allowApiChannel?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const channel = this.getByName(name);
-    if (channel) return channel;
+    const exists = this.getByName(name);
+    if (exists) return exists;
+
     if (!this.client.shard) return null;
 
     const context = serializeRegExp(name);
