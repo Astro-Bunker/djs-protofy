@@ -1,6 +1,8 @@
-import { EnumLike, version } from "discord.js";
+import { APIChannel, Client, EnumLike, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
+// @ts-expect-error ts(7016)
+import { createChannel } from "discord.js/src/util/Channels";
 
 export function verifyDJSVersion() {
   const v = Number(version.split(".")[0]);
@@ -39,4 +41,36 @@ export function serializeRegExp(value: string | RegExp) {
     source: value,
     isRegExp: false,
   };
+}
+
+export function to_snake_case<T>(s: T): T;
+export function to_snake_case<T extends string>(s: T): string;
+export function to_snake_case<T extends Record<string, unknown>>(s: T): T;
+export function to_snake_case(s: string | Record<string, unknown>) {
+  if (typeof s === "string")
+    return s.replace(/(^[A-Z])|([A-Z])/g, (_, a, b) => a ? a.toLowerCase() : `_${b.toLowerCase()}`);
+
+  const newObject: Record<string, unknown> = {};
+
+  for (const iterator of Object.keys(s)) {
+    newObject[to_snake_case(iterator)] = s[iterator];
+  }
+
+  return newObject;
+}
+
+export function createBroadcastedChannel(client: Client<true>, data: APIChannel) {
+  if ("availableTags" in data) delete data.availableTags;
+  if ("guild" in data) delete data.guild;
+  if ("member" in data) delete data.member;
+  if ("messages" in data) delete data.messages;
+  if ("permissionOverwrites" in data) delete data.permissionOverwrites;
+  if ("recipients" in data) delete data.recipients;
+  if ("threadMetadata" in data) delete data.threadMetadata;
+
+  data = to_snake_case(data);
+
+  try {
+    return createChannel(client, data, null, { allowUnknownGuild: true });
+  } catch { }
 }
