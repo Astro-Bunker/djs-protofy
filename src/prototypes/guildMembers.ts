@@ -1,4 +1,4 @@
-import { Client, GuildMemberManager } from "discord.js";
+import { Client, Collection, GuildMember, GuildMemberManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
@@ -15,6 +15,7 @@ export class GuildMembers {
       getByUserGlobalName: { value: this.getByUserGlobalName },
       getByUserUsername: { value: this.getByUserUsername },
       searchBy: { value: this.searchBy },
+      _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
       _searchByString: { value: this._searchByString },
     });
@@ -88,7 +89,10 @@ export class GuildMembers {
     });
   }
 
-  searchBy(query: string | RegExp | Search) {
+  searchBy(query: string | RegExp | Search): GuildMember | undefined;
+  searchBy(query: (string | RegExp | Search)[]): Collection<string, GuildMember>;
+  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+    if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
@@ -124,6 +128,15 @@ export class GuildMembers {
             query.username.test(member.user.username)
         )
       ));
+  }
+
+  protected _searchByMany(queries: (string | RegExp | Search)[]) {
+    const cache: this["cache"] = new Collection();
+    for (const query of queries) {
+      const result = this.searchBy(query);
+      if (result) cache.set(result.id, result);
+    }
+    return cache;
   }
 
   protected _searchByRegExp(query: RegExp) {

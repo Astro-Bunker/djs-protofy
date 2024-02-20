@@ -19,6 +19,7 @@ export class Emojis {
       filterDeletables: { value: this.filterDeletables },
       filterUndeletables: { value: this.filterUndeletables },
       searchBy: { value: this.searchBy },
+      _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
       _searchByString: { value: this._searchByString },
     });
@@ -76,7 +77,10 @@ export class Emojis {
     return this.cache.filter(emoji => !emoji.deletable);
   }
 
-  searchBy(query: string | RegExp | Search) {
+  searchBy(query: string | RegExp | Search): GuildEmoji | undefined;
+  searchBy(query: (string | RegExp | Search)[]): Collection<string, GuildEmoji>;
+  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+    if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
@@ -94,6 +98,15 @@ export class Emojis {
             query.name.test(emoji.name)
         )
       ));
+  }
+
+  protected _searchByMany(queries: (string | RegExp | Search)[]) {
+    const cache: this["cache"] = new Collection();
+    for (const query of queries) {
+      const result = this.searchBy(query);
+      if (result) cache.set(result.id, result);
+    }
+    return cache;
   }
 
   protected _searchByRegExp(query: RegExp) {

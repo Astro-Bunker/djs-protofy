@@ -1,4 +1,4 @@
-import { APIUser, Client, UserManager } from "discord.js";
+import { APIUser, Client, Collection, User, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, serializeRegExp } from "../utils";
 
@@ -17,6 +17,7 @@ export class Users {
       getInShardsByGlobalName: { value: this.getInShardsByGlobalName },
       getInShardsByUsername: { value: this.getInShardsByUsername },
       searchBy: { value: this.searchBy },
+      _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
       _searchByString: { value: this._searchByString },
     });
@@ -105,7 +106,10 @@ export class Users {
       .catch(() => null);
   }
 
-  searchBy(query: string | RegExp | Search) {
+  searchBy(query: string | RegExp | Search): User | undefined;
+  searchBy(query: (string | RegExp | Search)[]): Collection<string, User>;
+  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+    if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
@@ -135,6 +139,15 @@ export class Users {
             query.username.test(user.username)
         )
       ));
+  }
+
+  protected _searchByMany(queries: (string | RegExp | Search)[]) {
+    const cache: this["cache"] = new Collection();
+    for (const query of queries) {
+      const result = this.searchBy(query);
+      if (result) cache.set(result.id, result);
+    }
+    return cache;
   }
 
   protected _searchByRegExp(query: RegExp) {

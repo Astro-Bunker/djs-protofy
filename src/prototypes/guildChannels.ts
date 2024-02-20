@@ -18,6 +18,7 @@ export class GuildChannels {
       getVoiceByUserId: { value: this.getVoiceByUserId },
       filterByTypes: { value: this.filterByTypes },
       searchBy: { value: this.searchBy },
+      _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
       _searchByString: { value: this._searchByString },
     });
@@ -111,10 +112,15 @@ export class GuildChannels {
       return this.cache.filter(channel => type.includes(channel.type as T));
     }
 
-    return this.cache.filter(channel => channel.type === resolveEnum(ChannelType, type));
+    const resolvedType = resolveEnum(ChannelType, type);
+
+    return this.cache.filter(channel => channel.type === resolvedType);
   }
 
-  searchBy(query: string | RegExp | Search) {
+  searchBy(query: string | RegExp | Search): GuildBasedChannel | undefined;
+  searchBy(query: (string | RegExp | Search)[]): Collection<string, GuildBasedChannel>;
+  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+    if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
@@ -138,6 +144,15 @@ export class GuildChannels {
             query.name.test(channel.topic)
         )
       ));
+  }
+
+  protected _searchByMany(queries: (string | RegExp | Search)[]) {
+    const cache: this["cache"] = new Collection();
+    for (const query of queries) {
+      const result = this.searchBy(query);
+      if (result) cache.set(result.id, result);
+    }
+    return cache;
   }
 
   protected _searchByRegExp(query: RegExp) {
