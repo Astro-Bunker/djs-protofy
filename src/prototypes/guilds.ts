@@ -70,9 +70,11 @@ export class Guilds {
     return this.cache.filter(guild => guild.ownerId === id);
   }
 
-  searchBy(query: string | RegExp | Search): Guild | undefined;
-  searchBy(query: (string | RegExp | Search)[]): Collection<string, Guild>;
-  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+  searchBy<T extends string | RegExp>(query: T): Guild | undefined;
+  searchBy<T extends Search>(query: T): Guild | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T): Guild | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, Guild>;
+  searchBy<T extends string | RegExp | Search>(query: T | T[]) {
     if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);

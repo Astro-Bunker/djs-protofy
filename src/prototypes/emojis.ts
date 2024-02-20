@@ -77,9 +77,11 @@ export class Emojis {
     return this.cache.filter(emoji => !emoji.deletable);
   }
 
-  searchBy(query: string | RegExp | Search): GuildEmoji | undefined;
-  searchBy(query: (string | RegExp | Search)[]): Collection<string, GuildEmoji>;
-  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+  searchBy<T extends string | RegExp>(query: T): GuildEmoji | undefined;
+  searchBy<T extends Search>(query: T): GuildEmoji | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T): GuildEmoji | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, GuildEmoji>;
+  searchBy<T extends string | RegExp | Search>(query: T | T[]) {
     if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);

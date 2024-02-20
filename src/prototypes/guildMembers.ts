@@ -89,9 +89,11 @@ export class GuildMembers {
     });
   }
 
-  searchBy(query: string | RegExp | Search): GuildMember | undefined;
-  searchBy(query: (string | RegExp | Search)[]): Collection<string, GuildMember>;
-  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+  searchBy<T extends string | RegExp>(query: T): GuildMember | undefined;
+  searchBy<T extends Search>(query: T): GuildMember | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T): GuildMember | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, GuildMember>;
+  searchBy<T extends string | RegExp | Search>(query: T | T[]) {
     if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);

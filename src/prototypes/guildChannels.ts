@@ -117,9 +117,11 @@ export class GuildChannels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
-  searchBy(query: string | RegExp | Search): GuildBasedChannel | undefined;
-  searchBy(query: (string | RegExp | Search)[]): Collection<string, GuildBasedChannel>;
-  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+  searchBy<T extends string | RegExp>(query: T): GuildBasedChannel | undefined;
+  searchBy<T extends Search>(query: T): GuildBasedChannel | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T): GuildBasedChannel | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, GuildBasedChannel>;
+  searchBy<T extends string | RegExp | Search>(query: T | T[]) {
     if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);

@@ -104,9 +104,11 @@ export class Roles {
     return this.cache.filter(role => !role.mentionable);
   }
 
-  searchBy(query: string | RegExp | Search): Role | undefined;
-  searchBy(query: (string | RegExp | Search)[]): Collection<string, Role>;
-  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+  searchBy<T extends string | RegExp>(query: T): Role | undefined;
+  searchBy<T extends Search>(query: T): Role | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T): Role | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, Role>;
+  searchBy<T extends string | RegExp | Search>(query: T | T[]) {
     if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);

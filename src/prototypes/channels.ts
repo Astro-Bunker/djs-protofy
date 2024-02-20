@@ -150,9 +150,11 @@ export class Channels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
-  searchBy(query: string | RegExp | Search): Channel | undefined;
-  searchBy(query: (string | RegExp | Search)[]): Collection<string, Channel>;
-  searchBy(query: string | RegExp | Search | (string | RegExp | Search)[]) {
+  searchBy<T extends string | RegExp>(query: T): Channel | undefined;
+  searchBy<T extends Search>(query: T): Channel | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T): Channel | undefined;
+  searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, Channel>;
+  searchBy<T extends string | RegExp | Search>(query: T | T[]) {
     if (Array.isArray(query)) return this._searchByMany(query);
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
