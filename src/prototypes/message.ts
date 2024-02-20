@@ -1,4 +1,4 @@
-import { Channel, Collection, GatewayIntentBits, GuildMember, Message, Role, User } from "discord.js";
+import { Channel, Collection, GatewayIntentBits, GuildBasedChannel, GuildMember, Message, Role, User } from "discord.js";
 
 export class SMessage {
   declare client: Message["client"];
@@ -31,7 +31,8 @@ export class SMessage {
     for (const query of queries) {
       if (this.mentions.channels.has(query)) continue;
 
-      const channel = (this.guild ?? this.client).channels.searchBy(query);
+      // @ts-expect-error ts(2349)
+      const channel = (this.guild ?? this.client).channels.searchBy(query) as Channel | GuildBasedChannel;
 
       if (!channel || this.mentions.channels.has(channel.id)) continue;
 
