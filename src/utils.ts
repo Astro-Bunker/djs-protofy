@@ -1,4 +1,4 @@
-import { APIChannel, Client, EnumLike, version } from "discord.js";
+import { APIChannel, Channel, Client, EnumLike, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 // @ts-expect-error ts(7016)
@@ -23,11 +23,15 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
   return s1 === s2;
 }
 
-export function resolveEnum<T extends EnumLike<any, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T] {
+export function resolveEnum<T extends EnumLike<any, any>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
+export function resolveEnum(enumLike: EnumLike<any, any>, value: unknown) {
   if (typeof value === "string") return enumLike[value];
-  return value as T[keyof T];
+  return value;
 }
 
+export function serializeRegExp(u: string | RegExp): { flags?: string, isRegExp: boolean, source: string };
+export function serializeRegExp<R extends RegExp>(r: R): { flags: string, isRegExp: true, source: string };
+export function serializeRegExp<S extends string>(s: S): { isRegExp: false, source: S };
 export function serializeRegExp(value: string | RegExp) {
   if (isRegExp(value)) {
     return {
@@ -43,23 +47,23 @@ export function serializeRegExp(value: string | RegExp) {
   };
 }
 
-export function to_snake_case<T>(s: T): T;
-export function to_snake_case<T extends string>(s: T): string;
-export function to_snake_case<T extends Record<string, unknown>>(s: T): T;
-export function to_snake_case(s: string | Record<string, unknown>) {
-  if (typeof s === "string")
-    return s.replace(/(^[A-Z])|([A-Z])/g, (_, a, b) => a ? a.toLowerCase() : `_${b.toLowerCase()}`);
+export function to_snake_case<U>(u: U): U;
+export function to_snake_case<S extends string>(s: S): string;
+export function to_snake_case<R extends Record<string, unknown>>(R: R): R;
+export function to_snake_case(u: string | Record<string, unknown>) {
+  if (typeof u === "string")
+    return u.replace(/(^[A-Z])|([A-Z])/g, (_, a, b) => a ? a.toLowerCase() : `_${b.toLowerCase()}`);
 
   const newObject: Record<string, unknown> = {};
 
-  for (const iterator of Object.keys(s)) {
-    newObject[to_snake_case(iterator)] = s[iterator];
+  for (const iterator of Object.keys(u)) {
+    newObject[to_snake_case(iterator)] = u[iterator];
   }
 
   return newObject;
 }
 
-export function createBroadcastedChannel(client: Client<true>, data: APIChannel) {
+export function createBroadcastedChannel(client: Client<true>, data: APIChannel): Channel | undefined {
   if ("availableTags" in data) delete data.availableTags;
   if ("guild" in data) delete data.guild;
   if ("member" in data) delete data.member;
