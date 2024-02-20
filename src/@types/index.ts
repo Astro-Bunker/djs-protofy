@@ -1,4 +1,4 @@
-import { Channel, ChannelType, GuildChannelType } from "discord.js";
+import { Channel, ChannelType, GuildBasedChannel, GuildChannelType } from "discord.js";
 
 export type ChannelTypeString = keyof typeof ChannelType;
 
@@ -8,4 +8,4 @@ export type ChannelWithType<T extends ChannelType | ChannelTypeString> =
   Extract<Channel, { type: T extends string ? (typeof ChannelType)[T] : T }>;
 
 export type GuildChannelWithType<T extends GuildChannelType | GuildChannelTypeString> =
-  Extract<Channel, { type: T extends string ? (typeof ChannelType)[T] : T }>;
+  Extract<GuildBasedChannel, { type: T extends string ? (typeof ChannelType)[T] : T }>;
