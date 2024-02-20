@@ -8,6 +8,9 @@ export class Messages {
   constructor() {
     Object.defineProperties(MessageManager.prototype, {
       getById: { value: this.getById },
+      filterByAuthorId: { value: this.filterByAuthorId },
+      filterByContent: { value: this.filterByContent },
+      filterByAuthorIsBots: { value: this.filterByAuthorIsBots },
     });
   }
 
