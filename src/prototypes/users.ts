@@ -1,6 +1,6 @@
 import { APIUser, Client, Collection, User, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, serializeRegExp } from "../utils";
+import { compareStrings, createBroadcastedUser, serializeRegExp, to_snake_case } from "../utils";
 
 export class Users {
   declare cache: UserManager["cache"];
@@ -65,44 +65,80 @@ export class Users {
     });
   }
 
-  async getInShardsById(id: string) {
-    if (typeof id !== "string" || !this.client.shard) return null;
+  async getInShardsById(id: string): Promise<User | null>;
+  async getInShardsById(id: string, allowApiUser: true): Promise<APIUser | User | null>;
+  async getInShardsById(id: string, allowApiUser?: boolean) {
+    if (typeof id !== "string") return null;
+
+    const exists = this.getById(id);
+    if (exists) return exists;
+
+    if (!this.client.shard) return null;
 
     return await this.client.shard.broadcastEval((shard, id) => shard.users.getById(id), { context: id })
-      .then(res => res.find(Boolean) as APIUser ?? null)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedUser(this.client, data)
+        ?? (allowApiUser ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 
-  async getInShardsByDisplayName(name: string | RegExp) {
-    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
+  async getInShardsByDisplayName(id: string | RegExp): Promise<User | null>;
+  async getInShardsByDisplayName(id: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
+  async getInShardsByDisplayName(name: string | RegExp, allowApiUser?: boolean) {
+    if (typeof name !== "string" && !isRegExp(name)) return null;
+
+    const exists = this.getByDisplayName(name);
+    if (exists) return exists;
+
+    if (!this.client.shard) return null;
 
     const context = serializeRegExp(name);
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.users.getByDisplayName(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIUser ?? null)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedUser(this.client, data)
+        ?? (allowApiUser ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 
-  async getInShardsByGlobalName(name: string | RegExp) {
-    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
+  async getInShardsByGlobalName(id: string | RegExp): Promise<User | null>;
+  async getInShardsByGlobalName(id: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
+  async getInShardsByGlobalName(name: string | RegExp, allowApiUser?: boolean) {
+    if (typeof name !== "string" && !isRegExp(name)) return null;
+
+    const exists = this.getByDisplayName(name);
+    if (exists) return exists;
+
+    if (!this.client.shard) return null;
 
     const context = serializeRegExp(name);
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.users.getByGlobalName(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIUser ?? null)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedUser(this.client, data)
+        ?? (allowApiUser ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 
-  async getInShardsByUsername(name: string | RegExp) {
-    if ((typeof name !== "string" && !isRegExp(name)) || !this.client.shard) return null;
+  async getInShardsByUsername(id: string | RegExp): Promise<User | null>;
+  async getInShardsByUsername(id: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
+  async getInShardsByUsername(name: string | RegExp, allowApiUser?: boolean) {
+    if (typeof name !== "string" && !isRegExp(name)) return null;
+
+    const exists = this.getByDisplayName(name);
+    if (exists) return exists;
+
+    if (!this.client.shard) return null;
 
     const context = serializeRegExp(name);
 
     return await this.client.shard.broadcastEval((shard, { flags, isRegExp, source }) =>
       shard.users.getByUsername(isRegExp ? RegExp(source, flags) : source), { context })
-      .then(res => res.find(Boolean) as APIUser ?? null)
+      .then(res => res.find(Boolean) as any)
+      .then(data => data ? createBroadcastedUser(this.client, data)
+        ?? (allowApiUser ? to_snake_case(data) : null) : null)
       .catch(() => null);
   }
 

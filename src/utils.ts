@@ -1,4 +1,4 @@
-import { APIChannel, APIGuild, Channel, Client, EnumLike, Guild, version } from "discord.js";
+import { APIChannel, APIGuild, APIUser, Channel, Client, EnumLike, Guild, User, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 // @ts-expect-error ts(7016)
@@ -68,7 +68,7 @@ export function to_snake_case(u: string | Record<string, unknown>) {
 }
 
 export function createBroadcastedChannel(client: Client<true>, data: Channel | APIChannel): Channel | undefined;
-export function createBroadcastedChannel(client: Client<true>, data: Record<string, any>): Channel | undefined {
+export function createBroadcastedChannel(client: Client<true>, data: Record<string, any>) {
   if ("messages" in data) delete data.messages;
   if ("permissionOverwrites" in data) delete data.permissionOverwrites;
   if ("recipients" in data) delete data.recipients;
@@ -103,7 +103,7 @@ export function createBroadcastedChannel(client: Client<true>, data: Record<stri
 }
 
 export function createBroadcastedGuild(client: Client<true>, data: Guild | APIGuild): Guild | undefined;
-export function createBroadcastedGuild(client: Client<true>, data: Record<string, any>): Guild | undefined {
+export function createBroadcastedGuild(client: Client<true>, data: Record<string, any>) {
   data = to_snake_case(data);
 
   const clone = Object.assign(Object.create(data), data);
@@ -144,6 +144,18 @@ export function createBroadcastedGuild(client: Client<true>, data: Record<string
   try {
     // @ts-expect-error ts(2673)
     return new Guild(client, data);
+  } catch (error: any) {
+    client.emit("error", error);
+  }
+}
+
+export function createBroadcastedUser(client: Client<true>, data: User | APIUser): User | undefined;
+export function createBroadcastedUser(client: Client<true>, data: Record<string, any>) {
+  data = to_snake_case(data);
+
+  try {
+    // @ts-expect-error ts(2674)
+    return new User(client, data);
   } catch (error: any) {
     client.emit("error", error);
   }
