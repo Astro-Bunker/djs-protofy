@@ -1,4 +1,4 @@
-import { APIChannel, APIGuild, APIUser, Channel, Client, EnumLike, Guild, User, version } from "discord.js";
+import { APIChannel, APIGuild, APIMessage, APIUser, Channel, Client, EnumLike, Guild, Message, User, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 // @ts-expect-error ts(7016)
@@ -149,6 +149,21 @@ export function createBroadcastedGuild(client: Client<true>, data: Record<string
   }
 }
 
+export function createBroadcastedMessage(client: Client<true>, data: Message | APIMessage): Message | undefined;
+export function createBroadcastedMessage(client: Client<true>, data: Record<string, any>) {
+  if ("mentions" in data) delete data.mentions;
+  excludeNullishProperties(data);
+
+  data = to_snake_case(data);
+
+  try {
+    // @ts-expect-error ts(2674)
+    return new Message(client, data);
+  } catch (error: any) {
+    client.emit("error", error);
+  }
+}
+
 export function createBroadcastedUser(client: Client<true>, data: User | APIUser): User | undefined;
 export function createBroadcastedUser(client: Client<true>, data: Record<string, any>) {
   data = to_snake_case(data);
@@ -158,5 +173,12 @@ export function createBroadcastedUser(client: Client<true>, data: Record<string,
     return new User(client, data);
   } catch (error: any) {
     client.emit("error", error);
+  }
+}
+
+export function excludeNullishProperties<T extends Record<any, any>>(o: T): void;
+export function excludeNullishProperties(o: Record<any, any>) {
+  for (const [key, value] of Object.entries(o)) {
+    if (!exists(value)) delete o[key];
   }
 }

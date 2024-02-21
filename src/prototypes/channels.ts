@@ -1,7 +1,7 @@
-import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, VoiceBasedChannel } from "discord.js";
+import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, createBroadcastedChannel, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, createBroadcastedChannel, createBroadcastedMessage, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
@@ -19,6 +19,7 @@ export class Channels {
       getInShardsByName: { value: this.getInShardsByName },
       getVoiceByUserId: { value: this.getVoiceByUserId },
       filterByTypes: { value: this.filterByTypes },
+      send: { value: this.send },
       searchBy: { value: this.searchBy },
       _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
@@ -160,6 +161,28 @@ export class Channels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
+  async send<T extends string | MessageCreateOptions | MessagePayload>(channelId: string, payload: T): Promise<Result>;
+  async send(channelId: string, payload: any): Promise<Result> {
+    const channel = this.client.channels.getById(channelId);
+    if (channel) {
+      if (!channel.isTextBased()) return { success: false };
+      return await channel.send(payload)
+        .then(message => ({ message, success: true }))
+        .catch(error => ({ error, success: false }));
+    }
+
+    if (!this.client.shard) return { success: false };
+
+    return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
+      const channel = shard.channels.getById(channelId);
+      if (!channel?.isTextBased()) return;
+      return await channel.send(payload);
+    }, { context: { channelId, payload } })
+      .then(res => res.find(Boolean) as Message | undefined)
+      .then(data => data ? { message: createBroadcastedMessage(this.client, data), success: true } : { success: false })
+      .catch(error => ({ success: false, error }));
+  }
+
   searchBy<T extends string | RegExp>(query: T): Channel | undefined;
   searchBy<T extends Search>(query: T): Channel | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): Channel | undefined;
@@ -219,4 +242,10 @@ export class Channels {
 interface Search {
   id?: string | RegExp
   name?: string | RegExp
+}
+
+interface Result {
+  error?: Error
+  message?: Message
+  success: boolean
 }
