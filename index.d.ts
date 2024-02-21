@@ -13,7 +13,6 @@ import type { SMessage } from "./src/prototypes/message";
 import type { Messages } from "./src/prototypes/messages";
 import type { Roles } from "./src/prototypes/roles";
 import type { Users } from "./src/prototypes/users";
-export * from "./src";
 
 declare module "discord.js" {
   interface ApplicationCommand extends SApplicationCommand { }
