@@ -1,4 +1,4 @@
-import { EnumLike, version } from "discord.js";
+import { Constructable, EnumLike, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 
@@ -21,8 +21,20 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
   return s1 === s2;
 }
 
+export function excludeNullishProperties<T extends Record<any, any>>(o: T): void;
+export function excludeNullishProperties(o: Record<any, any>) {
+  for (const [key, value] of Object.entries(o)) {
+    if (!exists(value)) delete o[key];
+  }
+}
+
 export function exists<O>(o: O): o is NonNullable<O> {
   return o !== undefined && o !== null;
+}
+
+export function isInstanceOf<O, T extends Constructable<O>>(o: O, t: T | T[]): o is InstanceType<T> {
+  if (Array.isArray(t)) return t.every(t => o instanceof t);
+  return o instanceof t;
 }
 
 export function resolveEnum<T extends EnumLike<any, any>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
@@ -31,9 +43,9 @@ export function resolveEnum(enumLike: EnumLike<any, any>, value: unknown) {
   return value;
 }
 
-export function serializeRegExp(u: string | RegExp): { flags?: string, isRegExp: boolean, source: string };
-export function serializeRegExp<R extends RegExp>(r: R): { flags: string, isRegExp: true, source: string };
+export function serializeRegExp<R extends RegExp>(r: R): { flags: R["flags"], isRegExp: true, source: R["source"] };
 export function serializeRegExp<S extends string>(s: S): { isRegExp: false, source: S };
+export function serializeRegExp(u: string | RegExp): { flags?: string, isRegExp: boolean, source: string };
 export function serializeRegExp(value: string | RegExp) {
   if (isRegExp(value)) {
     return {
@@ -63,11 +75,4 @@ export function to_snake_case(u: string | Record<string, unknown>) {
   }
 
   return newObject;
-}
-
-export function excludeNullishProperties<T extends Record<any, any>>(o: T): void;
-export function excludeNullishProperties(o: Record<any, any>) {
-  for (const [key, value] of Object.entries(o)) {
-    if (!exists(value)) delete o[key];
-  }
 }
