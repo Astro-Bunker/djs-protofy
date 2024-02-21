@@ -163,7 +163,7 @@ export class Channels {
 
   async send<T extends string | MessageCreateOptions | MessagePayload>(channelId: string, payload: T): Promise<Result>;
   async send(channelId: string, payload: any): Promise<Result> {
-    const channel = this.client.channels.getById(channelId);
+    const channel = this.client.channels.getById(channelId) ?? await this.client.channels.fetch(channelId);
     if (channel) {
       if (!channel.isTextBased()) return { success: false };
       return await channel.send(payload)
