@@ -1,7 +1,8 @@
 import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, createBroadcastedChannel, createBroadcastedMessage, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
@@ -43,7 +44,7 @@ export class Channels {
     if (exists(type)) type = resolveEnum(ChannelType, type);
 
     return this.cache.find(channel => {
-      if (exists(type) !== undefined && channel.type !== type) return false;
+      if (exists(type) && channel.type !== type) return false;
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
@@ -163,6 +164,8 @@ export class Channels {
 
   async send<T extends string | MessageCreateOptions | MessagePayload>(channelId: string, payload: T): Promise<Result>;
   async send(channelId: string, payload: any): Promise<Result> {
+    if (typeof channelId !== "string") return { success: false };
+
     const channel = this.client.channels.getById(channelId) ?? await this.client.channels.fetch(channelId);
     if (channel) {
       if (!channel.isTextBased()) return { success: false };

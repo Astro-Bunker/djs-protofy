@@ -1,6 +1,7 @@
 import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, createBroadcastedGuild, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, serializeRegExp, to_snake_case } from "../utils";
+import { createBroadcastedGuild } from "../utils/shardUtils";
 
 export class Guilds {
   declare cache: GuildManager["cache"];

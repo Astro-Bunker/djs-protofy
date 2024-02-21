@@ -1,6 +1,7 @@
 import { APIUser, Client, Collection, User, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, createBroadcastedUser, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, serializeRegExp, to_snake_case } from "../utils";
+import { createBroadcastedUser } from "../utils/shardUtils";
 
 export class Users {
   declare cache: UserManager["cache"];
