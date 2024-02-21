@@ -219,4 +219,5 @@ export class Channels {
 interface Search {
   id?: string | RegExp
   name?: string | RegExp
+  topic?: string | RegExp
 }
