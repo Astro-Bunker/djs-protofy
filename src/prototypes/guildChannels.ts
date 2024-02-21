@@ -110,7 +110,7 @@ export class GuildChannels {
   }
 
   filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GuildChannelWithType<T>>;
-  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]){
+  filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]) {
     if (Array.isArray(type)) {
       type.map(value => resolveEnum(ChannelType, value));
       return this.cache.filter(channel => type.includes(channel.type as T));
@@ -180,4 +180,5 @@ export class GuildChannels {
 interface Search {
   id?: string | RegExp
   name?: string | RegExp
+  topic?: string | RegExp
 }
