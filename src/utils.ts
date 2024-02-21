@@ -157,7 +157,7 @@ export function createBroadcastedMessage(client: Client<true>, data: Record<stri
   data = to_snake_case(data);
 
   try {
-    // @ts-expect-error ts(2674)
+    // @ts-expect-error ts(2673)
     return new Message(client, data);
   } catch (error: any) {
     client.emit("error", error);
