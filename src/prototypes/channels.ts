@@ -1,4 +1,4 @@
-import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelType, Client, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
+import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
@@ -6,7 +6,9 @@ import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/sha
 
 export class Channels {
   declare cache: ChannelManager["cache"];
-  declare client: Client<true>;
+  declare client: ChannelManager["client"];
+  declare resolve: ChannelManager["resolve"];
+  declare resolveId: ChannelManager["resolveId"];
 
   constructor() {
     Object.defineProperties(ChannelManager.prototype, {
@@ -103,13 +105,13 @@ export class Channels {
     }) as CategoryChannel;
   }
 
-  async getInShardsById(id: string): Promise<Channel | null>;
-  async getInShardsById(id: string, allowApiChannel: true): Promise<APIChannel | Channel | null>;
+  getInShardsById(id: string): Promise<Channel | null>;
+  getInShardsById(id: string, allowApiChannel: true): Promise<APIChannel | Channel | null>;
   async getInShardsById(id: string, allowApiChannel?: boolean) {
     if (typeof id !== "string") return null;
 
-    const exists = this.getById(id);
-    if (exists) return exists;
+    const existing = this.getById(id);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -120,13 +122,13 @@ export class Channels {
       .catch(() => null);
   }
 
-  async getInShardsByName(name: string | RegExp): Promise<Channel | null>;
-  async getInShardsByName(name: string | RegExp, allowApiChannel: true): Promise<APIChannel | Channel | null>;
+  getInShardsByName(name: string | RegExp): Promise<Channel | null>;
+  getInShardsByName(name: string | RegExp, allowApiChannel: true): Promise<APIChannel | Channel | null>;
   async getInShardsByName(name: string | RegExp, allowApiChannel?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const exists = this.getByName(name);
-    if (exists) return exists;
+    const existing = this.getByName(name);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -162,8 +164,12 @@ export class Channels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
-  async send<T extends string | MessageCreateOptions | MessagePayload>(channelId: string, payload: T): Promise<Result>;
-  async send(channelId: string, payload: any): Promise<Result> {
+  send<T extends string>(channel: ChannelResolvable, payload: T): Promise<Result>;
+  send<T extends MessageCreateOptions>(channel: ChannelResolvable, payload: T): Promise<Result>;
+  send<T extends MessagePayload>(channel: ChannelResolvable, payload: T): Promise<Result>;
+  send<T extends string | MessageCreateOptions | MessagePayload>(channel: ChannelResolvable, payload: T): Promise<Result>;
+  async send(channelId: ChannelResolvable, payload: any): Promise<Result> {
+    channelId = this.resolveId(channelId);
     if (typeof channelId !== "string") return { success: false };
 
     const channel = this.client.channels.getById(channelId) ?? await this.client.channels.fetch(channelId);
@@ -186,7 +192,8 @@ export class Channels {
       .catch(error => ({ success: false, error }));
   }
 
-  searchBy<T extends string | RegExp>(query: T): Channel | undefined;
+  searchBy<T extends string>(query: T): Channel | undefined;
+  searchBy<T extends RegExp>(query: T): Channel | undefined;
   searchBy<T extends Search>(query: T): Channel | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): Channel | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, Channel>;

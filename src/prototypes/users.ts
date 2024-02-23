@@ -1,11 +1,11 @@
-import { APIUser, Client, Collection, User, UserManager } from "discord.js";
+import { APIUser, Collection, User, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedUser } from "../utils/shardUtils";
 
 export class Users {
   declare cache: UserManager["cache"];
-  declare client: Client<true>;
+  declare client: UserManager["client"];
 
   constructor() {
     Object.defineProperties(UserManager.prototype, {
@@ -66,8 +66,8 @@ export class Users {
     });
   }
 
-  async getInShardsById(id: string): Promise<User | null>;
-  async getInShardsById(id: string, allowApiUser: true): Promise<APIUser | User | null>;
+  getInShardsById(id: string): Promise<User | null>;
+  getInShardsById(id: string, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsById(id: string, allowApiUser?: boolean) {
     if (typeof id !== "string") return null;
 
@@ -83,13 +83,13 @@ export class Users {
       .catch(() => null);
   }
 
-  async getInShardsByDisplayName(id: string | RegExp): Promise<User | null>;
-  async getInShardsByDisplayName(id: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
+  getInShardsByDisplayName(name: string | RegExp): Promise<User | null>;
+  getInShardsByDisplayName(name: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsByDisplayName(name: string | RegExp, allowApiUser?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const exists = this.getByDisplayName(name);
-    if (exists) return exists;
+    const existing = this.getByDisplayName(name);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -103,13 +103,13 @@ export class Users {
       .catch(() => null);
   }
 
-  async getInShardsByGlobalName(id: string | RegExp): Promise<User | null>;
-  async getInShardsByGlobalName(id: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
+  getInShardsByGlobalName(name: string | RegExp): Promise<User | null>;
+  getInShardsByGlobalName(name: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsByGlobalName(name: string | RegExp, allowApiUser?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const exists = this.getByDisplayName(name);
-    if (exists) return exists;
+    const existing = this.getByDisplayName(name);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -123,13 +123,13 @@ export class Users {
       .catch(() => null);
   }
 
-  async getInShardsByUsername(id: string | RegExp): Promise<User | null>;
-  async getInShardsByUsername(id: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
+  getInShardsByUsername(name: string | RegExp): Promise<User | null>;
+  getInShardsByUsername(name: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsByUsername(name: string | RegExp, allowApiUser?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const exists = this.getByDisplayName(name);
-    if (exists) return exists;
+    const existing = this.getByDisplayName(name);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -143,7 +143,8 @@ export class Users {
       .catch(() => null);
   }
 
-  searchBy<T extends string | RegExp>(query: T): User | undefined;
+  searchBy<T extends string>(query: T): User | undefined;
+  searchBy<T extends RegExp>(query: T): User | undefined;
   searchBy<T extends Search>(query: T): User | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): User | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, User>;

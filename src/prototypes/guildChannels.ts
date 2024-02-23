@@ -1,11 +1,10 @@
-import { CategoryChannel, ChannelType, Client, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
+import { CategoryChannel, ChannelType, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { GuildChannelTypeString, GuildChannelWithType } from "../@types";
 import { compareStrings, exists, resolveEnum } from "../utils";
 
 export class GuildChannels {
   declare cache: GuildChannelManager["cache"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(GuildChannelManager.prototype, {
@@ -121,7 +120,8 @@ export class GuildChannels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
-  searchBy<T extends string | RegExp>(query: T): GuildBasedChannel | undefined;
+  searchBy<T extends string>(query: T): GuildBasedChannel | undefined;
+  searchBy<T extends RegExp>(query: T): GuildBasedChannel | undefined;
   searchBy<T extends Search>(query: T): GuildBasedChannel | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): GuildBasedChannel | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, GuildBasedChannel>;

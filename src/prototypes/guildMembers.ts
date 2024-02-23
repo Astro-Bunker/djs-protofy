@@ -1,10 +1,9 @@
-import { Client, Collection, GuildMember, GuildMemberManager } from "discord.js";
+import { Collection, GuildMember, GuildMemberManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class GuildMembers {
   declare cache: GuildMemberManager["cache"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(GuildMemberManager.prototype, {
@@ -89,7 +88,8 @@ export class GuildMembers {
     });
   }
 
-  searchBy<T extends string | RegExp>(query: T): GuildMember | undefined;
+  searchBy<T extends string>(query: T): GuildMember | undefined;
+  searchBy<T extends RegExp>(query: T): GuildMember | undefined;
   searchBy<T extends Search>(query: T): GuildMember | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): GuildMember | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, GuildMember>;

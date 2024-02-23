@@ -1,4 +1,4 @@
-import { GuildMember, PermissionFlagsBits } from "discord.js";
+import { GuildMember, GuildMemberResolvable, PermissionFlagsBits } from "discord.js";
 
 export class SGuildMember {
   declare id: string;
@@ -15,22 +15,30 @@ export class SGuildMember {
     });
   }
 
-  bannableBy(member: GuildMember) {
+  bannableBy(member: GuildMemberResolvable) {
+    member = this.guild.members.resolve(member)!;
+    if (!member) return false;
     return this.manageableBy(member) && member.permissions.has(PermissionFlagsBits.BanMembers);
   }
 
-  kickableBy(member: GuildMember) {
+  kickableBy(member: GuildMemberResolvable) {
+    member = this.guild.members.resolve(member)!;
+    if (!member) return false;
     return this.manageableBy(member) && member.permissions.has(PermissionFlagsBits.KickMembers);
   }
 
-  manageableBy(member: GuildMember) {
+  manageableBy(member: GuildMemberResolvable) {
+    member = this.guild.members.resolve(member)!;
+    if (!member) return false;
     if (this.id === this.guild.ownerId) return false;
     if (this.id === member.id) return false;
     if (this.guild.ownerId === member.id) return true;
     return member.roles.highest.comparePositionTo(this.roles.highest) > 0;
   }
 
-  moderatableBy(member: GuildMember) {
+  moderatableBy(member: GuildMemberResolvable) {
+    member = this.guild.members.resolve(member)!;
+    if (!member) return false;
     return (
       !this.permissions.has(PermissionFlagsBits.Administrator) &&
       this.manageableBy(member) &&

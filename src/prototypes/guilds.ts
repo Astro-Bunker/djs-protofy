@@ -1,11 +1,11 @@
-import { APIGuild, Client, Collection, Guild, GuildManager } from "discord.js";
+import { APIGuild, Collection, Guild, GuildManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedGuild } from "../utils/shardUtils";
 
 export class Guilds {
   declare cache: GuildManager["cache"];
-  declare client: Client<true>;
+  declare client: GuildManager["client"];
 
   constructor() {
     Object.defineProperties(GuildManager.prototype, {
@@ -13,8 +13,8 @@ export class Guilds {
       getByName: { value: this.getByName },
       getInShardsById: { value: this.getInShardsById },
       getInShardsByName: { value: this.getInShardsByName },
-      getInShardsByOwnerId: { value: this.getInShardsByOwnerId },
       filterByOwnerId: { value: this.filterByOwnerId },
+      filterInShardsByOwnerId: { value: this.filterInShardsByOwnerId },
       searchBy: { value: this.searchBy },
       _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
@@ -38,13 +38,13 @@ export class Guilds {
     });
   }
 
-  async getInShardsById(id: string): Promise<Guild | null>;
-  async getInShardsById(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
+  getInShardsById(id: string): Promise<Guild | null>;
+  getInShardsById(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
   async getInShardsById(id: string, allowApiGuild?: boolean) {
     if (typeof id !== "string") return null;
 
-    const exists = this.getById(id);
-    if (exists) return exists;
+    const existing = this.getById(id);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -55,13 +55,13 @@ export class Guilds {
       .catch(console.error);
   }
 
-  async getInShardsByName(id: string): Promise<Guild | null>;
-  async getInShardsByName(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
+  getInShardsByName(id: string): Promise<Guild | null>;
+  getInShardsByName(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
   async getInShardsByName(name: string | RegExp, allowApiGuild?: boolean) {
     if (typeof name !== "string" && !isRegExp(name)) return null;
 
-    const exists = this.getByName(name);
-    if (exists) return exists;
+    const existing = this.getByName(name);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 
@@ -75,7 +75,13 @@ export class Guilds {
       .catch(() => null);
   }
 
-  async getInShardsByOwnerId(id: string) {
+  filterByOwnerId(id: string) {
+    if (typeof id !== "string") return new Collection<string, Guild>();
+
+    return this.cache.filter(guild => guild.ownerId === id);
+  }
+
+  async filterInShardsByOwnerId(id: string) {
     if (typeof id !== "string" || !this.client.shard) return [];
 
     return await this.client.shard.broadcastEval((shard, id) => shard.guilds.filterByOwnerId(id), { context: id })
@@ -83,13 +89,8 @@ export class Guilds {
       .catch(() => []);
   }
 
-  filterByOwnerId(id: string) {
-    if (typeof id !== "string") return new Collection<string, Guild>();
-
-    return this.cache.filter(guild => guild.ownerId === id);
-  }
-
-  searchBy<T extends string | RegExp>(query: T): Guild | undefined;
+  searchBy<T extends string>(query: T): Guild | undefined;
+  searchBy<T extends RegExp>(query: T): Guild | undefined;
   searchBy<T extends Search>(query: T): Guild | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): Guild | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, Guild>;

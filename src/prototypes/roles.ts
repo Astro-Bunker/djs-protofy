@@ -1,21 +1,20 @@
-import { Client, Collection, PermissionResolvable, Role, RoleManager } from "discord.js";
+import { Collection, PermissionResolvable, Role, RoleManager } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class Roles {
   declare cache: RoleManager["cache"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(RoleManager.prototype, {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
       getByPosition: { value: this.getByPosition },
-      getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
       getByRawPosition: { value: this.getByRawPosition },
-      filterByUnicodeEmoji: { value: this.filterByUnicodeEmoji },
+      getByUnicodeEmoji: { value: this.getByUnicodeEmoji },
       filterByMembersId: { value: this.filterByMembersId },
       filterByPermissions: { value: this.filterByPermissions },
+      filterByUnicodeEmoji: { value: this.filterByUnicodeEmoji },
       filterEditables: { value: this.filterEditables },
       filterUneditables: { value: this.filterUneditables },
       filterHoists: { value: this.filterHoists },
@@ -104,7 +103,8 @@ export class Roles {
     return this.cache.filter(role => !role.mentionable);
   }
 
-  searchBy<T extends string | RegExp>(query: T): Role | undefined;
+  searchBy<T extends string>(query: T): Role | undefined;
+  searchBy<T extends RegExp>(query: T): Role | undefined;
   searchBy<T extends Search>(query: T): Role | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): Role | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, Role>;

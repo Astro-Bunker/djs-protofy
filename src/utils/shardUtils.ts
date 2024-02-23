@@ -3,8 +3,8 @@ import { excludeNullishProperties, to_snake_case } from ".";
 // @ts-expect-error ts(7016)
 import { createChannel } from "discord.js/src/util/Channels";
 
-export function createBroadcastedChannel(client: Client<true>, data: Channel | APIChannel): Channel | undefined;
-export function createBroadcastedChannel(client: Client<true>, data: Record<string, any>) {
+export function createBroadcastedChannel(client: Client, data: Channel | APIChannel): Channel | undefined;
+export function createBroadcastedChannel(client: Client, data: Record<string, any>) {
   if ("messages" in data) delete data.messages;
   if ("permissionOverwrites" in data) delete data.permissionOverwrites;
   if ("recipients" in data) delete data.recipients;
@@ -38,8 +38,8 @@ export function createBroadcastedChannel(client: Client<true>, data: Record<stri
   }
 }
 
-export function createBroadcastedGuild(client: Client<true>, data: Guild | APIGuild): Guild | undefined;
-export function createBroadcastedGuild(client: Client<true>, data: Record<string, any>) {
+export function createBroadcastedGuild(client: Client, data: Guild | APIGuild): Guild | undefined;
+export function createBroadcastedGuild(client: Client, data: Record<string, any>) {
   data = to_snake_case(data);
 
   const clone = Object.assign(Object.create(data), data);
@@ -85,8 +85,8 @@ export function createBroadcastedGuild(client: Client<true>, data: Record<string
   }
 }
 
-export function createBroadcastedMessage(client: Client<true>, data: Message | APIMessage): Message | undefined;
-export function createBroadcastedMessage(client: Client<true>, data: Record<string, any>) {
+export function createBroadcastedMessage(client: Client, data: Message | APIMessage): Message | undefined;
+export function createBroadcastedMessage(client: Client, data: Record<string, any>) {
   if ("mentions" in data) delete data.mentions;
   excludeNullishProperties(data);
 
@@ -100,8 +100,8 @@ export function createBroadcastedMessage(client: Client<true>, data: Record<stri
   }
 }
 
-export function createBroadcastedUser(client: Client<true>, data: User | APIUser): User | undefined;
-export function createBroadcastedUser(client: Client<true>, data: Record<string, any>) {
+export function createBroadcastedUser(client: Client, data: User | APIUser): User | undefined;
+export function createBroadcastedUser(client: Client, data: Record<string, any>) {
   data = to_snake_case(data);
 
   try {

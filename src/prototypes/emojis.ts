@@ -1,10 +1,9 @@
-import { BaseGuildEmojiManager, Client, Collection, GuildEmoji } from "discord.js";
+import { BaseGuildEmojiManager, Collection, GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class Emojis {
   declare cache: BaseGuildEmojiManager["cache"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(BaseGuildEmojiManager.prototype, {
@@ -77,7 +76,8 @@ export class Emojis {
     return this.cache.filter(emoji => !emoji.deletable);
   }
 
-  searchBy<T extends string | RegExp>(query: T): GuildEmoji | undefined;
+  searchBy<T extends string>(query: T): GuildEmoji | undefined;
+  searchBy<T extends RegExp>(query: T): GuildEmoji | undefined;
   searchBy<T extends Search>(query: T): GuildEmoji | undefined;
   searchBy<T extends string | RegExp | Search>(query: T): GuildEmoji | undefined;
   searchBy<T extends string | RegExp | Search>(query: T[]): Collection<string, GuildEmoji>;

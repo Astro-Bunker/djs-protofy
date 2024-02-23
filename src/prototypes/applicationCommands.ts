@@ -1,9 +1,8 @@
-import { ApplicationCommandManager, Client } from "discord.js";
+import { ApplicationCommandManager } from "discord.js";
 import { isRegExp } from "util/types";
 
 export class ApplicationCommands {
   declare cache: ApplicationCommandManager["cache"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(ApplicationCommandManager.prototype, {

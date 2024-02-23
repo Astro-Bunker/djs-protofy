@@ -1,10 +1,9 @@
-import { Client, Collection, GuildMessageManager, Message } from "discord.js";
+import { Collection, GuildMessageManager, Message } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 
 export class GuildMessages {
   declare cache: GuildMessageManager["cache"];
-  declare client: Client<true>;
 
   constructor() {
     Object.defineProperties(GuildMessageManager.prototype, {
