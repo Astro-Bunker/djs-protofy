@@ -3,6 +3,7 @@ import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { Channels } from "./prototypes/channels";
 import { SCollection } from "./prototypes/collection";
 import { Emojis } from "./prototypes/emojis";
+import { GuildBans } from "./prototypes/guildBans";
 import { GuildChannels } from "./prototypes/guildChannels";
 import { GuildEmojis } from "./prototypes/guildEmojis";
 import { SGuildMember } from "./prototypes/guildMember";
@@ -25,6 +26,7 @@ export class DJSProtofy {
     new Channels();
     new SCollection();
     new Emojis();
+    new GuildBans();
     new GuildChannels();
     new GuildEmojis();
     new SGuildMember();

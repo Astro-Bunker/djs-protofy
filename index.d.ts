@@ -3,6 +3,7 @@ import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { Channels } from "./src/prototypes/channels";
 import type { Emojis } from "./src/prototypes/emojis";
+import type { GuildBans } from "./src/prototypes/guildBans";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
 import type { GuildEmojis } from "./src/prototypes/guildEmojis";
 import type { SGuildMember } from "./src/prototypes/guildMember";
@@ -23,6 +24,8 @@ declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
 
   interface ChannelManager extends Channels { }
+
+  interface GuildBanManager extends GuildBans { }
 
   interface GuildChannelManager extends GuildChannels { }
 
