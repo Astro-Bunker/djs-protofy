@@ -7,7 +7,10 @@ export class GuildBans {
 
   constructor() {
     Object.defineProperties(GuildBanManager.prototype, {
-
+      searchBy: { value: this.searchBy },
+      _searchByMany: { value: this._searchByMany },
+      _searchByRegExp: { value: this._searchByRegExp },
+      _searchByString: { value: this._searchByString },
     });
   }
 
