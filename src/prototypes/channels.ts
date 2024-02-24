@@ -7,6 +7,7 @@ import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/sha
 export class Channels {
   declare cache: ChannelManager["cache"];
   declare client: ChannelManager["client"];
+  declare fetch: ChannelManager["fetch"];
   declare resolve: ChannelManager["resolve"];
   declare resolveId: ChannelManager["resolveId"];
 
@@ -168,11 +169,11 @@ export class Channels {
   send<T extends MessageCreateOptions>(channel: ChannelResolvable, payload: T): Promise<Result>;
   send<T extends MessagePayload>(channel: ChannelResolvable, payload: T): Promise<Result>;
   send<T extends string | MessageCreateOptions | MessagePayload>(channel: ChannelResolvable, payload: T): Promise<Result>;
-  async send(channelId: ChannelResolvable, payload: any): Promise<Result> {
-    channelId = this.resolveId(channelId);
+  async send(channelResolvable: ChannelResolvable, payload: any): Promise<Result> {
+    const channelId = this.resolveId(channelResolvable);
     if (typeof channelId !== "string") return { success: false };
 
-    const channel = this.client.channels.getById(channelId) ?? await this.client.channels.fetch(channelId);
+    const channel = this.resolve(channelResolvable) ?? await this.fetch(channelId).catch(() => null);
     if (channel) {
       if (!channel.isTextBased()) return { success: false };
       return await channel.send(payload)
@@ -189,7 +190,7 @@ export class Channels {
     }, { context: { channelId, payload } })
       .then(res => res.find(Boolean) as Message | undefined)
       .then(data => data ? { message: createBroadcastedMessage(this.client, data), success: true } : { success: false })
-      .catch(error => ({ success: false, error }));
+      .catch(error => ({ error, success: false }));
   }
 
   searchBy<T extends string>(query: T): Channel | undefined;
