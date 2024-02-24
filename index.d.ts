@@ -12,6 +12,7 @@ import type { Guilds } from "./src/prototypes/guilds";
 import type { SMessage } from "./src/prototypes/message";
 import type { Messages } from "./src/prototypes/messages";
 import type { Roles } from "./src/prototypes/roles";
+import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
 import type { Users } from "./src/prototypes/users";
 
 declare module "discord.js" {
@@ -40,6 +41,8 @@ declare module "discord.js" {
   interface MessageManager extends Messages { }
 
   interface RoleManager extends Roles { }
+
+  interface ShardClientUtil extends SShardClientUtil { }
 
   interface UserManager extends Users { }
 

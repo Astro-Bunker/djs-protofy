@@ -12,6 +12,7 @@ import { Guilds } from "./prototypes/guilds";
 import { SMessage } from "./prototypes/message";
 import { Messages } from "./prototypes/messages";
 import { Roles } from "./prototypes/roles";
+import { SShardClientUtil } from "./prototypes/shardClientUtil";
 import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
 
@@ -33,6 +34,7 @@ export class DJSProtofy {
     new SMessage();
     new Messages();
     new Roles();
+    new SShardClientUtil();
     new Users();
   }
 }
