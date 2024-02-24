@@ -1,8 +1,16 @@
 # 📃 djs-protofy
 
+A library created to make discord.js easier to use through prototypes.
+
+[![djs-protofy](https://img.shields.io/npm/v/djs-protofy?style=for-the-badge&label=djs-protofy)](https://www.npmjs.com/package/djs-protofy)
+
 [![Supported DJS Version](https://img.shields.io/github/package-json/dependency-version/Saphire-Bunker/djs-easier/dev/discord.js?style=for-the-badge)](https://github.com/discordjs/discord.js)
 
-A library created to make Discord.JS easier to use through prototypes.
+## Links
+
+- [Discord Server](https://discord.gg/FqnRDbJwYT)
+- [Github](https://github.com/Saphire-Bunker/djs-easier/tree/main)
+- [NPM](https://www.npmjs.com/package/djs-protofy)
 
 ## Requirements
 
