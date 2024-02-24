@@ -71,8 +71,8 @@ export class Users {
   async getInShardsById(id: string, allowApiUser?: boolean) {
     if (typeof id !== "string") return null;
 
-    const exists = this.getById(id);
-    if (exists) return exists;
+    const existing = this.getById(id);
+    if (existing) return existing;
 
     if (!this.client.shard) return null;
 

@@ -78,9 +78,11 @@ export class Channels {
     });
   }
 
-  getByUrl(url: string): Channel | undefined;
-  getByUrl<T extends ChannelType | ChannelTypeString>(url: string, type: T): ChannelWithType<T> | undefined;
-  getByUrl(url: string, type?: ChannelType | ChannelTypeString) {
+  getByUrl(url: string | URL): Channel | undefined;
+  getByUrl<T extends ChannelType | ChannelTypeString>(url: string | URL, type: T): ChannelWithType<T> | undefined;
+  getByUrl(url: string | URL, type?: ChannelType | ChannelTypeString) {
+    url = url.toString();
+
     if (exists(type)) type = resolveEnum(ChannelType, type);
 
     return this.cache.find(channel => channel.url === url && (exists(type) ? channel.type === type : true));
@@ -188,7 +190,7 @@ export class Channels {
       if (!channel?.isTextBased()) return;
       return await channel.send(payload);
     }, { context: { channelId, payload } })
-      .then(res => res.find(Boolean) as Message | undefined)
+      .then(res => res.find(Boolean) as any)
       .then(data => data ? { message: createBroadcastedMessage(this.client, data), success: true } : { success: false })
       .catch(error => ({ error, success: false }));
   }
