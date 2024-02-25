@@ -1,6 +1,6 @@
 import { BaseGuildEmojiManager, Collection, GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings } from "../utils";
+import { compareStrings, replaceMentionCharacters } from "../utils";
 
 export class Emojis {
   declare cache: BaseGuildEmojiManager["cache"];
@@ -118,6 +118,7 @@ export class Emojis {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((emoji) => [
         emoji.name?.toLowerCase(),

@@ -1,6 +1,6 @@
 import { APIUser, Collection, User, UserManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, replaceMentionCharacters, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedUser } from "../utils/shardUtils";
 
 export class Users {
@@ -199,6 +199,7 @@ export class Users {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((user) => [
         user.displayName?.toLowerCase(),

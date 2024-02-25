@@ -1,6 +1,6 @@
 import { Collection, GuildBan, GuildBanManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings } from "../utils";
+import { compareStrings, replaceMentionCharacters } from "../utils";
 
 export class GuildBans {
   declare cache: GuildBanManager["cache"];
@@ -70,6 +70,7 @@ export class GuildBans {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((ban) => [
         ban.user.displayName?.toLowerCase(),

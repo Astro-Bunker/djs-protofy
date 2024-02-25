@@ -1,7 +1,7 @@
 import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, exists, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
 
 export class Channels {
@@ -244,6 +244,7 @@ export class Channels {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((channel) => [
         "name" in channel && channel.name?.toLowerCase(),

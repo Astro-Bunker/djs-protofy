@@ -37,6 +37,10 @@ export function isInstanceOf<O, T extends Constructable<O>>(o: O, t: T | T[]): o
   return o instanceof t;
 }
 
+export function replaceMentionCharacters(s: string) {
+  return s.replace(/<[@#][!&]?(\d{17,})>/, "$1");
+}
+
 export function resolveEnum<T extends EnumLike<any, any>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum(enumLike: EnumLike<any, any>, value: unknown) {
   if (typeof value === "string") return enumLike[value];

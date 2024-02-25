@@ -1,6 +1,6 @@
 import { Collection, PermissionResolvable, Role, RoleManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings } from "../utils";
+import { compareStrings, replaceMentionCharacters } from "../utils";
 
 export class Roles {
   declare cache: RoleManager["cache"];
@@ -145,6 +145,7 @@ export class Roles {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((role) => [
         role.name.toLowerCase(),

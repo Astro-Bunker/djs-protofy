@@ -1,6 +1,6 @@
 import { APIGuild, Collection, Guild, GuildManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, replaceMentionCharacters, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedGuild } from "../utils/shardUtils";
 
 export class Guilds {
@@ -137,6 +137,7 @@ export class Guilds {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((guild) => [
         guild.name.toLowerCase(),

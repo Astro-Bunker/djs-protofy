@@ -1,7 +1,7 @@
 import { CategoryChannel, ChannelType, Collection, GuildBasedChannel, GuildChannelManager, GuildChannelType, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { GuildChannelTypeString, GuildChannelWithType } from "../@types";
-import { compareStrings, exists, resolveEnum } from "../utils";
+import { compareStrings, exists, replaceMentionCharacters, resolveEnum } from "../utils";
 
 export class GuildChannels {
   declare cache: GuildChannelManager["cache"];
@@ -169,6 +169,7 @@ export class GuildChannels {
   }
 
   protected _searchByString(query: string) {
+    query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
       this.cache.find((channel) => [
         channel.name.toLowerCase(),
