@@ -37,6 +37,11 @@ export function isInstanceOf<O, T extends Constructable<O>>(o: O, t: T | T[]): o
   return o instanceof t;
 }
 
+/**
+ * This replaces special characters mentioning user, channel or role leaving only the id in snowflate format.
+ * 
+ * https://discord.com/developers/docs/reference#message-formatting
+ */
 export function replaceMentionCharacters(s: string) {
   return s.replace(/<[@#][!&]?(\d{17,})>/, "$1");
 }
