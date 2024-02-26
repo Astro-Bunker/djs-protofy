@@ -6,7 +6,7 @@ export function verifyDJSVersion() {
   const v = Number(version.split(".")[0]);
 
   if (v !== suportedDJSVersion) {
-    console.warn(`Expected discord.js@${suportedDJSVersion}. Some features may not work correctly.`);
+    process.emitWarning(`Expected discord.js@${suportedDJSVersion}. Some features may not work correctly.`);
   }
 }
 
@@ -21,14 +21,15 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
   return s1 === s2;
 }
 
-export function excludeNullishProperties<T extends Record<any, any>>(o: T): void;
+export function excludeNullishProperties<O extends Record<any, any>>(O: O): void;
 export function excludeNullishProperties(o: Record<any, any>) {
   for (const [key, value] of Object.entries(o)) {
     if (!exists(value)) delete o[key];
   }
 }
 
-export function exists<O>(o: O): o is NonNullable<O> {
+export function exists<O>(O: O): O is NonNullable<O>;
+export function exists(o: unknown) {
   return o !== undefined && o !== null;
 }
 
@@ -46,15 +47,16 @@ export function replaceMentionCharacters(s: string) {
   return s.replace(/<[@#][!&]?(\d{17,})>/, "$1");
 }
 
-export function resolveEnum<T extends EnumLike<any, any>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
+export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
+export function resolveEnum<T extends EnumLike<keyof T, T[keyof T]>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum(enumLike: EnumLike<any, any>, value: unknown) {
   if (typeof value === "string") return enumLike[value];
   return value;
 }
 
-export function serializeRegExp<R extends RegExp>(r: R): { flags: R["flags"], isRegExp: true, source: R["source"] };
-export function serializeRegExp<S extends string>(s: S): { isRegExp: false, source: S };
 export function serializeRegExp(u: string | RegExp): { flags?: string, isRegExp: boolean, source: string };
+export function serializeRegExp<R extends RegExp>(R: R): { flags: R["flags"], isRegExp: true, source: R["source"] };
+export function serializeRegExp<S extends string>(S: S): { isRegExp: false, source: S };
 export function serializeRegExp(value: string | RegExp) {
   if (isRegExp(value)) {
     return {
@@ -70,8 +72,8 @@ export function serializeRegExp(value: string | RegExp) {
   };
 }
 
-export function to_snake_case<U>(u: U): U;
-export function to_snake_case<S extends string>(s: S): string;
+export function to_snake_case<U>(U: U): U;
+export function to_snake_case<S extends string>(S: S): string;
 export function to_snake_case<R extends Record<string, unknown>>(R: R): R;
 export function to_snake_case(u: string | Record<string, unknown>) {
   if (typeof u === "string")
