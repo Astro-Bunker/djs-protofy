@@ -76,14 +76,16 @@ export function mapSelectMenuOptions<
         return accOptions;
       }, []);
 
-      if (options.length) return accMenus.concat(new StringSelectMenuBuilder({
-        custom_id: menu.custom_id,
-        disabled: menu.disabled,
-        max_values: Math.min(options.length, menu.max_values ?? 1) || 1,
-        min_values: Math.min(options.length, menu.min_values ?? 0),
-        placeholder: menu.placeholder,
-      })
-        .addOptions(options));
+      if (options.length) {
+        return accMenus.concat(new StringSelectMenuBuilder({
+          custom_id: menu.custom_id,
+          disabled: menu.disabled,
+          max_values: Math.min(options.length, menu.max_values ?? 1),
+          min_values: Math.min(options.length, menu.min_values ?? 1),
+          placeholder: menu.placeholder,
+        })
+          .addOptions(options));
+      }
 
       return accMenus;
     }, []);
