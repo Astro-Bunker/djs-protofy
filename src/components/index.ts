@@ -1,6 +1,9 @@
 import { APIActionRowComponentTypes, ActionRow, ActionRowBuilder, AnyComponentBuilder, MessageActionRowComponent, TextInputComponent, createComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
+export * from "./button";
+export * from "./selectmenu";
+
 export function mapComponents<
   T extends ActionRow<MessageActionRowComponent | TextInputComponent> | ActionRowBuilder<AnyComponentBuilder>
 >(
