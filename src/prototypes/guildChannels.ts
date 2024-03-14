@@ -39,7 +39,7 @@ export class GuildChannels {
     const resolvedType = exists(type) && resolveEnum(ChannelType, type);
 
     return this.cache.find(channel => {
-      if (type && channel.type !== resolvedType) return false;
+      if (exists(type) && channel.type !== resolvedType) return false;
 
       if ("name" in channel && channel.name) {
         if (typeof name === "string") {
@@ -59,7 +59,7 @@ export class GuildChannels {
     const resolvedType = exists(type) && resolveEnum(ChannelType, type);
 
     return this.cache.find(channel => {
-      if (type && channel.type !== resolvedType) return false;
+      if (exists(type) && channel.type !== resolvedType) return false;
 
       if ("topic" in channel && channel.topic) {
         if (typeof topic === "string")
