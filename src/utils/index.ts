@@ -1,4 +1,4 @@
-import { Constructable, EnumLike, version } from "discord.js";
+import { EnumLike, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 
@@ -33,11 +33,6 @@ export function exists(o: unknown) {
   return o !== undefined && o !== null;
 }
 
-export function isInstanceOf<O, T extends Constructable<O>>(o: O, t: T | T[]): o is InstanceType<T> {
-  if (Array.isArray(t)) return t.every(t => o instanceof t);
-  return o instanceof t;
-}
-
 /**
  * This replaces special characters mentioning user, channel or role leaving only the id in snowflate format.
  * 
@@ -49,8 +44,8 @@ export function replaceMentionCharacters(s: string) {
 
 export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum<T extends EnumLike<keyof T, T[keyof T]>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
-export function resolveEnum(enumLike: EnumLike<any, any>, value: unknown) {
-  if (typeof value === "string") return enumLike[value];
+export function resolveEnum(enumLike: EnumLike<any, any>, value: any) {
+  if (isNaN(value)) return enumLike[value] ?? Object.values(enumLike).includes(value) ? value : undefined;
   return value;
 }
 
@@ -75,15 +70,15 @@ export function serializeRegExp(value: string | RegExp) {
 export function to_snake_case<U>(U: U): U;
 export function to_snake_case<S extends string>(S: S): string;
 export function to_snake_case<R extends Record<string, unknown>>(R: R): R;
-export function to_snake_case(u: string | Record<string, unknown>) {
+export function to_snake_case(u: unknown) {
+  if (!exists(u)) return u;
+
   if (typeof u === "string")
     return u.replace(/(^[A-Z])|([A-Z])/g, (_, a, b) => a ? a.toLowerCase() : `_${b.toLowerCase()}`);
 
-  const newObject: Record<string, unknown> = {};
+  if (Array.isArray(u))
+    return u.map(v => typeof v === "object" ? to_snake_case(v) : v);
 
-  for (const iterator of Object.keys(u)) {
-    newObject[to_snake_case(iterator)] = u[iterator];
-  }
-
-  return newObject;
+  return Object.entries(u)
+    .map(([k, v]) => ({ [to_snake_case(k)]: typeof v === "object" ? to_snake_case(v) : v }));
 }
