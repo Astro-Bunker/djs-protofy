@@ -52,7 +52,7 @@ export const enum EmbedLimits {
 export const enum ActionRowLimits {
   Buttons = 5,
   SelectMenus = 1,
-  TextInputs = 5,
+  TextInputs = 1,
 }
 
 export const enum ButtonLimits {
