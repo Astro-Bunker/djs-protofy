@@ -14,12 +14,15 @@ import { SMessage } from "./prototypes/message";
 import { Messages } from "./prototypes/messages";
 import { Roles } from "./prototypes/roles";
 import { SShardClientUtil } from "./prototypes/shardClientUtil";
+import { SString } from "./prototypes/string";
 import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
 
 export class DJSProtofy {
   constructor() {
     verifyDJSVersion();
+
+    new SString();
 
     new SApplicationCommand();
     new ApplicationCommands();

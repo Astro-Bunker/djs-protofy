@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 
-export const enum ApplicationCommandChoiceLimits {
+export enum ApplicationCommandChoiceLimits {
   /** 1-100 character choice name */
   Name = 100,
   /** Value for the choice, up to 100 characters if string */
   Value = 100,
 }
 
-export const enum ApplicationCommandOptionLimits {
+export enum ApplicationCommandOptionLimits {
   /** 1-32 character name */
   Name = 32,
   /** 1-100 character description */
@@ -23,7 +23,7 @@ export const enum ApplicationCommandOptionLimits {
 /**
  * https://discord.com/developers/docs/interactions/application-commands#application-command-object
  */
-export const enum ApplicationCommandLimits {
+export enum ApplicationCommandLimits {
   /** Name of command, 1-32 characters */
   Name = 32,
   /** Description for `CHAT_INPUT` commands, 1-100 characters. Empty string for `USER` and `MESSAGE` commands */
@@ -32,7 +32,7 @@ export const enum ApplicationCommandLimits {
   Options = 25,
 }
 
-export const enum EmbedFieldLimits {
+export enum EmbedFieldLimits {
   Name = 256,
   Value = 1024,
 }
@@ -40,7 +40,7 @@ export const enum EmbedFieldLimits {
 /**
  * https://discord.com/developers/docs/resources/channel#embed-object-embed-limits
  */
-export const enum EmbedLimits {
+export enum EmbedLimits {
   Title = 256,
   Description = 4096,
   Fields = 25,
@@ -48,20 +48,20 @@ export const enum EmbedLimits {
   AuthorName = 256,
 }
 
-export const enum ActionRowLimits {
+export enum ActionRowLimits {
   Buttons = 5,
   SelectMenus = 1,
   TextInputs = 1,
 }
 
-export const enum ButtonLimits {
+export enum ButtonLimits {
   /** Developer-defined identifier for the button; max 100 characters */
   CustomId = 100,
   /** Text that appears on the button; max 80 characters */
   Label = 80,
 }
 
-export const enum SelectMenuOptionLimits {
+export enum SelectMenuOptionLimits {
   /** User-facing name of the option; max 100 characters */
   Label = 100,
   /** Dev-defined value of the option; max 100 characters */
@@ -70,7 +70,7 @@ export const enum SelectMenuOptionLimits {
   Description = 100,
 }
 
-export const enum SelectMenuLimits {
+export enum SelectMenuLimits {
   /** ID for the select menu; max 100 characters */
   CustomId = 100,
   /** Minimum number of items that must be chosen (defaults to 1); min 0, max 25 */
@@ -86,7 +86,7 @@ export const enum SelectMenuLimits {
 /**
  * https://discord.com/developers/docs/resources/channel#create-message-jsonform-params
  */
-export const enum MessageLimits {
+export enum MessageLimits {
   /** Message contents (up to 2000 characters) */
   Content = 2000,
   /** Components to include with the message */
@@ -96,7 +96,7 @@ export const enum MessageLimits {
   Total = 6000,
 }
 
-export const enum TextInputLimits {
+export enum TextInputLimits {
   /** Developer-defined identifier for the input; max 100 characters */
   CustomId = 100,
   /** Label for this component; max 45 characters */
@@ -109,4 +109,47 @@ export const enum TextInputLimits {
   Value = 4000,
   /** Custom placeholder text if the input is empty; max 100 characters */
   Placeholder = 100,
+}
+
+export enum DiscordLimits {
+  ActionRowButtons = 5,
+  ActionRowSelectMenus = 1,
+  ActionRowTextInputs = 1,
+  ApplicationCommandName = 32,
+  ApplicationCommandDescription = 100,
+  ApplicationCommandOptions = 25,
+  ApplicationCommandOptionName = 32,
+  ApplicationCommandOptionDescription = 100,
+  ApplicationCommandOptionChoices = 25,
+  ApplicationCommandOptionMinLength = 6000,
+  ApplicationCommandOptionMaxLength = 6000,
+  ApplicationCommandChoiceName = 100,
+  ApplicationCommandChoiceValue = 100,
+  ButtonCustomId = 100,
+  ButtonLabel = 80,
+  EmbedTitle = 256,
+  EmbedDescription = 4096,
+  EmbedFields = 25,
+  EmbedFooterText = 2048,
+  EmbedAuthorName = 256,
+  EmbedFieldName = 256,
+  EmbedFieldValue = 1024,
+  MessageComponents = 5,
+  MessageContent = 2000,
+  MessageEmbeds = 10,
+  MessageTotal = 6000,
+  SelectMenuCustomId = 100,
+  SelectMenuMinValues = 25,
+  SelectMenuMaxValues = 25,
+  SelectMenuOptions = 25,
+  SelectMenuPlaceholder = 150,
+  SelectMenuOptionLabel = 100,
+  SelectMenuOptionValue = 100,
+  SelectMenuOptionDescription = 100,
+  TextInputCustomId = 100,
+  TextInputLabel = 45,
+  TextInputMinLength = 4000,
+  TextInputMaxLength = 4000,
+  TextInputValue = 4000,
+  TextInputPlaceholder = 100,
 }
