@@ -46,7 +46,6 @@ export const enum EmbedLimits {
   Fields = 25,
   FooterText = 2048,
   AuthorName = 256,
-  Total = 6000,
 }
 
 export const enum ActionRowLimits {
@@ -94,6 +93,7 @@ export const enum MessageLimits {
   Components = 5,
   /** Up to 10 `rich` embeds (up to 6000 characters) */
   Embeds = 10,
+  Total = 6000,
 }
 
 export const enum TextInputLimits {
