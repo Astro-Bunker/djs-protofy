@@ -17,6 +17,8 @@ import type { Roles } from "./src/prototypes/roles";
 import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
 import type { Users } from "./src/prototypes/users";
 
+export type * from "./src";
+
 declare module "discord.js" {
   interface ApplicationCommand extends SApplicationCommand { }
 
