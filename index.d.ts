@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import type { EnumLike } from "discord.js";
 import { DiscordLimits } from "./src/@enum";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
@@ -59,6 +60,13 @@ declare module "discord.js" {
 }
 
 declare global {
+  var animated: true;
+  var disabled: true;
+  var ephemeral: true;
+  var fetchReply: true;
+  var inline: true;
+  var required: true;
+
   interface String {
     limit<T extends typeof DiscordLimits>(size: keyof T | T[keyof T], enumLike?: T): string
     limit<T extends EnumLike>(size: keyof T | T[keyof T] | number, enumLike: T): string

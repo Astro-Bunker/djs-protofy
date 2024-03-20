@@ -22,6 +22,15 @@ export class DJSProtofy {
   constructor() {
     verifyDJSVersion();
 
+    Object.assign(globalThis, {
+      animated: true,
+      disabled: true,
+      ephemeral: true,
+      fetchReply: true,
+      inline: true,
+      required: true,
+    });
+
     new SString();
 
     new SApplicationCommand();
