@@ -45,7 +45,7 @@ export function replaceMentionCharacters(s: string) {
 export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum<T extends EnumLike<keyof T, T[keyof T]>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum(enumLike: EnumLike<any, any>, value: any) {
-  if (isNaN(value)) return enumLike[value] ?? Object.values(enumLike).includes(value) ? value : undefined;
+  if (isNaN(value)) return enumLike[value] ?? (Object.values(enumLike).includes(value) ? value : undefined);
   return value;
 }
 

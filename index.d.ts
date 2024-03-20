@@ -1,6 +1,6 @@
 /* eslint-disable no-var */
 import type { EnumLike } from "discord.js";
-import { DiscordLimits } from "./src/@enum";
+import { DiscordStringLimits } from "./src/@enum";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { Channels } from "./src/prototypes/channels";
@@ -68,7 +68,7 @@ declare global {
   var required: true;
 
   interface String {
-    limit<T extends typeof DiscordLimits>(size: keyof T | T[keyof T], enumLike?: T): string
+    limit<T extends typeof DiscordStringLimits>(size: keyof T | T[keyof T], enumLike?: T): string
     limit<T extends EnumLike>(size: keyof T | T[keyof T] | number, enumLike: T): string
     limit(size: number): string
   }

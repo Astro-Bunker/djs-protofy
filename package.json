@@ -6,11 +6,12 @@
   "types": "index.d.ts",
   "scripts": {
     "watch": "tsc -watch",
+    "test:node": "node --test out/test",
+    "test": "npm run test:ts && npm run build && npm run test:node",
+    "test:ts": "tsc --noEmit",
     "build": "tsc",
     "prepublish": "npm run build",
-    "release": "npm run prepublish && npm publish",
-    "test": "npm run test:ts",
-    "test:ts": "tsc --noEmit"
+    "release": "npm run prepublish && npm publish"
   },
   "keywords": [
     "discord.js",
