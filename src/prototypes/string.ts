@@ -1,5 +1,5 @@
 import type { EnumLike } from "discord.js";
-import { DiscordLimits } from "../@enum";
+import { DiscordStringLimits } from "../@enum";
 import { exists, resolveEnum } from "../utils";
 
 export class SString {
@@ -13,7 +13,7 @@ export class SString {
   }
 
   limit(length: number, enumLike?: EnumLike<any, any>) {
-    if (!exists(enumLike)) enumLike = DiscordLimits;
+    if (!exists(enumLike)) enumLike = DiscordStringLimits;
 
     if (typeof length !== "number")
       length = resolveEnum(enumLike, length) ?? this.length;
