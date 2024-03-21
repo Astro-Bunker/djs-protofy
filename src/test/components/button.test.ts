@@ -4,7 +4,7 @@ import test, { describe } from "node:test";
 import { mapButtons } from "../../components";
 
 describe("Testing mapping buttons", () => {
-  const BUTTONS = [
+  const components = [
     new ActionRowBuilder<ButtonBuilder>({
       components: Array.from(Array(5)).map((_, i) => new ButtonBuilder({
         custom_id: "customId" + i,
@@ -15,13 +15,18 @@ describe("Testing mapping buttons", () => {
   ];
 
   test("Mapping buttons", () => {
-    const actual = mapButtons(BUTTONS, (button) => {
+    const actual = mapButtons(components, (button) => {
+      /** Skip non matched buttons */
       if (button.style === ButtonStyle.Link) return button;
+
+      /** Editing matched buttons */
       if (button.custom_id === "customId1") {
-        button.label = "edit";
+        button.label = "edited";
         button.style = ButtonStyle.Secondary;
         return button;
       }
+
+      /** Removing another buttons */
       return null;
     });
 
@@ -30,7 +35,7 @@ describe("Testing mapping buttons", () => {
         components: [
           new ButtonBuilder({
             custom_id: "customId1",
-            label: "edit",
+            label: "edited",
             style: ButtonStyle.Secondary,
           }),
         ],
