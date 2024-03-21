@@ -1,5 +1,5 @@
+import assert from "assert";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, UserSelectMenuBuilder } from "discord.js";
-import assert from "node:assert";
 import test, { describe } from "node:test";
 import { mapComponents } from "../../components";
 
