@@ -1,7 +1,7 @@
 import assert from "assert";
-import { ActionRowBuilder, StringSelectMenuBuilder, UserSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, UserSelectMenuBuilder } from "discord.js";
 import test, { describe } from "node:test";
-import { mapSelectMenuOptions, mapSelectMenus } from "../../components";
+import { getDefaultOptionFromSelectMenu, mapSelectMenuOptions, mapSelectMenus } from "../../components";
 
 describe("Testing mapping select menus", () => {
   const components = Array.from(Array(5)).map((_, i) => new ActionRowBuilder<UserSelectMenuBuilder>({
@@ -81,5 +81,34 @@ describe("Testing mapping select menu options", () => {
     ];
 
     assert.deepStrictEqual(actual.map(r => r.toJSON()), expected.map(r => r.toJSON()));
+  });
+});
+
+describe("Testing getting default select menu option", () => {
+  const components = [
+    new ActionRowBuilder<StringSelectMenuBuilder>({
+      components: [
+        new StringSelectMenuBuilder({
+          custom_id: "stringSelectMenuId",
+          options: Array.from(Array(25)).map((_, i) => ({
+            label: "label" + i,
+            value: "value" + i,
+            default: i === 10,
+          })),
+        }),
+      ],
+    }),
+  ];
+
+  test("Getting default select menu option", () => {
+    const actual = getDefaultOptionFromSelectMenu(components);
+
+    const expected = new StringSelectMenuOptionBuilder({
+      label: "label10",
+      value: "value10",
+      default: true,
+    });
+
+    assert.deepStrictEqual(actual, expected.toJSON());
   });
 });

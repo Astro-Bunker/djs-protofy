@@ -11,12 +11,14 @@ const selectMenuTypes = [
 
 export function getDefaultOptionFromSelectMenu(
   components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  customId?: string,
 ) {
   let optionDefault: APISelectMenuOption | undefined;
 
   components?.some(row =>
     row.toJSON().components.some(element =>
       "options" in element &&
+      (typeof customId === "string" ? element.custom_id === customId : true) &&
       element.options.some(option =>
         option.default && (optionDefault = option))));
 
