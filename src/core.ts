@@ -1,6 +1,7 @@
 import { setTimeout as sleep } from "timers/promises";
 import { SApplicationCommand } from "./prototypes/applicationCommand";
 import { ApplicationCommands } from "./prototypes/applicationCommands";
+import { SArray } from "./prototypes/array";
 import { Channels } from "./prototypes/channels";
 import { SCollection } from "./prototypes/collection";
 import { Emojis } from "./prototypes/emojis";
@@ -33,6 +34,7 @@ export class DJSProtofy {
       sleep,
     });
 
+    new SArray();
     new SString();
 
     new SApplicationCommand();
