@@ -1,6 +1,6 @@
 import { Collection } from "discord.js";
 
-export class SCollection<K = unknown, V = unknown> {
+export class SCollection<K, V> {
   declare keys: Collection<K, V>["keys"];
   declare values: Collection<K, V>["values"];
 
