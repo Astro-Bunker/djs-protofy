@@ -17,7 +17,7 @@ describe("Testing Array#random", () => {
     const actual = array.random(array.length);
 
     assert.strictEqual(actual.every(v => array.includes(v)), true);
-    assert.deepStrictEqual(actual.map(v => actual.lastIndexOf(v)), Array.from(Array(array.length).keys()));
+    assert.deepStrictEqual(actual.map(v => actual.lastIndexOf(v)).sort(), Array.from(Array(array.length).keys()));
   });
 
   test("reandom(NaN)", () => {
