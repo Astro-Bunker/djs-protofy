@@ -1,10 +1,12 @@
 /* eslint-disable no-var */
 import type { EnumLike } from "discord.js";
 import type { setTimeout } from "timers/promises";
-import { DiscordStringLimits } from "./src/@enum";
+import type { DiscordStringLimits } from "./src/@enum";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
+import type { SArray } from "./src/prototypes/array";
 import type { Channels } from "./src/prototypes/channels";
+import type { SCollection } from "./src/prototypes/collection";
 import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildBans } from "./src/prototypes/guildBans";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
@@ -17,6 +19,7 @@ import type { SMessage } from "./src/prototypes/message";
 import type { Messages } from "./src/prototypes/messages";
 import type { Roles } from "./src/prototypes/roles";
 import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
+import type { SString } from "./src/prototypes/string";
 import type { Users } from "./src/prototypes/users";
 
 export type * from "./src";
@@ -54,10 +57,7 @@ declare module "discord.js" {
 
   interface UserManager extends Users { }
 
-  interface Collection<K, V> {
-    keysToArray(): K[]
-    valuesToArray(): V[]
-  }
+  interface Collection<K, V> extends SCollection<K, V> { }
 }
 
 declare global {
@@ -70,7 +70,13 @@ declare global {
 
   declare function sleep<T = void>(...args: Parameters<typeof setTimeout<T>>): ReturnType<typeof setTimeout<T>>;
 
-  interface String {
+  interface Array<T> extends SArray<T> {
+    random(): T
+    random(amount: number): T[]
+    random(amount: number, allowDuplicates: boolean): T[]
+  }
+
+  interface String extends SString {
     limit<T extends typeof DiscordStringLimits>(size: keyof T | T[keyof T], enumLike?: T): string
     limit<T extends EnumLike>(size: keyof T | T[keyof T] | number, enumLike: T): string
     limit(size: number): string
