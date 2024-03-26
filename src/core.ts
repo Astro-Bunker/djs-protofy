@@ -1,3 +1,4 @@
+import { setTimeout as sleep } from "timers/promises";
 import { SApplicationCommand } from "./prototypes/applicationCommand";
 import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { Channels } from "./prototypes/channels";
@@ -29,6 +30,7 @@ export class DJSProtofy {
       fetchReply: true,
       inline: true,
       required: true,
+      sleep,
     });
 
     new SString();

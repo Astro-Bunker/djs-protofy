@@ -1,5 +1,6 @@
 /* eslint-disable no-var */
 import type { EnumLike } from "discord.js";
+import type { setTimeout } from "timers/promises";
 import { DiscordStringLimits } from "./src/@enum";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
@@ -66,6 +67,8 @@ declare global {
   var fetchReply: true;
   var inline: true;
   var required: true;
+
+  declare function sleep<T = void>(...args: Parameters<typeof setTimeout<T>>): ReturnType<typeof setTimeout<T>>;
 
   interface String {
     limit<T extends typeof DiscordStringLimits>(size: keyof T | T[keyof T], enumLike?: T): string
