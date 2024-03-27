@@ -22,7 +22,7 @@ import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
 import type { SString } from "./src/prototypes/string";
 import type { Users } from "./src/prototypes/users";
 
-export type * from "./src";
+export * from "./src";
 
 declare module "discord.js" {
   interface ApplicationCommand extends SApplicationCommand { }
