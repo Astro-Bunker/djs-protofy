@@ -10,7 +10,8 @@
     "test": "npm run test:ts && npm run build && npm run test:node",
     "test:ts": "tsc --noEmit",
     "build": "tsc",
-    "prepublish": "npm run build",
+    "build:esm": "gen-esm-wrapper . out/index.mjs",
+    "prepublish": "npm run build && npm run build:esm",
     "release": "npm run prepublish && npm publish"
   },
   "keywords": [
