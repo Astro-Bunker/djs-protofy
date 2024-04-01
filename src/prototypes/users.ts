@@ -153,32 +153,16 @@ export class Users {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find((user) =>
-      (
-        query.id && (
-          typeof query.id === "string" ?
-            compareStrings(query.id, user.id) :
-            query.id.test(user.id)
-        )
-      ) || (
-        query.displayName && (
-          typeof query.displayName === "string" ?
-            compareStrings(query.displayName, user.displayName) :
-            query.displayName.test(user.displayName)
-        )
-      ) || (
-        query.globalName && user.globalName && (
-          typeof query.globalName === "string" ?
-            compareStrings(query.globalName, user.globalName) :
-            query.globalName.test(user.globalName)
-        )
-      ) || (
-        query.username && (
-          typeof query.username === "string" ?
-            compareStrings(query.username, user.username) :
-            query.username.test(user.username)
-        )
-      ));
+    return typeof query.id === "string" && this.cache.get(query.id) ||
+      this.cache.find(user =>
+        typeof query.displayName === "string" && compareStrings(query.displayName, user.displayName) ||
+        isRegExp(query.displayName) && query.displayName.test(user.displayName) ||
+        typeof query.username === "string" && compareStrings(query.username, user.username) ||
+        isRegExp(query.username) && query.username.test(user.username) ||
+        typeof user.globalName === "string" && (
+          typeof query.globalName === "string" && compareStrings(query.globalName, user.globalName) ||
+          isRegExp(query.globalName) && query.globalName.test(user.globalName)
+        ));
   }
 
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
@@ -192,10 +176,9 @@ export class Users {
 
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((user) =>
-      query.test(user.id) ||
       query.test(user.displayName) ||
       query.test(user.username) ||
-      (user.globalName && query.test(user.globalName)));
+      (typeof user.globalName === "string" && query.test(user.globalName)));
   }
 
   protected _searchByString(query: string) {
@@ -210,7 +193,7 @@ export class Users {
 }
 
 interface Search {
-  id?: string | RegExp
+  id?: string
   displayName?: string | RegExp
   globalName?: string | RegExp
   username?: string | RegExp

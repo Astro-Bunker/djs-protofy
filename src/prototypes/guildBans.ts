@@ -24,32 +24,16 @@ export class GuildBans {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find(ban =>
-      (
-        query.id && (
-          typeof query.id === "string" ?
-            compareStrings(query.id, ban.user.id) :
-            query.id.test(ban.user.id)
-        )
-      ) || (
-        query.displayName && (
-          typeof query.displayName === "string" ?
-            compareStrings(query.displayName, ban.user.displayName) :
-            query.displayName.test(ban.user.displayName)
-        )
-      ) || (
-        query.globalName && ban.user.globalName && (
-          typeof query.globalName === "string" ?
-            compareStrings(query.globalName, ban.user.globalName) :
-            query.globalName.test(ban.user.globalName)
-        )
-      ) || (
-        query.username && (
-          typeof query.username === "string" ?
-            compareStrings(query.username, ban.user.username) :
-            query.username.test(ban.user.username)
-        )
-      ));
+    return typeof query.id === "string" && this.cache.get(query.id) ||
+      this.cache.find(ban =>
+        typeof query.displayName === "string" && compareStrings(query.displayName, ban.user.displayName) ||
+        isRegExp(query.displayName) && query.displayName.test(ban.user.displayName) ||
+        typeof query.username === "string" && compareStrings(query.username, ban.user.username) ||
+        isRegExp(query.username) && query.username.test(ban.user.username) ||
+        typeof ban.user.globalName === "string" && (
+          typeof query.globalName === "string" && compareStrings(query.globalName, ban.user.globalName) ||
+          isRegExp(query.globalName) && query.globalName.test(ban.user.globalName)
+        ));
   }
 
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
@@ -63,10 +47,9 @@ export class GuildBans {
 
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((ban) =>
-      query.test(ban.user.id) ||
       query.test(ban.user.displayName) ||
       query.test(ban.user.username) ||
-      (ban.user.globalName && query.test(ban.user.globalName)));
+      (typeof ban.user.globalName === "string" && query.test(ban.user.globalName)));
   }
 
   protected _searchByString(query: string) {
@@ -81,7 +64,7 @@ export class GuildBans {
 }
 
 interface Search {
-  id?: string | RegExp
+  id?: string
   displayName?: string | RegExp
   globalName?: string | RegExp
   username?: string | RegExp

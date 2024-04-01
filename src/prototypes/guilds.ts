@@ -99,26 +99,12 @@ export class Guilds {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find(guild =>
-      (
-        query.id && (
-          typeof query.id === "string" ?
-            compareStrings(query.id, guild.id) :
-            query.id.test(guild.id)
-        )
-      ) || (
-        query.name && (
-          typeof query.name === "string" ?
-            compareStrings(query.name, guild.name) :
-            query.name.test(guild.name)
-        )
-      ) || (
-        query.ownerId && (
-          typeof query.ownerId === "string" ?
-            compareStrings(query.ownerId, guild.ownerId) :
-            query.ownerId.test(guild.ownerId)
-        )
-      ));
+    return typeof query.id === "string" && this.cache.get(query.id) ||
+      this.cache.find(guild =>
+        typeof query.name === "string" && compareStrings(query.name, guild.name) ||
+        isRegExp(query.name) && query.name.test(guild.name) ||
+        typeof query.ownerId === "string" && compareStrings(query.ownerId, guild.ownerId) ||
+        isRegExp(query.ownerId) && query.ownerId.test(guild.ownerId));
   }
 
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
@@ -131,9 +117,7 @@ export class Guilds {
   }
 
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((guild) =>
-      query.test(guild.id) ||
-      query.test(guild.name));
+    return this.cache.find((guild) => query.test(guild.name));
   }
 
   protected _searchByString(query: string) {
@@ -146,7 +130,7 @@ export class Guilds {
 }
 
 interface Search {
-  id?: string | RegExp
+  id?: string
   name?: string | RegExp
   ownerId?: string | RegExp
 }

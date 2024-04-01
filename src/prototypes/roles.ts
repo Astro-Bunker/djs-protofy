@@ -113,19 +113,10 @@ export class Roles {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find(role =>
-      (
-        query.id && (
-          typeof query.id === "string" ?
-            compareStrings(query.id, role.id) :
-            query.id.test(role.id)
-        )
-      ) || (
-        query.name && (
-          typeof query.name === "string" ?
-            compareStrings(query.name, role.name) :
-            query.name.test(role.name)
-        )
+    return typeof query.id === "string" && this.cache.get(query.id) ||
+      this.cache.find(role => (
+        typeof query.name === "string" && compareStrings(query.name, role.name) ||
+        isRegExp(query.name) && query.name.test(role.name)
       ));
   }
 
@@ -139,9 +130,7 @@ export class Roles {
   }
 
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((role) =>
-      query.test(role.id) ||
-      query.test(role.name));
+    return this.cache.find((role) => query.test(role.name));
   }
 
   protected _searchByString(query: string) {
@@ -154,6 +143,6 @@ export class Roles {
 }
 
 interface Search {
-  id?: string | RegExp
+  id?: string
   name?: string | RegExp
 }

@@ -80,20 +80,12 @@ export class GuildEmojis {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find(emoji =>
-      (
-        query.id && (
-          typeof query.id === "string" ?
-            compareStrings(query.id, emoji.id) :
-            query.id.test(emoji.id)
-        )
-      ) || (
-        query.name && emoji.name && (
-          typeof query.name === "string" ?
-            compareStrings(query.name, emoji.name) :
-            query.name.test(emoji.name)
-        )
-      ));
+    return typeof query.id === "string" && this.cache.get(query.id) ||
+      this.cache.find(emoji =>
+        typeof emoji.name === "string" && (
+          typeof query.name === "string" && compareStrings(query.name, emoji.name) ||
+          isRegExp(query.name) && query.name.test(emoji.name)
+        ));
   }
 
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
@@ -106,9 +98,7 @@ export class GuildEmojis {
   }
 
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((emoji) =>
-      query.test(emoji.id) ||
-      (emoji.name && query.test(emoji.name)));
+    return this.cache.find((emoji) => typeof emoji.name === "string" && query.test(emoji.name));
   }
 
   protected _searchByString(query: string) {
@@ -121,6 +111,6 @@ export class GuildEmojis {
 }
 
 interface Search {
-  id?: string | RegExp
+  id?: string
   name?: string | RegExp
 }

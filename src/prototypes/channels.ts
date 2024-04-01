@@ -205,26 +205,16 @@ export class Channels {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return this.cache.find(channel =>
-      (
-        query.id && (
-          typeof query.id === "string" ?
-            compareStrings(query.id, channel.id) :
-            query.id.test(channel.id)
-        )
-      ) || (
-        query.name && "name" in channel && channel.name && (
-          typeof query.name === "string" ?
-            (compareStrings(query.name, channel.name)) :
-            query.name.test(channel.name)
-        )
-      ) || (
-        query.name && "topic" in channel && channel.topic && (
-          typeof query.name === "string" ?
-            compareStrings(query.name, channel.topic) :
-            query.name.test(channel.topic)
-        )
-      ));
+    return typeof query.id === "string" && this.cache.get(query.id) ||
+      this.cache.find(channel =>
+        "name" in channel && typeof channel.name === "string" && (
+          typeof query.name === "string" && compareStrings(query.name, channel.name) ||
+          isRegExp(query.name) && query.name.test(channel.name)
+        ) ||
+        "topic" in channel && channel.topic && (
+          typeof query.name === "string" && compareStrings(query.name, channel.topic) ||
+          isRegExp(query.name) && query.name.test(channel.topic)
+        ));
   }
 
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
@@ -238,9 +228,8 @@ export class Channels {
 
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((channel) =>
-      query.test(channel.id) ||
-      (("name" in channel && channel.name) && query.test(channel.name)) ||
-      (("topic" in channel && channel.topic) && query.test(channel.topic)));
+      ("name" in channel && typeof channel.name === "string" && query.test(channel.name)) ||
+      ("topic" in channel && typeof channel.topic === "string" && query.test(channel.topic)));
   }
 
   protected _searchByString(query: string) {
@@ -254,7 +243,7 @@ export class Channels {
 }
 
 interface Search {
-  id?: string | RegExp
+  id?: string
   name?: string | RegExp
   topic?: string | RegExp
 }
