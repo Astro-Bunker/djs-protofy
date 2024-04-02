@@ -188,8 +188,6 @@ export class Channels {
     return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
       const channel = shard.channels.getById(channelId);
       if (!channel?.isTextBased()) return;
-      const { AttachmentBuilder } = await import("discord.js");
-      payload.files?.map((attachment: any) => AttachmentBuilder.from(attachment));
       return await channel.send(payload);
     }, { context: { channelId, payload } })
       .then(res => res.find(Boolean) as any)
