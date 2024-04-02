@@ -1,4 +1,4 @@
-import { APIChannel, AttachmentBuilder, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
+import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
@@ -188,7 +188,8 @@ export class Channels {
     return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
       const channel = shard.channels.getById(channelId);
       if (!channel?.isTextBased()) return;
-      payload.files.map((attachment: any) => AttachmentBuilder.from(attachment));
+      const { AttachmentBuilder } = await import("discord.js");
+      payload.files?.map((attachment: any) => AttachmentBuilder.from(attachment));
       return await channel.send(payload);
     }, { context: { channelId, payload } })
       .then(res => res.find(Boolean) as any)
