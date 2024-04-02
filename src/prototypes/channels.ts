@@ -185,7 +185,7 @@ export class Channels {
 
     if (!this.client.shard) return { success: false };
 
-    return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
+    return await this.client.shard.broadcastEval(async (shard, { channelId }) => {
       const channel = shard.channels.getById(channelId);
       if (!channel?.isTextBased()) return;
       return await channel.send(payload);
