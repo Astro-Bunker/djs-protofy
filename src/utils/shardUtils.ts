@@ -90,8 +90,6 @@ export function createBroadcastedMessage(client: Client, data: Record<string, an
   if ("mentions" in data) delete data.mentions;
   excludeNullishProperties(data);
 
-  data = to_snake_case(data);
-
   return data;
   /* try {
     // @ts-expect-error ts(2673)
