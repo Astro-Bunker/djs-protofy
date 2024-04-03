@@ -85,18 +85,19 @@ export function createBroadcastedGuild(client: Client, data: Record<string, any>
   }
 }
 
-export function createBroadcastedMessage(client: Client, data: Message | APIMessage): APIMessage;
+export function createBroadcastedMessage(client: Client, data: Message | APIMessage): Message | undefined;
 export function createBroadcastedMessage(client: Client, data: Record<string, any>) {
   if ("mentions" in data) delete data.mentions;
   excludeNullishProperties(data);
 
-  return data;
-  /* try {
+  data = to_snake_case(data);
+
+  try {
     // @ts-expect-error ts(2673)
     return new Message(client, data);
   } catch (error: any) {
     client.emit("error", error);
-  } */
+  }
 }
 
 export function createBroadcastedUser(client: Client, data: User | APIUser): User | undefined;
