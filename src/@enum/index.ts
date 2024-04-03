@@ -90,6 +90,11 @@ export enum EmbedLimits {
   AuthorName = 256,
 }
 
+/** https://discord.com/developers/docs/resources/emoji */
+export enum EmojiLimits {
+  Name = 32,
+}
+
 export enum GuildLimits {
   /** guild name (2-100 characters, excluding trailing and leading whitespace) */
   Name = 100,
@@ -223,6 +228,7 @@ export enum DiscordLimits {
   EmbedAuthorName = 256,
   EmbedFieldName = 256,
   EmbedFieldValue = 1024,
+  EmojiName = 32,
   GuildName = 100,
   GuildDescription = 120,
   GuildMemberNick = 32,

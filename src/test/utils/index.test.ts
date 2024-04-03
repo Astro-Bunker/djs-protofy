@@ -1,6 +1,57 @@
-import assert from "node:assert";
+import assert from "assert";
 import test, { describe } from "node:test";
-import { to_snake_case } from "../../utils";
+import { replaceMentionCharacters, to_snake_case } from "../../utils";
+
+describe("Testing replaceMentionCharacters", () => {
+  test("replaceMentionCharacters(number)", () => {
+    assert.strictEqual(replaceMentionCharacters("12345678901234567"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("12345678901234567 12345678901234567"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
+  test("replaceMentionCharacters(channel_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("<#12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("<#12345678901234567> <#12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
+  test("replaceMentionCharacters(member_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("<@!12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("<@!12345678901234567> <@!12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
+  test("replaceMentionCharacters(role_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("<@&12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("<@&12345678901234567> <@&12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
+  test("replaceMentionCharacters(user_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("<@12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("<@12345678901234567> <@12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
+  test("replaceMentionCharacters(emoji_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("<:name:12345678901234567>"), "12345678901234567");
+    assert.strictEqual(replaceMentionCharacters("<:a_name:12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("<:name:12345678901234567> <:name:12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+});
 
 describe("Testing to_snake_case", () => {
   test("to_snake_case(string)", () => {
@@ -8,13 +59,11 @@ describe("Testing to_snake_case", () => {
   });
 
   test("to_snake_case(object)", () => {
-    const obj = {
+    const actual = to_snake_case({
       name: "name",
       serverId: "server_id",
       UserId: "user_id",
-    };
-
-    const actual = to_snake_case(obj);
+    });
 
     const expected = {
       name: "name",
@@ -26,13 +75,11 @@ describe("Testing to_snake_case", () => {
   });
 
   test("to_snake_case(array)", () => {
-    const array = [{
+    const actual = to_snake_case([{
       name: "name",
       serverId: "server_id",
       UserId: "user_id",
-    }];
-
-    const actual = to_snake_case(array);
+    }]);
 
     const expected = [{
       name: "name",

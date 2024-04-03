@@ -1,4 +1,4 @@
-import { EnumLike, version } from "discord.js";
+import { type EnumLike, version } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 
@@ -39,7 +39,7 @@ export function exists(o: unknown) {
  * https://discord.com/developers/docs/reference#message-formatting
  */
 export function replaceMentionCharacters(s: string) {
-  return s.replace(/<[@#][!&]?(\d{17,})>/, "$1");
+  return s.replace(/<(?::(?:a_)?\w{1,32}:|[@#][!&]?)(\d{17,})>/g, "$1");
 }
 
 export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
