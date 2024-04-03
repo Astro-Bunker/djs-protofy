@@ -1,4 +1,4 @@
-import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
+import { APIChannel, APIMessage, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
@@ -250,6 +250,6 @@ interface Search {
 
 interface Result {
   error?: Error
-  message?: Message
+  message?: Message | APIMessage
   success: boolean
 }
