@@ -80,5 +80,5 @@ export function to_snake_case(u: unknown) {
     return u.map(v => typeof v === "object" ? to_snake_case(v) : v);
 
   return Object.entries(u)
-    .map(([k, v]) => ({ [to_snake_case(k)]: typeof v === "object" ? to_snake_case(v) : v }));
+    .reduce((a, [k, v]) => Object.assign(a, { [to_snake_case(k)]: typeof v === "object" ? to_snake_case(v) : v }), {});
 }
