@@ -82,8 +82,8 @@ export function mapSelectMenuOptions<
         return accMenus.concat(new StringSelectMenuBuilder({
           custom_id: menu.custom_id,
           disabled: menu.disabled,
-          max_values: Math.min(options.length, menu.max_values ?? 1),
-          min_values: Math.min(options.length, menu.min_values ?? 1),
+          max_values: typeof menu.max_values === "number" ? Math.min(options.length, menu.max_values) : undefined,
+          min_values: typeof menu.min_values === "number" ? Math.min(options.length, menu.min_values) : undefined,
           placeholder: menu.placeholder,
         })
           .addOptions(options));
