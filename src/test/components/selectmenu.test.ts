@@ -38,21 +38,68 @@ describe("Testing mapping select menus", () => {
 });
 
 describe("Testing mapping select menu options", () => {
-  const components = [
-    new ActionRowBuilder<StringSelectMenuBuilder>({
-      components: [
-        new StringSelectMenuBuilder({
-          custom_id: "stringSelectMenuId",
-          options: Array.from(Array(25)).map((_, i) => ({
-            label: "label" + i,
-            value: "value" + i,
-          })),
-        }),
-      ],
-    }),
-  ];
-
   test("Mapping select menu options", () => {
+    const components = [
+      new ActionRowBuilder<StringSelectMenuBuilder>({
+        components: [
+          new StringSelectMenuBuilder({
+            custom_id: "stringSelectMenuId",
+            options: Array.from(Array(25)).map((_, i) => ({
+              label: "label" + i,
+              value: "value" + i,
+            })),
+          }),
+        ],
+      }),
+    ];
+
+    const actual = mapSelectMenuOptions(components, (option) => {
+      if (option.value === "value20") {
+        option.label = "edited";
+        return option;
+      }
+
+      return null;
+    });
+
+    const expected = [
+      new ActionRowBuilder<StringSelectMenuBuilder>({
+        components: [
+          new StringSelectMenuBuilder({
+            custom_id: "stringSelectMenuId",
+            disabled: undefined,
+            max_values: undefined,
+            min_values: undefined,
+            placeholder: undefined,
+            options: [{
+              label: "edited",
+              value: "value20",
+            }],
+          }),
+        ],
+      }),
+    ];
+
+    assert.deepStrictEqual(actual.map(r => r.toJSON()), expected.map(r => r.toJSON()));
+  });
+
+  test("Mapping select menu options with max_values=25", () => {
+    const components = [
+      new ActionRowBuilder<StringSelectMenuBuilder>({
+        components: [
+          new StringSelectMenuBuilder({
+            custom_id: "stringSelectMenuId",
+            options: Array.from(Array(25)).map((_, i) => ({
+              label: "label" + i,
+              value: "value" + i,
+            })),
+            max_values: 25,
+            min_values: 25,
+          }),
+        ],
+      }),
+    ];
+
     const actual = mapSelectMenuOptions(components, (option) => {
       if (option.value === "value20") {
         option.label = "edited";
