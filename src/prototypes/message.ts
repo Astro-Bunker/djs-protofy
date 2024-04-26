@@ -16,6 +16,7 @@ export class SMessage {
     });
   }
 
+  /** @DJSProtofy */
   async parseMentions() {
     await Promise.all([
       new Promise(r => r(this.parseChannelMentions())),
@@ -25,6 +26,7 @@ export class SMessage {
     ]);
   }
 
+  /** @DJSProtofy */
   parseChannelMentions(): Collection<string, Channel> {
     const queries = new Set(this.content.trim().split(/\s+/g));
 
@@ -42,6 +44,7 @@ export class SMessage {
     return this.mentions.channels;
   }
 
+  /** @DJSProtofy */
   async parseMemberMentions(): Promise<Collection<string, GuildMember>> {
     if (!this.guild) return this.mentions.members ?? new Collection();
 
@@ -73,6 +76,7 @@ export class SMessage {
     return this.mentions.members!;
   }
 
+  /** @DJSProtofy */
   parseRoleMentions(): Collection<string, Role> {
     if (!this.guild) return this.mentions.roles;
 
@@ -91,6 +95,7 @@ export class SMessage {
     return this.mentions.roles;
   }
 
+  /** @DJSProtofy */
   async parseUserMentions(): Promise<Collection<string, User>> {
     const ids = this.content.match(/\d{17,}/g);
 

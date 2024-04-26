@@ -24,10 +24,12 @@ export class Emojis {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string) {
     return this.cache.get(id);
   }
 
+  /** @DJSProtofy */
   getByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -42,40 +44,49 @@ export class Emojis {
     });
   }
 
+  /** @DJSProtofy */
   filterByAuthorId(id: string) {
     if (typeof id !== "string") return new Collection<string, GuildEmoji>();
     return this.cache.filter(emoji => emoji.author?.id === id);
   }
 
+  /** @DJSProtofy */
   filterByGuildId(id: string) {
     if (typeof id !== "string") return new Collection<string, GuildEmoji>();
     return this.cache.filter(emoji => emoji.guild?.id === id);
   }
 
+  /** @DJSProtofy */
   filterAnimateds() {
     return this.cache.filter(emoji => emoji.animated);
   }
 
+  /** @DJSProtofy */
   filterStatics() {
     return this.cache.filter(emoji => !emoji.animated);
   }
 
+  /** @DJSProtofy */
   filterAvailables() {
     return this.cache.filter(emoji => emoji.available);
   }
 
+  /** @DJSProtofy */
   filterUnavailables() {
     return this.cache.filter(emoji => !emoji.available);
   }
 
+  /** @DJSProtofy */
   filterDeletables() {
     return this.cache.filter(emoji => emoji.deletable);
   }
 
+  /** @DJSProtofy */
   filterUndeletables() {
     return this.cache.filter(emoji => !emoji.deletable);
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): GuildEmoji | undefined;
   searchBy<T extends RegExp>(query: T): GuildEmoji | undefined;
   searchBy<T extends Search>(query: T): GuildEmoji | undefined;
@@ -94,6 +105,7 @@ export class Emojis {
         ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -103,10 +115,12 @@ export class Emojis {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((emoji) => typeof emoji.name === "string" && query.test(emoji.name));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

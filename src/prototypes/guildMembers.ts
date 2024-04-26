@@ -20,10 +20,12 @@ export class GuildMembers {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string) {
     return this.cache.get(id);
   }
 
+  /** @DJSProtofy */
   getByDisplayName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -36,6 +38,7 @@ export class GuildMembers {
     });
   }
 
+  /** @DJSProtofy */
   getByNickname(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -50,6 +53,7 @@ export class GuildMembers {
     });
   }
 
+  /** @DJSProtofy */
   getByUserDisplayName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -62,6 +66,7 @@ export class GuildMembers {
     });
   }
 
+  /** @DJSProtofy */
   getByUserGlobalName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -76,6 +81,7 @@ export class GuildMembers {
     });
   }
 
+  /** @DJSProtofy */
   getByUserUsername(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -88,6 +94,7 @@ export class GuildMembers {
     });
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): GuildMember | undefined;
   searchBy<T extends RegExp>(query: T): GuildMember | undefined;
   searchBy<T extends Search>(query: T): GuildMember | undefined;
@@ -114,6 +121,7 @@ export class GuildMembers {
         ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -123,6 +131,7 @@ export class GuildMembers {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((member) =>
       query.test(member.displayName) ||
@@ -131,6 +140,7 @@ export class GuildMembers {
       (typeof member.user.globalName === "string" && query.test(member.user.globalName)));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

@@ -12,6 +12,7 @@ export class SArray<T> {
     });
   }
 
+  /** @DJSProtofy */
   random(amount?: number, allowDuplicates?: boolean) {
     if (typeof amount === "number") {
       if (isNaN(amount) || amount < 1) return [];
@@ -28,6 +29,7 @@ export class SArray<T> {
     return this[randomInt(this.length)];
   }
 
+  /** @DJSProtofy */
   shuffle() {
     return this.sort(() => Math.random() - 0.5);
   }

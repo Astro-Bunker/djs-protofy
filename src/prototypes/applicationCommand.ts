@@ -13,6 +13,7 @@ export class SApplicationCommand {
     });
   }
 
+  /** @DJSProtofy */
   getMention(): `</${string}:${string}>`;
   getMention<S extends string>(subCommand: S): `</${string} ${S}:${string}>`;
   getMention<G extends string, S extends string>(subGroup: G, subCommand: S): `</${string} ${G} ${S}:${string}>`;
@@ -26,6 +27,7 @@ export class SApplicationCommand {
     return this.mention;
   }
 
+  /** @DJSProtofy */
   toString() {
     return this.mention;
   }

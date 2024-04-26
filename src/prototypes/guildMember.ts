@@ -15,18 +15,21 @@ export class SGuildMember {
     });
   }
 
+  /** @DJSProtofy */
   bannableBy(member: GuildMemberResolvable) {
     member = this.guild.members.resolve(member)!;
     if (!member) return false;
     return this.manageableBy(member) && member.permissions.has(PermissionFlagsBits.BanMembers);
   }
 
+  /** @DJSProtofy */
   kickableBy(member: GuildMemberResolvable) {
     member = this.guild.members.resolve(member)!;
     if (!member) return false;
     return this.manageableBy(member) && member.permissions.has(PermissionFlagsBits.KickMembers);
   }
 
+  /** @DJSProtofy */
   manageableBy(member: GuildMemberResolvable) {
     member = this.guild.members.resolve(member)!;
     if (!member) return false;
@@ -36,6 +39,7 @@ export class SGuildMember {
     return member.roles.highest.comparePositionTo(this.roles.highest) > 0;
   }
 
+  /** @DJSProtofy */
   moderatableBy(member: GuildMemberResolvable) {
     member = this.guild.members.resolve(member)!;
     if (!member) return false;

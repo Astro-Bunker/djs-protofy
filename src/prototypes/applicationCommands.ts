@@ -11,10 +11,12 @@ export class ApplicationCommands {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string) {
     return this.cache.get(id);
   }
 
+  /** @DJSProtofy */
   getByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 

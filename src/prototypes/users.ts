@@ -24,10 +24,12 @@ export class Users {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string) {
     return this.cache.get(id);
   }
 
+  /** @DJSProtofy */
   getByDisplayName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -40,6 +42,7 @@ export class Users {
     });
   }
 
+  /** @DJSProtofy */
   getByGlobalName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -54,6 +57,7 @@ export class Users {
     });
   }
 
+  /** @DJSProtofy */
   getByUsername(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -66,6 +70,7 @@ export class Users {
     });
   }
 
+  /** @DJSProtofy */
   getInShardsById(id: string): Promise<User | null>;
   getInShardsById(id: string, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsById(id: string, allowApiUser?: boolean) {
@@ -83,6 +88,7 @@ export class Users {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   getInShardsByDisplayName(name: string | RegExp): Promise<User | null>;
   getInShardsByDisplayName(name: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsByDisplayName(name: string | RegExp, allowApiUser?: boolean) {
@@ -103,6 +109,7 @@ export class Users {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   getInShardsByGlobalName(name: string | RegExp): Promise<User | null>;
   getInShardsByGlobalName(name: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsByGlobalName(name: string | RegExp, allowApiUser?: boolean) {
@@ -123,6 +130,7 @@ export class Users {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   getInShardsByUsername(name: string | RegExp): Promise<User | null>;
   getInShardsByUsername(name: string | RegExp, allowApiUser: true): Promise<APIUser | User | null>;
   async getInShardsByUsername(name: string | RegExp, allowApiUser?: boolean) {
@@ -143,6 +151,7 @@ export class Users {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): User | undefined;
   searchBy<T extends RegExp>(query: T): User | undefined;
   searchBy<T extends Search>(query: T): User | undefined;
@@ -165,6 +174,7 @@ export class Users {
         ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -174,6 +184,7 @@ export class Users {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((user) =>
       query.test(user.displayName) ||
@@ -181,6 +192,7 @@ export class Users {
       (typeof user.globalName === "string" && query.test(user.globalName)));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

@@ -22,10 +22,12 @@ export class Guilds {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string) {
     return this.cache.get(id);
   }
 
+  /** @DJSProtofy */
   getByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -38,6 +40,7 @@ export class Guilds {
     });
   }
 
+  /** @DJSProtofy */
   getInShardsById(id: string): Promise<Guild | null>;
   getInShardsById(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
   async getInShardsById(id: string, allowApiGuild?: boolean) {
@@ -55,6 +58,7 @@ export class Guilds {
       .catch(console.error);
   }
 
+  /** @DJSProtofy */
   getInShardsByName(id: string): Promise<Guild | null>;
   getInShardsByName(id: string, allowApiGuild: true): Promise<APIGuild | Guild | null>;
   async getInShardsByName(name: string | RegExp, allowApiGuild?: boolean) {
@@ -75,12 +79,14 @@ export class Guilds {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   filterByOwnerId(id: string) {
     if (typeof id !== "string") return new Collection<string, Guild>();
 
     return this.cache.filter(guild => guild.ownerId === id);
   }
 
+  /** @DJSProtofy */
   async filterInShardsByOwnerId(id: string) {
     if (typeof id !== "string" || !this.client.shard) return [];
 
@@ -89,6 +95,7 @@ export class Guilds {
       .catch(() => []);
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): Guild | undefined;
   searchBy<T extends RegExp>(query: T): Guild | undefined;
   searchBy<T extends Search>(query: T): Guild | undefined;
@@ -107,6 +114,7 @@ export class Guilds {
         isRegExp(query.ownerId) && query.ownerId.test(guild.ownerId));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -116,10 +124,12 @@ export class Guilds {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((guild) => query.test(guild.name));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

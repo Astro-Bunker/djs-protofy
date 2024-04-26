@@ -14,6 +14,7 @@ export class GuildBans {
     });
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): GuildBan | undefined;
   searchBy<T extends RegExp>(query: T): GuildBan | undefined;
   searchBy<T extends Search>(query: T): GuildBan | undefined;
@@ -36,6 +37,7 @@ export class GuildBans {
         ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -45,6 +47,7 @@ export class GuildBans {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((ban) =>
       query.test(ban.user.displayName) ||
@@ -52,6 +55,7 @@ export class GuildBans {
       (typeof ban.user.globalName === "string" && query.test(ban.user.globalName)));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

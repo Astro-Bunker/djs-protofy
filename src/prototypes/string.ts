@@ -12,6 +12,7 @@ export class SString {
     });
   }
 
+  /** @DJSProtofy */
   limit(length: number, enumLike?: EnumLike<any, any>) {
     if (!exists(enumLike)) enumLike = DiscordStringLimits;
 

@@ -23,6 +23,7 @@ export class GuildChannels {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string): GuildBasedChannel | undefined;
   getById<T extends GuildChannelType | GuildChannelTypeString>(id: string, type: T): GuildChannelWithType<T> | undefined;
   getById(id: string, type?: GuildChannelType | GuildChannelTypeString) {
@@ -31,6 +32,7 @@ export class GuildChannels {
     if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
+  /** @DJSProtofy */
   getByName(name: string | RegExp): GuildBasedChannel | undefined;
   getByName<T extends GuildChannelType | GuildChannelTypeString>(name: string | RegExp, type: T): GuildChannelWithType<T> | undefined;
   getByName(name: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
@@ -51,6 +53,7 @@ export class GuildChannels {
     });
   }
 
+  /** @DJSProtofy */
   getByTopic(topic: string | RegExp): GuildBasedChannel | undefined;
   getByTopic<T extends GuildChannelType | GuildChannelTypeString>(topic: string | RegExp, type: T): GuildChannelWithType<T> | undefined;
   getByTopic(topic: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
@@ -70,6 +73,7 @@ export class GuildChannels {
     });
   }
 
+  /** @DJSProtofy */
   getByUrl(url: string): GuildBasedChannel | undefined;
   getByUrl<T extends GuildChannelType | GuildChannelTypeString>(url: string, type: T): GuildChannelWithType<T> | undefined;
   getByUrl(url: string, type?: ChannelType | GuildChannelTypeString) {
@@ -78,12 +82,14 @@ export class GuildChannels {
     return this.cache.find(channel => channel.url === url && (exists(type) ? channel.type === type : true));
   }
 
+  /** @DJSProtofy */
   getCategoryById(id: string) {
     const category = this.cache.get(id);
     if (category?.type !== ChannelType.GuildCategory) return;
     return category;
   }
 
+  /** @DJSProtofy */
   getCategoryByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -98,6 +104,7 @@ export class GuildChannels {
     }) as CategoryChannel;
   }
 
+  /** @DJSProtofy */
   getVoiceByUserId(id: string): VoiceBasedChannel | undefined {
     if (typeof id !== "string") return;
 
@@ -108,6 +115,7 @@ export class GuildChannels {
     }) as VoiceBasedChannel;
   }
 
+  /** @DJSProtofy */
   filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]): Collection<string, GuildChannelWithType<T>>;
   filterByTypes<T extends GuildChannelType | GuildChannelTypeString>(type: T | T[]) {
     if (Array.isArray(type)) {
@@ -120,6 +128,7 @@ export class GuildChannels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): GuildBasedChannel | undefined;
   searchBy<T extends RegExp>(query: T): GuildBasedChannel | undefined;
   searchBy<T extends Search>(query: T): GuildBasedChannel | undefined;
@@ -140,6 +149,7 @@ export class GuildChannels {
         ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -149,12 +159,14 @@ export class GuildChannels {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((channel) =>
       query.test(channel.name) ||
       ("topic" in channel && typeof channel.topic === "string" && query.test(channel.topic)));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

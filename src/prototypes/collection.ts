@@ -12,14 +12,17 @@ export class SCollection<K, V> {
     });
   }
 
+  /** @DJSProtofy */
   keysToArray() {
     return Array.from(this.keys());
   }
 
+  /** @DJSProtofy */
   valuesToArray() {
     return Array.from(this.values());
   }
 
+  /** @DJSProtofy */
   toJSON() {
     return Array.from(this.values());
   }

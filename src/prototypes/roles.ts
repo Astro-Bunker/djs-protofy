@@ -30,10 +30,12 @@ export class Roles {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string) {
     return this.cache.get(id);
   }
 
+  /** @DJSProtofy */
   getByName(name: string | RegExp) {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -46,63 +48,78 @@ export class Roles {
     });
   }
 
+  /** @DJSProtofy */
   getByPosition(position: number) {
     return this.cache.find(role => role.position === position);
   }
 
+  /** @DJSProtofy */
   getByRawPosition(position: number) {
     return this.cache.find(role => role.rawPosition === position);
   }
 
+  /** @DJSProtofy */
   getByUnicodeEmoji(emoji: string) {
     return this.cache.find(role => role.unicodeEmoji === emoji);
   }
 
+  /** @DJSProtofy */
   filterByMembersId(memberId: string | string[]) {
     if (!Array.isArray(memberId)) memberId = [memberId];
     return this.cache.filter(role => role.members.hasAll(...memberId));
   }
 
+  /** @DJSProtofy */
   filterByPermissions(...permissions: PermissionResolvable[]) {
     return this.cache.filter(role => role.permissions.has(permissions));
   }
 
+  /** @DJSProtofy */
   filterByUnicodeEmoji(emoji: string) {
     return this.cache.filter(role => role.unicodeEmoji === emoji);
   }
 
+  /** @DJSProtofy */
   filterEditables() {
     return this.cache.filter(role => role.editable);
   }
 
+  /** @DJSProtofy */
   filterUneditables() {
     return this.cache.filter(role => !role.editable);
   }
 
+  /** @DJSProtofy */
   filterHoists() {
     return this.cache.filter(role => role.hoist);
   }
 
+  /** @DJSProtofy */
   filterNonHoists() {
     return this.cache.filter(role => !role.hoist);
   }
 
+  /** @DJSProtofy */
   filterManageds() {
     return this.cache.filter(role => role.managed);
   }
 
+  /** @DJSProtofy */
   filterUnmanageds() {
     return this.cache.filter(role => !role.managed);
   }
 
+  /** @DJSProtofy */
   filterMentionables() {
     return this.cache.filter(role => role.mentionable);
   }
 
+  /** @DJSProtofy */
   filterUnmentionables() {
     return this.cache.filter(role => !role.mentionable);
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): Role | undefined;
   searchBy<T extends RegExp>(query: T): Role | undefined;
   searchBy<T extends Search>(query: T): Role | undefined;
@@ -120,6 +137,7 @@ export class Roles {
       ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -129,10 +147,12 @@ export class Roles {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((role) => query.test(role.name));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??

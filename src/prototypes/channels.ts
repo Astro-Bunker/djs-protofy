@@ -31,6 +31,7 @@ export class Channels {
     });
   }
 
+  /** @DJSProtofy */
   getById(id: string): Channel | undefined;
   getById<T extends ChannelType | ChannelTypeString>(id: string, type: T): ChannelWithType<T> | undefined;
   getById(id: string, type?: ChannelType | ChannelTypeString) {
@@ -39,6 +40,7 @@ export class Channels {
     if (channel?.type === resolveEnum(ChannelType, type)) return channel;
   }
 
+  /** @DJSProtofy */
   getByName(name: string | RegExp): Channel | undefined;
   getByName<T extends ChannelType | ChannelTypeString>(name: string | RegExp, type: T): ChannelWithType<T> | undefined;
   getByName(name: string | RegExp, type?: ChannelType | ChannelTypeString) {
@@ -59,6 +61,7 @@ export class Channels {
     });
   }
 
+  /** @DJSProtofy */
   getByTopic(topic: string | RegExp): Channel | undefined;
   getByTopic<T extends ChannelType | ChannelTypeString>(topic: string | RegExp, type: T): ChannelWithType<T> | undefined;
   getByTopic(topic: string | RegExp, type?: ChannelType | ChannelTypeString) {
@@ -78,6 +81,7 @@ export class Channels {
     });
   }
 
+  /** @DJSProtofy */
   getByUrl(url: string | URL): Channel | undefined;
   getByUrl<T extends ChannelType | ChannelTypeString>(url: string | URL, type: T): ChannelWithType<T> | undefined;
   getByUrl(url: string | URL, type?: ChannelType | ChannelTypeString) {
@@ -88,12 +92,14 @@ export class Channels {
     return this.cache.find(channel => channel.url === url && (exists(type) ? channel.type === type : true));
   }
 
+  /** @DJSProtofy */
   getCategoryById(id: string) {
     const category = this.cache.get(id);
     if (category?.type !== ChannelType.GuildCategory) return;
     return category;
   }
 
+  /** @DJSProtofy */
   getCategoryByName(name: string | RegExp): CategoryChannel | undefined {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
@@ -108,6 +114,7 @@ export class Channels {
     }) as CategoryChannel;
   }
 
+  /** @DJSProtofy */
   getInShardsById(id: string): Promise<Channel | null>;
   getInShardsById(id: string, allowApiChannel: true): Promise<APIChannel | Channel | null>;
   async getInShardsById(id: string, allowApiChannel?: boolean) {
@@ -125,6 +132,7 @@ export class Channels {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   getInShardsByName(name: string | RegExp): Promise<Channel | null>;
   getInShardsByName(name: string | RegExp, allowApiChannel: true): Promise<APIChannel | Channel | null>;
   async getInShardsByName(name: string | RegExp, allowApiChannel?: boolean) {
@@ -145,6 +153,7 @@ export class Channels {
       .catch(() => null);
   }
 
+  /** @DJSProtofy */
   getVoiceByUserId(id: string): VoiceBasedChannel | undefined {
     if (typeof id !== "string") return;
 
@@ -155,6 +164,7 @@ export class Channels {
     }) as VoiceBasedChannel;
   }
 
+  /** @DJSProtofy */
   filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>>;
   filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]) {
     if (Array.isArray(type)) {
@@ -167,6 +177,7 @@ export class Channels {
     return this.cache.filter(channel => channel.type === resolvedType);
   }
 
+  /** @DJSProtofy */
   send<T extends string>(channel: ChannelResolvable, payload: T): Promise<Result>;
   send<T extends MessageCreateOptions>(channel: ChannelResolvable, payload: T): Promise<Result>;
   send<T extends MessagePayload>(channel: ChannelResolvable, payload: T): Promise<Result>;
@@ -195,6 +206,7 @@ export class Channels {
       .catch(error => ({ error, success: false }));
   }
 
+  /** @DJSProtofy */
   searchBy<T extends string>(query: T): Channel | undefined;
   searchBy<T extends RegExp>(query: T): Channel | undefined;
   searchBy<T extends Search>(query: T): Channel | undefined;
@@ -217,6 +229,7 @@ export class Channels {
         ));
   }
 
+  /** @DJSProtofy */
   protected _searchByMany(queries: (string | RegExp | Search)[]) {
     const cache: this["cache"] = new Collection();
     for (const query of queries) {
@@ -226,12 +239,14 @@ export class Channels {
     return cache;
   }
 
+  /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((channel) =>
       ("name" in channel && typeof channel.name === "string" && query.test(channel.name)) ||
       ("topic" in channel && typeof channel.topic === "string" && query.test(channel.topic)));
   }
 
+  /** @DJSProtofy */
   protected _searchByString(query: string) {
     query = replaceMentionCharacters(query);
     return this.cache.get(query) ??
