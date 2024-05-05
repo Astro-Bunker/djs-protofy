@@ -6,7 +6,7 @@ function createChannel(
   data: APIChannel,
   guild?: Guild,
   { allowUnknownGuild } = { allowUnknownGuild: true },
-) {
+): Channel {
   let channel;
   // @ts-expect-error ts(2339)
   if (!data.guild_id && !guild) {
