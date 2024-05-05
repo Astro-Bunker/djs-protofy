@@ -7,7 +7,7 @@ const packageJSON = JSON.parse(readFileSync(packagePath, "utf8"));
 
 export const suportedDJSVersion = Number(packageJSON.devDependencies["discord.js"].replace(/(^\D*)|(\D+.*$)/g, ""));
 
-export const categoryChannelTypes: CategoryChannelType[] = [
+export const categoryChannelTypes: readonly CategoryChannelType[] = [
   ChannelType.GuildText,
   ChannelType.GuildVoice,
   ChannelType.GuildAnnouncement,
@@ -16,7 +16,7 @@ export const categoryChannelTypes: CategoryChannelType[] = [
   ChannelType.GuildMedia,
 ];
 
-export const guildChannelTypes: GuildChannelType[] = [
+export const guildChannelTypes: readonly GuildChannelType[] = [
   ChannelType.GuildText,
   ChannelType.GuildVoice,
   ChannelType.GuildCategory,
@@ -30,7 +30,7 @@ export const guildChannelTypes: GuildChannelType[] = [
   ChannelType.GuildMedia,
 ];
 
-export const guildTextChannelTypes: GuildTextChannelType[] = [
+export const guildTextChannelTypes: readonly GuildTextChannelType[] = [
   ChannelType.GuildText,
   ChannelType.GuildVoice,
   ChannelType.GuildAnnouncement,
@@ -38,11 +38,9 @@ export const guildTextChannelTypes: GuildTextChannelType[] = [
   ChannelType.PublicThread,
   ChannelType.PrivateThread,
   ChannelType.GuildStageVoice,
-  ChannelType.GuildForum,
-  ChannelType.GuildMedia,
 ];
 
-export const textChannelTypes: TextChannelType[] = [
+export const textChannelTypes: readonly TextChannelType[] = [
   ChannelType.GuildText,
   ChannelType.DM,
   ChannelType.GuildVoice,
@@ -52,11 +50,9 @@ export const textChannelTypes: TextChannelType[] = [
   ChannelType.PublicThread,
   ChannelType.PrivateThread,
   ChannelType.GuildStageVoice,
-  ChannelType.GuildForum,
-  ChannelType.GuildMedia,
 ];
 
-export const threadChannelTypes: ThreadChannelType[] = [
+export const threadChannelTypes: readonly ThreadChannelType[] = [
   ChannelType.AnnouncementThread,
   ChannelType.PublicThread,
   ChannelType.PrivateThread,
