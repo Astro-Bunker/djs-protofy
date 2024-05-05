@@ -131,6 +131,24 @@ export enum MessageLimits {
   Total = 6000,
 }
 
+/** https://discord.com/developers/docs/resources/poll */
+export enum PollLimits {
+  /** Each of the answers available in the poll, up to 10 */
+  Answers = 10,
+  /** Number of hours the poll should be open for, up to 7 days */
+  Duration = 168,
+}
+
+export enum PollMediaLimits {
+  /** The text of the field */
+  text = 300,
+}
+
+export enum PollMediaAnswerLimits {
+  /** The text of the field */
+  text = 55,
+}
+
 export enum RoleLimits {
   /** name of the role, max 100 characters */
   Name = 100,
@@ -239,6 +257,10 @@ export enum DiscordLimits {
   MessageContent = 2000,
   MessageEmbeds = 10,
   MessageTotal = 6000,
+  PollAnswers = 10,
+  PollDuration = 168,
+  PollMediaText = 300,
+  PollMediaAnswerText = 55,
   RoleName = 100,
   SelectMenuCustomId = 100,
   SelectMenuMinValues = 25,
@@ -291,6 +313,8 @@ export enum DiscordStringLimits {
   KickReason = 512,
   MessageContent = 2000,
   MessageTotal = 6000,
+  PollMediaText = 300,
+  PollMediaAnswerText = 55,
   RoleName = 100,
   SelectMenuCustomId = 100,
   SelectMenuPlaceholder = 150,
