@@ -1,7 +1,81 @@
-import { APIChannel, APIGuild, APIMessage, APIUser, Channel, Client, Guild, Message, User } from "discord.js";
+import { APIChannel, APIGuild, APIMessage, APIUser, CategoryChannel, Channel, ChannelType, Client, DMChannel, DirectoryChannel, ForumChannel, Guild, MediaChannel, Message, NewsChannel, PartialGroupDMChannel, StageChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
 import { excludeNullishProperties, to_snake_case } from ".";
-// @ts-expect-error ts(7016)
-import { createChannel } from "discord.js/src/util/Channels";
+
+function createChannel(
+  client: Client<true>,
+  data: APIChannel,
+  guild?: Guild,
+  { allowUnknownGuild } = { allowUnknownGuild: true },
+) {
+  let channel;
+  // @ts-expect-error ts(2339)
+  if (!data.guild_id && !guild) {
+    // @ts-expect-error ts(2339)
+    if ((data.recipients && data.type !== ChannelType.GroupDM) || data.type === ChannelType.DM) {
+      // @ts-expect-error ts(2673)
+      channel = new DMChannel(client, data);
+    } else if (data.type === ChannelType.GroupDM) {
+      // @ts-expect-error ts(2673)
+      channel = new PartialGroupDMChannel(client, data);
+    }
+  } else {
+    // @ts-expect-error ts(2339)
+    guild ??= client.guilds.cache.get(data.guild_id);
+
+    if (guild || allowUnknownGuild) {
+      switch (data.type) {
+        case ChannelType.GuildText: {
+          // @ts-expect-error ts(2674)
+          channel = new TextChannel(guild, data, client);
+          break;
+        }
+        case ChannelType.GuildVoice: {
+          // @ts-expect-error ts(2554)
+          channel = new VoiceChannel(guild, data, client);
+          break;
+        }
+        case ChannelType.GuildCategory: {
+          // @ts-expect-error ts(2345)
+          channel = new CategoryChannel(guild, data, client);
+          break;
+        }
+        case ChannelType.GuildAnnouncement: {
+          // @ts-expect-error ts(2674)
+          channel = new NewsChannel(guild, data, client);
+          break;
+        }
+        case ChannelType.GuildStageVoice: {
+          // @ts-expect-error ts(2554)
+          channel = new StageChannel(guild, data, client);
+          break;
+        }
+        case ChannelType.AnnouncementThread:
+        case ChannelType.PublicThread:
+        case ChannelType.PrivateThread: {
+          // @ts-expect-error ts(2673)
+          channel = new ThreadChannel(guild, data, client);
+          if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
+          break;
+        }
+        // @ts-expect-error ts(2678)
+        case ChannelType.GuildDirectory:
+          // @ts-expect-error ts(2345)
+          channel = new DirectoryChannel(guild, data, client);
+          break;
+        case ChannelType.GuildForum:
+          // @ts-expect-error ts(2345)
+          channel = new ForumChannel(guild, data, client);
+          break;
+        case ChannelType.GuildMedia:
+          // @ts-expect-error ts(2345)
+          channel = new MediaChannel(guild, data, client);
+          break;
+      }
+      if (channel && !allowUnknownGuild) guild?.channels?.cache.set(channel.id, channel);
+    }
+  }
+  return channel;
+}
 
 export function createBroadcastedChannel(client: Client, data: Channel | APIChannel): Channel | undefined;
 export function createBroadcastedChannel(client: Client, data: Record<string, any>) {
@@ -13,7 +87,7 @@ export function createBroadcastedChannel(client: Client, data: Record<string, an
   data = to_snake_case(data);
 
   // const clone = Object.assign(Object.create(data), data);
-  const guild = client.guilds.getById(data.guild_id);
+  const guild = client.guilds.cache.get(data.guild_id);
 
   if ("guild" in data && typeof data.guild === "string") {
     if (guild) {
@@ -25,14 +99,14 @@ export function createBroadcastedChannel(client: Client, data: Record<string, an
 
   if ("member" in data && typeof data.member === "string") {
     if (guild) {
-      data.member = guild.members.getById(data.member);
+      data.member = guild.members.cache.get(data.member);
     } else {
       delete data.member;
     }
   }
 
   try {
-    return createChannel(client, data, guild, { allowUnknownGuild: true });
+    return createChannel(client as Client<true>, data as APIChannel, guild, { allowUnknownGuild: true });
   } catch (error: any) {
     client.emit("error", error);
   }
