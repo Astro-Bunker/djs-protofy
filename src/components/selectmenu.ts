@@ -1,4 +1,4 @@
-import { APIActionRowComponent, APIActionRowComponentTypes, APISelectMenuComponent, APISelectMenuOption, APIStringSelectComponent, ActionRow, ActionRowBuilder, ComponentBuilder, ComponentType, JSONEncodable, MessageActionRowComponent, MessageActionRowComponentBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder } from "discord.js";
+import { ActionRowBuilder, ComponentBuilder, ComponentType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder, type APIActionRowComponent, type APIActionRowComponentTypes, type APISelectMenuComponent, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
 const selectMenuTypes = [

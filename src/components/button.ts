@@ -1,4 +1,4 @@
-import { APIButtonComponent, ActionRow, ActionRowBuilder, ButtonBuilder, ComponentType, MessageActionRowComponent, MessageActionRowComponentBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ComponentType, type APIButtonComponent, type ActionRow, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
 export function mapButtons<
