@@ -1,4 +1,4 @@
-import { APIGuild, Collection, Guild, GuildManager } from "discord.js";
+import { Collection, GuildManager, type APIGuild, type Guild } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, replaceMentionCharacters, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedGuild } from "../utils/shardUtils";

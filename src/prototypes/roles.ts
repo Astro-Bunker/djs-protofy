@@ -1,4 +1,4 @@
-import { Collection, PermissionResolvable, Role, RoleManager } from "discord.js";
+import { Collection, RoleManager, type PermissionResolvable, type Role } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, replaceMentionCharacters } from "../utils";
 

@@ -1,4 +1,4 @@
-import type { EnumLike } from "discord.js";
+import { type EnumLike } from "discord.js";
 import { DiscordStringLimits } from "../@enum";
 import { exists, resolveEnum } from "../utils";
 

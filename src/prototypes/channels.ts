@@ -1,6 +1,6 @@
-import { APIChannel, CategoryChannel, Channel, ChannelManager, ChannelResolvable, ChannelType, Collection, Message, MessageCreateOptions, MessagePayload, VoiceBasedChannel } from "discord.js";
+import { ChannelManager, ChannelType, Collection, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
-import { ChannelTypeString, ChannelWithType } from "../@types";
+import type { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
 

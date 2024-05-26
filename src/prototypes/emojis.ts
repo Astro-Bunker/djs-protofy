@@ -1,4 +1,4 @@
-import { BaseGuildEmojiManager, Collection, GuildEmoji } from "discord.js";
+import { BaseGuildEmojiManager, Collection, type GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, replaceMentionCharacters } from "../utils";
 

@@ -1,4 +1,4 @@
-import { Channel, Collection, GatewayIntentBits, GuildBasedChannel, GuildMember, Message, Role, User } from "discord.js";
+import { Collection, GatewayIntentBits, Message, type Channel, type GuildBasedChannel, type GuildMember, type Role, type User } from "discord.js";
 
 export class SMessage {
   declare client: Message["client"];

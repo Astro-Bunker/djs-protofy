@@ -21,9 +21,7 @@ export class ApplicationCommands {
     if (typeof name !== "string" && !isRegExp(name)) return;
 
     return this.cache.find(command => {
-      if (typeof name === "string") {
-        return command.name === name;
-      }
+      if (typeof name === "string") return command.name === name;
 
       return name.test(command.name);
     });

@@ -1,4 +1,4 @@
-import { Collection, GuildBan, GuildBanManager } from "discord.js";
+import { Collection, GuildBanManager, type GuildBan } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, replaceMentionCharacters } from "../utils";
 

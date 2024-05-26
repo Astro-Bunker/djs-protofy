@@ -1,4 +1,4 @@
-import { CategoryChannelType, ChannelType, GuildChannelType, GuildTextChannelType, TextChannelType, ThreadChannelType } from "discord.js";
+import { ChannelType, type CategoryChannelType, type GuildChannelType, type GuildTextChannelType, type TextChannelType, type ThreadChannelType } from "discord.js";
 import { readFileSync } from "fs";
 import { join } from "path";
 

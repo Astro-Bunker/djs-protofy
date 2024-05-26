@@ -1,4 +1,4 @@
-import { APIUser, Collection, User, UserManager } from "discord.js";
+import { Collection, UserManager, type APIUser, type User } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, replaceMentionCharacters, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedUser } from "../utils/shardUtils";

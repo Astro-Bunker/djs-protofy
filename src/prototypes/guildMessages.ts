@@ -1,4 +1,4 @@
-import { Collection, GuildMessageManager, Message } from "discord.js";
+import { Collection, GuildMessageManager, type Message } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings } from "../utils";
 

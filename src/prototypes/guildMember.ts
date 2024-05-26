@@ -1,4 +1,4 @@
-import { GuildMember, GuildMemberResolvable, PermissionFlagsBits } from "discord.js";
+import { GuildMember, PermissionFlagsBits, type GuildMemberResolvable } from "discord.js";
 
 export class SGuildMember {
   declare id: string;
