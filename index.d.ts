@@ -61,13 +61,20 @@ declare module "discord.js" {
 }
 
 declare global {
+  /** @DJSProtofy */
   var animated: true;
+  /** @DJSProtofy */
   var disabled: true;
+  /** @DJSProtofy */
   var ephemeral: true;
+  /** @DJSProtofy */
   var fetchReply: true;
+  /** @DJSProtofy */
   var inline: true;
+  /** @DJSProtofy */
   var required: true;
 
+  /** @DJSProtofy */
   declare function sleep<T = void>(...args: Parameters<typeof setTimeout<T>>): ReturnType<typeof setTimeout<T>>;
 
   interface Array<T> extends SArray<T> {
