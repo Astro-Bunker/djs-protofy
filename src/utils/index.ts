@@ -1,4 +1,4 @@
-import { type EnumLike, version } from "discord.js";
+import { version, type EnumLike } from "discord.js";
 import { isRegExp } from "util/types";
 import { suportedDJSVersion } from "./constants";
 
