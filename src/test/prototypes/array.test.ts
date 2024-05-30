@@ -9,18 +9,20 @@ describe("Testing Array#random", () => {
 
   test("random", () => {
     const actual = array.random();
-
-    assert.strictEqual(array.includes(actual), true);
+    
+    assert(actual !== null);
+    assert(array.includes(actual));
+    assert([].random() === null);
   });
 
   test("random(number)", () => {
     const actual = array.random(array.length);
 
-    assert.strictEqual(actual.every(v => array.includes(v)), true);
+    assert(actual.every(v => array.includes(v)));
     assert.deepStrictEqual(actual.map(v => actual.lastIndexOf(v)).sort(), Array.from(Array(array.length).keys()));
   });
 
-  test("reandom(NaN)", () => {
+  test("random(NaN)", () => {
     assert.deepStrictEqual(array.random(NaN), []);
     assert.deepStrictEqual(array.random(0), []);
     assert.deepStrictEqual(array.random(-1), []);
@@ -34,7 +36,7 @@ describe("Testing Array#shuffle", () => {
     const actual = Array.from(array).shuffle();
 
     assert.notDeepStrictEqual(actual, array);
-    assert.strictEqual(actual.every(v => array.includes(v)), true);
+    assert(actual.every(v => array.includes(v)));
     assert.strictEqual(actual.length, array.length);
     assert.deepStrictEqual(actual, actual.shuffle());
     assert.strictEqual(actual, actual.shuffle());

@@ -12,10 +12,14 @@ export class SArray<T> {
     });
   }
 
-  /** @DJSProtofy */
+  /**
+   * @DJSProtofy
+   * 
+   * @returns `null` if array is `empty` and amount is `undefined`
+   */
   random(amount?: number, allowDuplicates?: boolean) {
     if (typeof amount === "number") {
-      if (isNaN(amount) || amount < 1) return [];
+      if (this.length === 0 || isNaN(amount) || amount < 1) return [];
 
       if (allowDuplicates) return Array.from(Array(amount)).map(() => this[randomInt(this.length)]);
 
@@ -25,6 +29,8 @@ export class SArray<T> {
 
       return Array.from(Array(amount)).map(() => clone.splice(randomInt(clone.length), 1)[0]);
     }
+
+    if (this.length === 0) return null;
 
     return this[randomInt(this.length)];
   }
