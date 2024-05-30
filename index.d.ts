@@ -78,10 +78,10 @@ declare global {
   declare function sleep<T = void>(...args: Parameters<typeof setTimeout<T>>): ReturnType<typeof setTimeout<T>>;
 
   interface Array<T> extends SArray<T> {
-    random(): ?T
-    random(amount: never): null;
+    random(): T
     random(amount: number): T[]
     random(amount: number, allowDuplicates: boolean): T[]
+    random(amount: any): T;
   }
 
   interface String extends SString {

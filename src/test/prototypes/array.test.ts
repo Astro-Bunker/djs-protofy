@@ -9,8 +9,7 @@ describe("Testing Array#random", () => {
 
   test("random", () => {
     const actual = array.random();
-    
-    assert(actual !== null);
+
     assert(array.includes(actual));
     assert([].random() === null);
   });

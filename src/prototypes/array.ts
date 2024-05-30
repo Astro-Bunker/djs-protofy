@@ -15,7 +15,7 @@ export class SArray<T> {
   /**
    * @DJSProtofy
    * 
-   * @returns `null` if array is `empty` and amount is `undefined`
+   * @returns `undefined` if array is `empty` and amount is `undefined`
    */
   random(amount?: number, allowDuplicates?: boolean) {
     if (typeof amount === "number") {
@@ -30,7 +30,7 @@ export class SArray<T> {
       return Array.from(Array(amount)).map(() => clone.splice(randomInt(clone.length), 1)[0]);
     }
 
-    if (this.length === 0) return null;
+    if (this.length === 0) return;
 
     return this[randomInt(this.length)];
   }
