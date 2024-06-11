@@ -16,6 +16,7 @@ export class SArray<T> {
    * @DJSProtofy
    * 
    * @returns `undefined` when array is `empty` and amount is `undefined`
+   * @returns `array` when amount is `number`
    */
   random(amount?: number, allowDuplicates?: boolean) {
     if (typeof amount === "number") {
