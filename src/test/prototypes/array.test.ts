@@ -11,7 +11,7 @@ describe("Testing Array#random", () => {
     const actual = array.random();
 
     assert(array.includes(actual));
-    assert([].random() === null);
+    assert([].random() === undefined);
   });
 
   test("random(number)", () => {
