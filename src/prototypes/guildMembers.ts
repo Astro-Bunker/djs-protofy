@@ -1,4 +1,4 @@
-import { Collection, GuildMemberManager, type GuildMember } from "discord.js";
+import { Collection, GuildMemberManager, RoleResolvable, type GuildMember } from "discord.js";
 import { isRegExp } from "util/types";
 import { compareStrings, replaceMentionCharacters } from "../utils";
 
@@ -92,6 +92,11 @@ export class GuildMembers {
 
       return name.test(member.user.username);
     });
+  }
+
+  /** @DJSProtofy */
+  fiterByRole(role: RoleResolvable) {
+    return this.cache.filter(member => member.roles.cache.has(member.roles.resolveId(role)));
   }
 
   /** @DJSProtofy */
