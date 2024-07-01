@@ -13,6 +13,7 @@ export class GuildMembers {
       getByUserDisplayName: { value: this.getByUserDisplayName },
       getByUserGlobalName: { value: this.getByUserGlobalName },
       getByUserUsername: { value: this.getByUserUsername },
+      fiterByRole: { value: this.fiterByRole },
       searchBy: { value: this.searchBy },
       _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
