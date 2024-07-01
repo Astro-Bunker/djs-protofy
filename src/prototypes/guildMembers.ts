@@ -95,8 +95,10 @@ export class GuildMembers {
   }
 
   /** @DJSProtofy */
-  fiterByRole(role: RoleResolvable) {
-    return this.cache.filter(member => member.roles.cache.has(member.roles.resolveId(role)));
+  fiterByRole(role: RoleResolvable): Collection<string, GuildMember> {
+    const roleId = this.cache.first()?.roles.resolveId(role);
+    if (!roleId) return new Collection();
+    return this.cache.filter(member => member.roles.cache.has(roleId));
   }
 
   /** @DJSProtofy */
