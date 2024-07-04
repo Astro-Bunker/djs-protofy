@@ -13,7 +13,7 @@ export class GuildMembers {
       getByUserDisplayName: { value: this.getByUserDisplayName },
       getByUserGlobalName: { value: this.getByUserGlobalName },
       getByUserUsername: { value: this.getByUserUsername },
-      fiterByRole: { value: this.fiterByRole },
+      filterByRole: { value: this.filterByRole },
       searchBy: { value: this.searchBy },
       _searchByMany: { value: this._searchByMany },
       _searchByRegExp: { value: this._searchByRegExp },
@@ -96,7 +96,7 @@ export class GuildMembers {
   }
 
   /** @DJSProtofy */
-  fiterByRole(role: RoleResolvable): Collection<string, GuildMember> {
+  filterByRole(role: RoleResolvable): Collection<string, GuildMember> {
     const roleId = this.cache.first()?.roles.resolveId(role);
     if (!roleId) return new Collection();
     return this.cache.filter(member => member.roles.cache.has(roleId));
