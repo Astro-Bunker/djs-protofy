@@ -24,11 +24,9 @@ export class SArray<T> {
 
       if (allowDuplicates) return Array.from(Array(amount)).map(() => this[randomInt(this.length)]);
 
-      amount = Math.min(amount, this.length);
-
       const clone = Array.from(this);
 
-      return Array.from(Array(amount)).map(() => clone.splice(randomInt(clone.length), 1)[0]);
+      return Array.from(Array(Math.min(amount, this.length))).map(() => clone.splice(randomInt(clone.length), 1)[0]);
     }
 
     if (this.length === 0) return;

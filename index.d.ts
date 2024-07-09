@@ -21,6 +21,7 @@ import type { Roles } from "./src/prototypes/roles";
 import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
 import type { SString } from "./src/prototypes/string";
 import type { Users } from "./src/prototypes/users";
+import type { SEmbed } from "./src/prototypes/embed";
 
 export * from "./src";
 
@@ -32,6 +33,8 @@ declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
 
   interface ChannelManager extends Channels { }
+
+  interface Embed extends SEmbed { }
 
   interface GuildBanManager extends GuildBans { }
 

@@ -4,6 +4,7 @@ import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { SArray } from "./prototypes/array";
 import { Channels } from "./prototypes/channels";
 import { SCollection } from "./prototypes/collection";
+import { SEmbed } from "./prototypes/embed";
 import { Emojis } from "./prototypes/emojis";
 import { GuildBans } from "./prototypes/guildBans";
 import { GuildChannels } from "./prototypes/guildChannels";
@@ -41,6 +42,7 @@ export class DJSProtofy {
     new ApplicationCommands();
     new Channels();
     new SCollection();
+    new SEmbed();
     new Emojis();
     new GuildBans();
     new GuildChannels();
