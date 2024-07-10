@@ -12,6 +12,8 @@ export class SGuildMember {
       kickableBy: { value: this.kickableBy },
       manageableBy: { value: this.manageableBy },
       moderatableBy: { value: this.moderatableBy },
+      isAdministrator: { value: this.isAdministrator },
+      isGuildManager: { value: this.isGuildManager },
     });
   }
 
@@ -48,5 +50,15 @@ export class SGuildMember {
       this.manageableBy(member) &&
       member.permissions.has(PermissionFlagsBits.ModerateMembers)
     );
+  }
+
+  /** @DJSProtofy */
+  isAdministrator() {
+    return this.permissions.has(PermissionFlagsBits.Administrator);
+  }
+
+  /** @DJSProtofy */
+  isGuildManager() {
+    return this.permissions.has(PermissionFlagsBits.ManageGuild);
   }
 }
