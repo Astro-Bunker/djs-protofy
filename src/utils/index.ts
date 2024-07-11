@@ -34,12 +34,12 @@ export function exists(o: unknown) {
 }
 
 /**
- * This replaces special characters mentioning user, channel or role leaving only the id in snowflate format.
+ * This replaces special characters mentioning channel, command, emoji, role or user leaving only the id in snowflate format.
  * 
  * https://discord.com/developers/docs/reference#message-formatting
  */
 export function replaceMentionCharacters(s: string) {
-  return s.replace(/<(?::(?:a_)?\w{1,32}:|[@#][!&]?)(\d{17,})>/g, "$1");
+  return s.replace(/<(?:(?:a?:|\/)\w{1,32}:|[@#][!&]?)(\d{17,})>/g, "$1");
 }
 
 export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
