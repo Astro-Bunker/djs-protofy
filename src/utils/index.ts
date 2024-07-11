@@ -34,7 +34,9 @@ export function exists(o: unknown) {
 }
 
 /**
- * This replaces special characters mentioning channel, command, emoji, role or user leaving only the id in snowflate format.
+ * This replaces special characters mentioning
+ * `channel`, `command`, `emoji`, `member`, `role` or `user`
+ * leaving only the id in snowflate format.
  * 
  * https://discord.com/developers/docs/reference#message-formatting
  */
