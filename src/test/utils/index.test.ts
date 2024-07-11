@@ -19,6 +19,23 @@ describe("Testing replaceMentionCharacters", () => {
     );
   });
 
+  test("replaceMentionCharacters(command_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("</name:12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("</name:12345678901234567> </name:12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
+  test("replaceMentionCharacters(emoji_id)", () => {
+    assert.strictEqual(replaceMentionCharacters("<:name:12345678901234567>"), "12345678901234567");
+    assert.strictEqual(replaceMentionCharacters("<a:name:12345678901234567>"), "12345678901234567");
+    assert.strictEqual(
+      replaceMentionCharacters("<:name:12345678901234567> <:name:12345678901234567>"),
+      "12345678901234567 12345678901234567",
+    );
+  });
+
   test("replaceMentionCharacters(member_id)", () => {
     assert.strictEqual(replaceMentionCharacters("<@!12345678901234567>"), "12345678901234567");
     assert.strictEqual(
@@ -39,15 +56,6 @@ describe("Testing replaceMentionCharacters", () => {
     assert.strictEqual(replaceMentionCharacters("<@12345678901234567>"), "12345678901234567");
     assert.strictEqual(
       replaceMentionCharacters("<@12345678901234567> <@12345678901234567>"),
-      "12345678901234567 12345678901234567",
-    );
-  });
-
-  test("replaceMentionCharacters(emoji_id)", () => {
-    assert.strictEqual(replaceMentionCharacters("<:name:12345678901234567>"), "12345678901234567");
-    assert.strictEqual(replaceMentionCharacters("<:a_name:12345678901234567>"), "12345678901234567");
-    assert.strictEqual(
-      replaceMentionCharacters("<:name:12345678901234567> <:name:12345678901234567>"),
       "12345678901234567 12345678901234567",
     );
   });
