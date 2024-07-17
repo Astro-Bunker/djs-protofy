@@ -14,6 +14,7 @@ export class SGuildMember {
       moderatableBy: { value: this.moderatableBy },
       isAdministrator: { value: this.isAdministrator },
       isGuildManager: { value: this.isGuildManager },
+      isGuildOwner: { value: this.isGuildOwner },
     });
   }
 
@@ -60,5 +61,10 @@ export class SGuildMember {
   /** @DJSProtofy */
   isGuildManager() {
     return this.permissions.has(PermissionFlagsBits.ManageGuild);
+  }
+
+  /** @DJSProtofy */
+  isGuildOwner() {
+    return this.id === this.guild.ownerId;
   }
 }
