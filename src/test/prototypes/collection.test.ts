@@ -6,7 +6,7 @@ import { SCollection } from "../../prototypes/collection";
 new SCollection();
 
 describe("Testing Collection prototypes", () => {
-  const collection = new Collection(Array.from(Array(10)).map((_, i) => ([`key${i}`, `value${i}`])));
+  const collection = new Collection(Array.from({ length: 10 }).map((_, i) => ([`key${i}`, `value${i}`])));
 
   test("keysToArray", () => {
     assert.strictEqual(typeof collection.keysToArray, "function");

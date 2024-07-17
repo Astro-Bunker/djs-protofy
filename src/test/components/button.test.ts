@@ -6,7 +6,7 @@ import { mapButtons } from "../../components";
 describe("Testing mapping buttons", () => {
   const components = [
     new ActionRowBuilder<ButtonBuilder>({
-      components: Array.from(Array(5)).map((_, i) => new ButtonBuilder({
+      components: Array.from({ length: 5 }).map((_, i) => new ButtonBuilder({
         custom_id: "customId" + i,
         label: "label" + i,
         style: ButtonStyle.Primary,

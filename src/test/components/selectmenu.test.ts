@@ -4,7 +4,7 @@ import test, { describe } from "node:test";
 import { getDefaultOptionFromSelectMenu, mapSelectMenuOptions, mapSelectMenus } from "../../components";
 
 describe("Testing mapping select menus", () => {
-  const components = Array.from(Array(5)).map((_, i) => new ActionRowBuilder<UserSelectMenuBuilder>({
+  const components = Array.from({ length: 5 }).map((_, i) => new ActionRowBuilder<UserSelectMenuBuilder>({
     components: [
       new UserSelectMenuBuilder({
         custom_id: "userSelectMenuId" + i,
@@ -44,7 +44,7 @@ describe("Testing mapping select menu options", () => {
         components: [
           new StringSelectMenuBuilder({
             custom_id: "stringSelectMenuId",
-            options: Array.from(Array(25)).map((_, i) => ({
+            options: Array.from({ length: 25 }).map((_, i) => ({
               label: "label" + i,
               value: "value" + i,
             })),
@@ -89,7 +89,7 @@ describe("Testing mapping select menu options", () => {
         components: [
           new StringSelectMenuBuilder({
             custom_id: "stringSelectMenuId",
-            options: Array.from(Array(25)).map((_, i) => ({
+            options: Array.from({ length: 25 }).map((_, i) => ({
               label: "label" + i,
               value: "value" + i,
             })),
@@ -137,7 +137,7 @@ describe("Testing getting default select menu option", () => {
       components: [
         new StringSelectMenuBuilder({
           custom_id: "stringSelectMenuId",
-          options: Array.from(Array(25)).map((_, i) => ({
+          options: Array.from({ length: 25 }).map((_, i) => ({
             label: "label" + i,
             value: "value" + i,
             default: i === 10,

@@ -22,11 +22,11 @@ export class SArray<T> {
     if (typeof amount === "number") {
       if (this.length === 0 || isNaN(amount) || amount < 1) return [];
 
-      if (allowDuplicates) return Array.from(Array(amount)).map(() => this[randomInt(this.length)]);
+      if (allowDuplicates) return Array.from({ length: amount }).map(() => this[randomInt(this.length)]);
 
       const clone = Array.from(this);
 
-      return Array.from(Array(Math.min(amount, this.length))).map(() => clone.splice(randomInt(clone.length), 1)[0]);
+      return Array.from({ length: Math.min(amount, this.length) }).map(() => clone.splice(randomInt(clone.length), 1)[0]);
     }
 
     if (this.length === 0) return;
