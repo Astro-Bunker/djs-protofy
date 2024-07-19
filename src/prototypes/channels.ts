@@ -1,4 +1,4 @@
-import { ChannelManager, ChannelType, Collection, GatewayIntentBits, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
+import { ChannelManager, ChannelType, Collection, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
 import type { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
@@ -186,8 +186,7 @@ export class Channels {
     const channelId = this.resolveId(channelResolvable);
     if (typeof channelId !== "string") return { success: false };
 
-    const channel = this.resolve(channelResolvable) ??
-      (this.client.options.intents.has(GatewayIntentBits.Guilds) ? null : await this.fetch(channelId).catch(() => null));
+    const channel = this.resolve(channelResolvable) ?? await this.fetch(channelId).catch(() => null);
     if (channel) {
       if (!channel.isTextBased()) return { success: false };
       return await channel.send(payload)
@@ -197,8 +196,8 @@ export class Channels {
 
     if (!this.client.shard) return { success: false };
 
-    return await this.client.shard.broadcastEval(async function (shard, { channelId, payload }) {
-      const channel = shard.channels.cache.get(channelId);
+    return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
+      const channel = shard.channels.getById(channelId);
       if (!channel?.isTextBased()) return;
       return await channel.send(payload);
     }, { context: { channelId, payload } })
