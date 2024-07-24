@@ -2,6 +2,7 @@
 import type { EnumLike } from "discord.js";
 import type { setTimeout } from "timers/promises";
 import type { DiscordStringLimits } from "./src/@enum";
+import type { AwaitOptions } from "./src/@types";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { SArray } from "./src/prototypes/array";
@@ -35,7 +36,10 @@ declare module "discord.js" {
 
   interface ChannelManager extends Channels { }
 
-  interface Client<Ready> extends SClient<Ready> { }
+  interface Client<Ready> extends SClient<Ready> {
+    awaitReady(): Promise<this is Client<true>>;
+    awaitReady(options: AwaitOptions): Promise<this is Client<true>>;
+  }
 
   interface Embed extends SEmbed { }
 
