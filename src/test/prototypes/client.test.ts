@@ -1,4 +1,4 @@
-import { assert } from "console";
+import assert from "assert";
 import { Client, Events } from "discord.js";
 import test, { describe } from "node:test";
 import { SClient } from "../../prototypes/client";
