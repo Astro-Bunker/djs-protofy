@@ -25,7 +25,7 @@ export class SClient<Ready extends boolean = boolean> {
         r(Boolean(client));
       };
       this.once(Events.ClientReady, onReady);
-      if (this.isReady()) return onReady();
+      if (this.isReady()) return onReady(this);
       if (options?.time) timeout = setTimeout(onReady, options.time);
     });
   }
