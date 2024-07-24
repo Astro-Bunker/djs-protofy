@@ -2,11 +2,14 @@
 import type { EnumLike } from "discord.js";
 import type { setTimeout } from "timers/promises";
 import type { DiscordStringLimits } from "./src/@enum";
+import type { AwaitOptions } from "./src/@types";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { SArray } from "./src/prototypes/array";
 import type { Channels } from "./src/prototypes/channels";
+import type { SClient } from "./src/prototypes/client";
 import type { SCollection } from "./src/prototypes/collection";
+import type { SEmbed } from "./src/prototypes/embed";
 import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildBans } from "./src/prototypes/guildBans";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
@@ -21,7 +24,6 @@ import type { Roles } from "./src/prototypes/roles";
 import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
 import type { SString } from "./src/prototypes/string";
 import type { Users } from "./src/prototypes/users";
-import type { SEmbed } from "./src/prototypes/embed";
 
 export * from "./src";
 
@@ -33,6 +35,11 @@ declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
 
   interface ChannelManager extends Channels { }
+
+  interface Client<Ready> extends SClient<Ready> {
+    awaitReady(): Promise<this is Client<true>>;
+    awaitReady(options: AwaitOptions): Promise<this is Client<true>>;
+  }
 
   interface Embed extends SEmbed { }
 

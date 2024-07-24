@@ -3,6 +3,7 @@ import { SApplicationCommand } from "./prototypes/applicationCommand";
 import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { SArray } from "./prototypes/array";
 import { Channels } from "./prototypes/channels";
+import { SClient } from "./prototypes/client";
 import { SCollection } from "./prototypes/collection";
 import { SEmbed } from "./prototypes/embed";
 import { Emojis } from "./prototypes/emojis";
@@ -41,6 +42,7 @@ export class DJSProtofy {
     new SApplicationCommand();
     new ApplicationCommands();
     new Channels();
+    new SClient();
     new SCollection();
     new SEmbed();
     new Emojis();
