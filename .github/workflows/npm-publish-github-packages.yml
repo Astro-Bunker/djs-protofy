@@ -37,8 +37,8 @@ jobs:
           npm version prerelease --preid=beta.$(date +%s) --no-git-tag-version
           npm publish --tag=beta
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{ github.event.release.prerelease == false }}
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
