@@ -4,6 +4,9 @@
   "description": "A library created to make Discord.JS easier to use through prototypes.",
   "main": "out/index.js",
   "types": "index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "watch": "tsc -watch",
     "test:node": "node --test out/test",
