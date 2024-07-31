@@ -3,6 +3,7 @@ import { isRegExp } from "util/types";
 
 export class ApplicationCommands {
   declare cache: ApplicationCommandManager["cache"];
+  declare fetch: ApplicationCommandManager["fetch"];
 
   constructor() {
     Object.defineProperties(ApplicationCommandManager.prototype, {
@@ -25,5 +26,13 @@ export class ApplicationCommands {
 
       return name.test(command.name);
     });
+  }
+
+  /** @DJSProtofy */
+  async fetchByName(name: string | RegExp) {
+    const exists = this.getByName(name);
+    if (exists) return exists;
+    await this.fetch();
+    return this.getByName(name);
   }
 }
