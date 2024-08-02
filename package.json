@@ -40,7 +40,7 @@
     "tslib": "^2.6.3"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.0.3",
     "@types/source-map-support": "^0.5.10",
     "discord.js": "^14.15.3",
     "eslint": "^9.6.0",
