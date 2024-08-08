@@ -9,6 +9,7 @@ export class ApplicationCommands {
     Object.defineProperties(ApplicationCommandManager.prototype, {
       getById: { value: this.getById },
       getByName: { value: this.getByName },
+      fetchByName: { value: this.fetchByName },
     });
   }
 
