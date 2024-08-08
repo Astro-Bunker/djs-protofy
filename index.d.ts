@@ -10,6 +10,7 @@ import type { Channels } from "./src/prototypes/channels";
 import type { SClient } from "./src/prototypes/client";
 import type { SCollection } from "./src/prototypes/collection";
 import type { SEmbed } from "./src/prototypes/embed";
+import type { SEmbedBuilder } from "./src/prototypes/embedBuilder";
 import type { Emojis } from "./src/prototypes/emojis";
 import type { GuildBans } from "./src/prototypes/guildBans";
 import type { GuildChannels } from "./src/prototypes/guildChannels";
@@ -42,6 +43,8 @@ declare module "discord.js" {
   }
 
   interface Embed extends SEmbed { }
+
+  interface EmbedBuilder extends SEmbedBuilder { }
 
   interface GuildBanManager extends GuildBans { }
 
