@@ -9,3 +9,7 @@ export type ChannelWithType<T extends ChannelType | ChannelTypeString> =
 
 export type GuildChannelWithType<T extends GuildChannelType | GuildChannelTypeString> =
   Extract<GuildBasedChannel, { type: T extends string ? (typeof ChannelType)[T] : T }>;
+
+export interface AwaitOptions {
+  time?: number;
+}

@@ -2,10 +2,12 @@
 import type { EnumLike } from "discord.js";
 import type { setTimeout } from "timers/promises";
 import type { DiscordStringLimits } from "./src/@enum";
+import type { AwaitOptions } from "./src/@types";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { SArray } from "./src/prototypes/array";
 import type { Channels } from "./src/prototypes/channels";
+import type { SClient } from "./src/prototypes/client";
 import type { SCollection } from "./src/prototypes/collection";
 import type { SEmbed } from "./src/prototypes/embed";
 import type { SEmbedBuilder } from "./src/prototypes/embedBuilder";
@@ -34,6 +36,11 @@ declare module "discord.js" {
   interface BaseGuildEmojiManager extends Emojis { }
 
   interface ChannelManager extends Channels { }
+
+  interface Client<Ready> extends SClient<Ready> {
+    awaitReady(): Promise<this is Client<true>>;
+    awaitReady(options: AwaitOptions): Promise<this is Client<true>>;
+  }
 
   interface Embed extends SEmbed { }
 
