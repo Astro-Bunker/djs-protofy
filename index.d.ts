@@ -31,7 +31,15 @@ export * from "./src";
 declare module "discord.js" {
   interface ApplicationCommand extends SApplicationCommand { }
 
-  interface ApplicationCommandManager extends ApplicationCommands { }
+  interface ApplicationCommandManager<
+    ApplicationCommandScope = ApplicationCommand<{ guild: GuildResolvable; }>,
+    PermissionsOptionsExtras = { guild: GuildResolvable; },
+    PermissionsGuildType = null
+  > extends ApplicationCommands<
+    ApplicationCommandScope,
+    PermissionsOptionsExtras,
+    PermissionsGuildType,
+  > { }
 
   interface BaseGuildEmojiManager extends Emojis { }
 
