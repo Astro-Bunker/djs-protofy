@@ -1,6 +1,6 @@
 {
   "name": "djs-protofy",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "description": "A library created to make Discord.JS easier to use through prototypes.",
   "main": "out/index.js",
   "types": "index.d.ts",
