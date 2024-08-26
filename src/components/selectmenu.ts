@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ComponentBuilder, ComponentType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder, type APIActionRowComponent, type APIActionRowComponentTypes, type APISelectMenuComponent, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
+import { APISelectMenuDefaultValue, ActionRowBuilder, ComponentBuilder, ComponentType, SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder, type APIActionRowComponent, type APIActionRowComponentTypes, type APISelectMenuComponent, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
 const selectMenuTypes = [
@@ -23,6 +23,22 @@ export function getDefaultOptionFromSelectMenu(
         option.default && (optionDefault = option))));
 
   return optionDefault;
+}
+
+export function getDefaultValuesFromSelectMenu<D extends SelectMenuDefaultValueType>(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  customId?: string,
+) {
+  let default_values: APISelectMenuDefaultValue<D>[] | undefined;
+
+  components?.some(row =>
+    row.toJSON().components.some(column =>
+      "default_values" in column &&
+      (typeof customId === "string" ? column.custom_id === customId : true) &&
+      // @ts-expect-error ts(2322)
+      (default_values = column.default_values)));
+
+  return default_values ?? [];
 }
 
 export function mapSelectMenus<
