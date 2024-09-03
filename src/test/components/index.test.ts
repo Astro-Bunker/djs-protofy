@@ -28,7 +28,7 @@ describe("Testing mapping components", () => {
       if (component.type !== ComponentType.Button) return null;
 
       /** Remove non matched components */
-      if (component.style === ButtonStyle.Link) return null;
+      if (!("custom_id" in component)) return null;
 
       /** Editing matched components */
       if (component.custom_id === "buttonId") {

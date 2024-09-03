@@ -188,7 +188,7 @@ export class Channels {
 
     const channel = this.resolve(channelResolvable) ?? await this.fetch(channelId).catch(() => null);
     if (channel) {
-      if (!channel.isTextBased()) return { success: false };
+      if (!("send" in channel)) return { success: false };
       return await channel.send(payload)
         .then(message => ({ message, success: true }))
         .catch(error => ({ error, success: false }));
@@ -198,7 +198,7 @@ export class Channels {
 
     return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
       const channel = shard.channels.getById(channelId);
-      if (!channel?.isTextBased()) return;
+      if (!channel || !("send" in channel)) return;
       return await channel.send(payload);
     }, { context: { channelId, payload } })
       .then(res => res.find(Boolean) as any)

@@ -17,7 +17,7 @@ describe("Testing mapping buttons", () => {
   test("Mapping buttons", () => {
     const actual = mapButtons(components, (button) => {
       /** Skip non matched buttons */
-      if (button.style === ButtonStyle.Link) return button;
+      if (!("custom_id" in button)) return button;
 
       /** Editing matched buttons */
       if (button.custom_id === "customId1") {
