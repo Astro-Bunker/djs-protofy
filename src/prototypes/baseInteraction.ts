@@ -5,7 +5,7 @@ export class SBaseInteraction {
 
   constructor() {
     Object.defineProperties(BaseInteraction.prototype, {
-      hasExpired: { get() { return this.hasExpired; } }
+      hasExpired: { get() { return (this.createdTimestamp + 900_000) >= Date.now(); } }
     });
   }
 
