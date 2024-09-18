@@ -6,6 +6,7 @@ import type { AwaitOptions } from "./src/@types";
 import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
 import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
 import type { SArray } from "./src/prototypes/array";
+import type { SBaseInteraction } from "./src/prototypes/baseInteraction";
 import type { Channels } from "./src/prototypes/channels";
 import type { SClient } from "./src/prototypes/client";
 import type { SCollection } from "./src/prototypes/collection";
@@ -42,6 +43,8 @@ declare module "discord.js" {
   > { }
 
   interface BaseGuildEmojiManager extends Emojis { }
+
+  interface BaseInteraction extends SBaseInteraction { }
 
   interface ChannelManager extends Channels { }
 
