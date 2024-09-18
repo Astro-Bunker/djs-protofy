@@ -2,6 +2,7 @@ import { setTimeout as sleep } from "timers/promises";
 import { SApplicationCommand } from "./prototypes/applicationCommand";
 import { ApplicationCommands } from "./prototypes/applicationCommands";
 import { SArray } from "./prototypes/array";
+import { SBaseInteraction } from "./prototypes/baseInteraction";
 import { Channels } from "./prototypes/channels";
 import { SClient } from "./prototypes/client";
 import { SCollection } from "./prototypes/collection";
@@ -41,6 +42,7 @@ export class DJSProtofy {
 
     new SApplicationCommand();
     new ApplicationCommands();
+    new SBaseInteraction();
     new Channels();
     new SClient();
     new SCollection();
