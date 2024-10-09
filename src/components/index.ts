@@ -1,11 +1,11 @@
-import { ActionRowBuilder, createComponentBuilder, type APIActionRowComponentTypes, type ActionRow, type AnyComponentBuilder, type MessageActionRowComponent, type TextInputComponent } from "discord.js";
+import { ActionRowBuilder, createComponentBuilder, type APIActionRowComponent, type APIActionRowComponentTypes, type ActionRow, type AnyComponentBuilder, type MessageActionRowComponent, type ModalActionRowComponent } from "discord.js";
 import { exists } from "../utils";
 
 export * from "./button";
 export * from "./selectmenu";
 
 export function mapComponents<
-  T extends ActionRow<MessageActionRowComponent | TextInputComponent> | ActionRowBuilder<AnyComponentBuilder>
+  T extends ActionRow<MessageActionRowComponent | ModalActionRowComponent> | ActionRowBuilder<AnyComponentBuilder>
 >(
   components: T[],
   callback: (component: APIActionRowComponentTypes, rowIndex: number, columnIndex: number) =>
@@ -15,7 +15,7 @@ export function mapComponents<
   if (typeof callback !== "function") throw Error("callback is not a function");
 
   return components.reduce<T[]>((accRows, row, rowIndex) => {
-    const rowJson = row.toJSON();
+    const rowJson = row.toJSON() as APIActionRowComponent<APIActionRowComponentTypes>;
 
     const columns = rowJson.components.reduce<AnyComponentBuilder[]>((accColumns, column, columnIndex) => {
       const result = callback(column, rowIndex, columnIndex);

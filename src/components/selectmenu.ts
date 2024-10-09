@@ -1,4 +1,4 @@
-import { APISelectMenuDefaultValue, ActionRowBuilder, ComponentBuilder, ComponentType, SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder, type APIActionRowComponent, type APIActionRowComponentTypes, type APISelectMenuComponent, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
+import { type APIActionRowComponent, type APIActionRowComponentTypes, type APIMessageActionRowComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, ActionRowBuilder, type ComponentBuilder, ComponentType, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder, type SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
 const selectMenuTypes = [
@@ -52,7 +52,7 @@ export function mapSelectMenus<
   if (typeof callback !== "function") throw Error("callback is not a function");
 
   return components.reduce<T[]>((accRows, row, rowIndex) => {
-    const rowJson = row.toJSON();
+    const rowJson = row.toJSON() as APIActionRowComponent<APIMessageActionRowComponent>;
 
     if (!selectMenuTypes.includes(rowJson.components[0]?.type)) return accRows.concat(row);
 

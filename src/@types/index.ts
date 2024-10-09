@@ -1,4 +1,4 @@
-import { Channel, ChannelType, GuildBasedChannel, GuildChannelType } from "discord.js";
+import type { Channel, ChannelType, GuildBasedChannel, GuildChannelType } from "discord.js";
 
 export type ChannelTypeString = keyof typeof ChannelType;
 

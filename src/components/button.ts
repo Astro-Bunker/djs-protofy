@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ComponentType, type APIButtonComponent, type ActionRow, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ComponentType, type APIActionRowComponent, type APIButtonComponent, type APIMessageActionRowComponent, type ActionRow, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
 export function mapButtons<
@@ -11,7 +11,7 @@ export function mapButtons<
   if (typeof callback !== "function") throw Error("callback is not a function");
 
   return components.reduce<T[]>((accRows, row, rowIndex) => {
-    const rowJson = row.toJSON();
+    const rowJson = row.toJSON() as APIActionRowComponent<APIMessageActionRowComponent>;
 
     if (rowJson.components[0]?.type !== ComponentType.Button) return accRows.concat(row);
 

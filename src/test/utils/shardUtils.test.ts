@@ -1,5 +1,5 @@
-import { APIDMChannel, APITextChannel, ChannelType, Client, Guild, GuildDefaultMessageNotifications, GuildExplicitContentFilter, GuildHubType, GuildMFALevel, GuildNSFWLevel, GuildPremiumTier, GuildSystemChannelFlags, GuildVerificationLevel } from "discord.js";
-import { RawGuildData } from "discord.js/typings/rawDataTypes";
+import { type APIDMChannel, type APITextChannel, ChannelType, Client, Guild, GuildDefaultMessageNotifications, GuildExplicitContentFilter, GuildHubType, GuildMFALevel, GuildNSFWLevel, GuildPremiumTier, GuildSystemChannelFlags, GuildVerificationLevel } from "discord.js";
+import { type RawGuildData } from "discord.js/typings/rawDataTypes";
 import assert from "node:assert";
 import test, { describe } from "node:test";
 import { createBroadcastedChannel } from "../../utils/shardUtils";

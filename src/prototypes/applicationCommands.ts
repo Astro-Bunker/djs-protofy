@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandManager, GuildResolvable } from "discord.js";
+import { ApplicationCommandManager, type ApplicationCommand, type GuildResolvable } from "discord.js";
 import { isRegExp } from "util/types";
 
 export class ApplicationCommands<

@@ -1,6 +1,6 @@
 import { ChannelType, Collection, GuildChannelManager, type CategoryChannel, type GuildBasedChannel, type GuildChannelType, type VoiceBasedChannel } from "discord.js";
 import { isRegExp } from "util/types";
-import { GuildChannelTypeString, GuildChannelWithType } from "../@types";
+import { type GuildChannelTypeString, type GuildChannelWithType } from "../@types";
 import { compareStrings, exists, replaceMentionCharacters, resolveEnum } from "../utils";
 
 export class GuildChannels {
