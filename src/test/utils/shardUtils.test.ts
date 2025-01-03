@@ -1,4 +1,4 @@
-import { type APIDMChannel, type APITextChannel, ChannelType, Client, Guild, GuildDefaultMessageNotifications, GuildExplicitContentFilter, GuildHubType, GuildMFALevel, GuildNSFWLevel, GuildPremiumTier, GuildSystemChannelFlags, GuildVerificationLevel } from "discord.js";
+import { type APIDMChannel, type APITextChannel, ChannelType, Client, Guild, GuildDefaultMessageNotifications, GuildExplicitContentFilter, GuildHubType, GuildMFALevel, GuildNSFWLevel, GuildPremiumTier, GuildSystemChannelFlags, GuildVerificationLevel, Locale } from "discord.js";
 import { type RawGuildData } from "discord.js/typings/rawDataTypes";
 import assert from "node:assert";
 import test, { describe } from "node:test";
@@ -35,7 +35,7 @@ describe("Testing createBroadcastedChannel", () => {
     name: "name",
     nsfw_level: GuildNSFWLevel.Default,
     owner_id: "owner_id",
-    preferred_locale: "en-US",
+    preferred_locale: Locale.EnglishUS,
     premium_progress_bar_enabled: false,
     premium_tier: GuildPremiumTier.None,
     public_updates_channel_id: null,
