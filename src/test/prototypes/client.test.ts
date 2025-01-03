@@ -1,5 +1,5 @@
 import assert from "assert";
-import { Client, Events } from "discord.js";
+import { Client, Events, Status } from "discord.js";
 import test, { describe } from "node:test";
 import { SClient } from "../../prototypes/client";
 
@@ -15,5 +15,9 @@ describe("Testing Client#awaitReady", () => {
     const on = client.awaitReady();
     client.emit(Events.ClientReady, client as Client<true>);
     assert(await on);
+
+    client.ws.status = Status.Ready;
+
+    assert(await client.awaitReady());
   });
 });

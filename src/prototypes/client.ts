@@ -16,8 +16,8 @@ export class SClient<Ready extends boolean = boolean> {
   awaitReady(): Promise<Ready>;
   awaitReady(options: AwaitOptions): Promise<Ready>;
   async awaitReady(options?: AwaitOptions) {
+    if (this.isReady()) return true;
     return await new Promise(r => {
-      if (this.isReady()) return r(true);
       let timeout: NodeJS.Timeout;
       const onReady = (client?: Client) => {
         clearTimeout(timeout);
