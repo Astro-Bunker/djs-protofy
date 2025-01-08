@@ -1,5 +1,6 @@
 import { Embed } from "discord.js";
 import { isRegExp } from "util/types";
+import { compareStrings } from "../utils";
 
 export class SEmbed {
   declare fields: Embed["fields"];
@@ -13,13 +14,9 @@ export class SEmbed {
 
   /** @DJSProtofy */
   getFieldByName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.fields.find(field => compareStrings(field.name, name));
 
-    return this.fields.find(field => {
-      if (typeof name === "string") return field.name === name;
-
-      return name.test(field.name);
-    });
+    if (isRegExp(name)) return this.fields.find(field => name.test(field.name));
   }
 
   /** @DJSProtofy */

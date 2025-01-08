@@ -29,15 +29,9 @@ export class Guilds {
 
   /** @DJSProtofy */
   getByName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.name, name));
 
-    return this.cache.find(guild => {
-      if (typeof name === "string") {
-        return compareStrings(guild.name, name);
-      }
-
-      return name.test(guild.name);
-    });
+    if (isRegExp(name)) return this.cache.find(cached => name.test(cached.name));
   }
 
   /** @DJSProtofy */
@@ -46,12 +40,12 @@ export class Guilds {
   async getInShardsById(id: string, allowApiGuild?: boolean) {
     if (typeof id !== "string") return null;
 
-    const existing = this.getById(id);
+    const existing = this.cache.get(id);
     if (existing) return existing;
 
     if (!this.client.shard) return null;
 
-    return await this.client.shard.broadcastEval((shard, id) => shard.guilds.getById(id), { context: id })
+    return await this.client.shard.broadcastEval((shard, id) => shard.guilds.cache.get(id), { context: id })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedGuild(this.client, data)
         ?? (allowApiGuild ? to_snake_case(data) : null) : null)
@@ -83,7 +77,7 @@ export class Guilds {
   filterByOwnerId(id: string) {
     if (typeof id !== "string") return new Collection<string, Guild>();
 
-    return this.cache.filter(guild => guild.ownerId === id);
+    return this.cache.filter(cached => cached.ownerId === id);
   }
 
   /** @DJSProtofy */
@@ -107,11 +101,11 @@ export class Guilds {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(guild =>
-        typeof query.name === "string" && compareStrings(query.name, guild.name) ||
-        isRegExp(query.name) && query.name.test(guild.name) ||
-        typeof query.ownerId === "string" && compareStrings(query.ownerId, guild.ownerId) ||
-        isRegExp(query.ownerId) && query.ownerId.test(guild.ownerId));
+      this.cache.find(cached =>
+        typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+        isRegExp(query.name) && query.name.test(cached.name) ||
+        typeof query.ownerId === "string" && compareStrings(query.ownerId, cached.ownerId) ||
+        isRegExp(query.ownerId) && query.ownerId.test(cached.ownerId));
   }
 
   /** @DJSProtofy */
@@ -131,11 +125,11 @@ export class Guilds {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query);
+    query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
-      this.cache.find((guild) => [
-        guild.name.toLowerCase(),
-      ].includes(query.toLowerCase()));
+      this.cache.find((cached) => [
+        cached.name.toLowerCase(),
+      ].includes(query));
   }
 }
 

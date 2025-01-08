@@ -22,23 +22,20 @@ export class GuildMessages {
   /** @DJSProtofy */
   filterByAuthorId(id: string) {
     if (typeof id !== "string") return new Collection<string, Message>();
-    return this.cache.filter(message => message.author?.id === id);
+    return this.cache.filter(cached => cached.author?.id === id);
   }
 
   /** @DJSProtofy */
   filterByContent(content: string | RegExp) {
-    if (typeof content !== "string" && !isRegExp(content)) return new Collection<string, Message>();
+    if (typeof content === "string") return this.cache.filter(cached => compareStrings(cached.content, content));
 
-    return this.cache.filter(message => {
-      if (typeof content === "string")
-        return compareStrings(message.content, content);
+    if (isRegExp(content)) return this.cache.filter(cached => content.test(cached.content));
 
-      return content.test(message.content);
-    });
+    return new Collection() as GuildMessageManager["cache"];
   }
 
   /** @DJSProtofy */
   filterByAuthorIsBots() {
-    return this.cache.filter(message => message.author?.bot);
+    return this.cache.filter(cached => cached.author?.bot);
   }
 }

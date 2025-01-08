@@ -7,6 +7,7 @@ export class SCollection<K, V> {
   constructor() {
     Object.defineProperties(Collection.prototype, {
       keysToArray: { value: this.keysToArray },
+      keysToSet: { value: this.keysToSet },
       valuesToArray: { value: this.valuesToArray },
       toJSON: { value: this.toJSON },
     });
@@ -14,16 +15,21 @@ export class SCollection<K, V> {
 
   /** @DJSProtofy */
   keysToArray() {
-    return Array.from(this.keys());
+    return this.keys().toArray();
+  }
+
+  /** @DJSProtofy */
+  keysToSet() {
+    return new Set(this.keys());
   }
 
   /** @DJSProtofy */
   valuesToArray() {
-    return Array.from(this.values());
+    return this.values().toArray();
   }
 
   /** @DJSProtofy */
   toJSON() {
-    return Array.from(this.values());
+    return this.values().toArray();
   }
 }

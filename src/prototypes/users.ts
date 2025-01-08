@@ -31,43 +31,27 @@ export class Users {
 
   /** @DJSProtofy */
   getByDisplayName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.displayName, name));
 
-    return this.cache.find(user => {
-      if (typeof name === "string") {
-        return compareStrings(user.displayName, name);
-      }
-
-      return name.test(user.displayName);
-    });
+    if (isRegExp(name)) return this.cache.find(cached => name.test(cached.displayName));
   }
 
   /** @DJSProtofy */
   getByGlobalName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached =>
+      typeof cached.globalName === "string" &&
+      compareStrings(cached.globalName, name));
 
-    return this.cache.find(user => {
-      if (user.globalName === null) return false;
-
-      if (typeof name === "string") {
-        return compareStrings(user.globalName, name);
-      }
-
-      return name.test(user.globalName);
-    });
+    if (isRegExp(name)) return this.cache.find(cached =>
+      typeof cached.globalName === "string" &&
+      name.test(cached.globalName));
   }
 
   /** @DJSProtofy */
   getByUsername(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.username, name));
 
-    return this.cache.find(user => {
-      if (typeof name === "string") {
-        return compareStrings(user.username, name);
-      }
-
-      return name.test(user.username);
-    });
+    if (isRegExp(name)) return this.cache.find(cached => name.test(cached.username));
   }
 
   /** @DJSProtofy */
@@ -76,12 +60,12 @@ export class Users {
   async getInShardsById(id: string, allowApiUser?: boolean) {
     if (typeof id !== "string") return null;
 
-    const existing = this.getById(id);
+    const existing = this.cache.get(id);
     if (existing) return existing;
 
     if (!this.client.shard) return null;
 
-    return await this.client.shard.broadcastEval((shard, id) => shard.users.getById(id), { context: id })
+    return await this.client.shard.broadcastEval((shard, id) => shard.users.cache.get(id), { context: id })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedUser(this.client, data)
         ?? (allowApiUser ? to_snake_case(data) : null) : null)
@@ -163,14 +147,14 @@ export class Users {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(user =>
-        typeof query.displayName === "string" && compareStrings(query.displayName, user.displayName) ||
-        isRegExp(query.displayName) && query.displayName.test(user.displayName) ||
-        typeof query.username === "string" && compareStrings(query.username, user.username) ||
-        isRegExp(query.username) && query.username.test(user.username) ||
-        typeof user.globalName === "string" && (
-          typeof query.globalName === "string" && compareStrings(query.globalName, user.globalName) ||
-          isRegExp(query.globalName) && query.globalName.test(user.globalName)
+      this.cache.find(cached =>
+        typeof query.displayName === "string" && compareStrings(query.displayName, cached.displayName) ||
+        isRegExp(query.displayName) && query.displayName.test(cached.displayName) ||
+        typeof query.username === "string" && compareStrings(query.username, cached.username) ||
+        isRegExp(query.username) && query.username.test(cached.username) ||
+        typeof cached.globalName === "string" && (
+          typeof query.globalName === "string" && compareStrings(query.globalName, cached.globalName) ||
+          isRegExp(query.globalName) && query.globalName.test(cached.globalName)
         ));
   }
 
@@ -186,21 +170,21 @@ export class Users {
 
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((user) =>
-      query.test(user.displayName) ||
-      query.test(user.username) ||
-      (typeof user.globalName === "string" && query.test(user.globalName)));
+    return this.cache.find((cached) =>
+      query.test(cached.displayName) ||
+      query.test(cached.username) ||
+      (typeof cached.globalName === "string" && query.test(cached.globalName)));
   }
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query);
+    query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
-      this.cache.find((user) => [
-        user.displayName?.toLowerCase(),
-        user.globalName?.toLowerCase(),
-        user.username?.toLowerCase(),
-      ].includes(query.toLowerCase()));
+      this.cache.find((cached) => [
+        cached.displayName?.toLowerCase(),
+        cached.globalName?.toLowerCase(),
+        cached.username?.toLowerCase(),
+      ].includes(query));
   }
 }
 

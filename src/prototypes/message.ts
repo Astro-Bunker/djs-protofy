@@ -1,4 +1,5 @@
 import { Collection, GatewayIntentBits, Message, type Channel, type GuildBasedChannel, type GuildMember, type Role, type User } from "discord.js";
+import { ManyDiscordSnowflakesPattern } from "../utils/regexps";
 
 export class SMessage {
   declare client: Message["client"];
@@ -51,12 +52,12 @@ export class SMessage {
     if (this.client.options.intents.has(GatewayIntentBits.GuildMembers)) {
       // @ts-expect-error ts(2339)
       if (!this.guild._membersHasAlreadyBeenFetched) {
-        await this.guild.members.fetch().catch(() => null);
+        await this.guild.members.fetch({ time: 10000 }).catch(() => null);
         // @ts-expect-error ts(2339)
         this.guild._membersHasAlreadyBeenFetched = true;
       }
     } else {
-      const user = Array.from(new Set(this.content.match(/\d{17,}/g)));
+      const user = Array.from(new Set(this.content.match(ManyDiscordSnowflakesPattern)));
 
       if (user.length) await this.guild.members.fetch({ user, time: 1000 }).catch(() => null);
     }
@@ -97,7 +98,7 @@ export class SMessage {
 
   /** @DJSProtofy */
   async parseUserMentions(): Promise<Collection<string, User>> {
-    const ids = this.content.match(/\d{17,}/g);
+    const ids = this.content.match(ManyDiscordSnowflakesPattern);
 
     if (ids) await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
 

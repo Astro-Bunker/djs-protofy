@@ -37,15 +37,9 @@ export class Roles {
 
   /** @DJSProtofy */
   getByName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.name, name));
 
-    return this.cache.find(role => {
-      if (typeof name === "string") {
-        return compareStrings(role.name, name);
-      }
-
-      return name.test(role.name);
-    });
+    if (isRegExp(name)) return this.cache.find(cached => name.test(cached.name));
   }
 
   /** @DJSProtofy */
@@ -131,9 +125,9 @@ export class Roles {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(role => (
-        typeof query.name === "string" && compareStrings(query.name, role.name) ||
-        isRegExp(query.name) && query.name.test(role.name)
+      this.cache.find(cached => (
+        typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+        isRegExp(query.name) && query.name.test(cached.name)
       ));
   }
 
@@ -149,16 +143,16 @@ export class Roles {
 
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((role) => query.test(role.name));
+    return this.cache.find((cached) => query.test(cached.name));
   }
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query);
+    query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
-      this.cache.find((role) => [
-        role.name.toLowerCase(),
-      ].includes(query.toLowerCase()));
+      this.cache.find((cached) => [
+        cached.name.toLowerCase(),
+      ].includes(query));
   }
 }
 
