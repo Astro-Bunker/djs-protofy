@@ -26,14 +26,14 @@ export class GuildBans {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(ban =>
-        typeof query.displayName === "string" && compareStrings(query.displayName, ban.user.displayName) ||
-        isRegExp(query.displayName) && query.displayName.test(ban.user.displayName) ||
-        typeof query.username === "string" && compareStrings(query.username, ban.user.username) ||
-        isRegExp(query.username) && query.username.test(ban.user.username) ||
-        typeof ban.user.globalName === "string" && (
-          typeof query.globalName === "string" && compareStrings(query.globalName, ban.user.globalName) ||
-          isRegExp(query.globalName) && query.globalName.test(ban.user.globalName)
+      this.cache.find(cached =>
+        typeof query.displayName === "string" && compareStrings(query.displayName, cached.user.displayName) ||
+        isRegExp(query.displayName) && query.displayName.test(cached.user.displayName) ||
+        typeof query.username === "string" && compareStrings(query.username, cached.user.username) ||
+        isRegExp(query.username) && query.username.test(cached.user.username) ||
+        typeof cached.user.globalName === "string" && (
+          typeof query.globalName === "string" && compareStrings(query.globalName, cached.user.globalName) ||
+          isRegExp(query.globalName) && query.globalName.test(cached.user.globalName)
         ));
   }
 
@@ -49,21 +49,21 @@ export class GuildBans {
 
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((ban) =>
-      query.test(ban.user.displayName) ||
-      query.test(ban.user.username) ||
-      (typeof ban.user.globalName === "string" && query.test(ban.user.globalName)));
+    return this.cache.find((cached) =>
+      query.test(cached.user.displayName) ||
+      query.test(cached.user.username) ||
+      (typeof cached.user.globalName === "string" && query.test(cached.user.globalName)));
   }
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query);
+    query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
-      this.cache.find((ban) => [
-        ban.user.displayName?.toLowerCase(),
-        ban.user.globalName?.toLowerCase(),
-        ban.user.username?.toLowerCase(),
-      ].includes(query.toLowerCase()));
+      this.cache.find((cached) => [
+        cached.user.displayName?.toLowerCase(),
+        cached.user.globalName?.toLowerCase(),
+        cached.user.username?.toLowerCase(),
+      ].includes(query));
   }
 }
 

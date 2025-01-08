@@ -1,5 +1,6 @@
 import { ApplicationCommandManager, type ApplicationCommand, type GuildResolvable } from "discord.js";
 import { isRegExp } from "util/types";
+import { compareStrings } from "../utils";
 
 export class ApplicationCommands<
   ApplicationCommandScope extends ApplicationCommand = ApplicationCommand<{ guild: GuildResolvable; }>,
@@ -24,13 +25,9 @@ export class ApplicationCommands<
 
   /** @DJSProtofy */
   getByName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.name, name));
 
-    return this.cache.find(command => {
-      if (typeof name === "string") return command.name === name;
-
-      return name.test(command.name);
-    });
+    if (isRegExp(name)) return this.cache.find(cached => name.test(cached.name));
   }
 
   /** @DJSProtofy */

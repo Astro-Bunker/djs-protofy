@@ -77,7 +77,7 @@ function createChannel(
   return channel;
 }
 
-export function createBroadcastedChannel(client: Client, data: Channel | APIChannel): Channel | undefined;
+export function createBroadcastedChannel(client: Client, data: Channel | APIChannel): Channel | null;
 export function createBroadcastedChannel(client: Client, data: Record<string, any>) {
   if ("messages" in data) delete data.messages;
   if ("permissionOverwrites" in data) delete data.permissionOverwrites;
@@ -109,10 +109,11 @@ export function createBroadcastedChannel(client: Client, data: Record<string, an
     return createChannel(client as Client<true>, data as APIChannel, guild, { allowUnknownGuild: true });
   } catch (error: any) {
     client.emit("error", error);
+    return null;
   }
 }
 
-export function createBroadcastedGuild(client: Client, data: Guild | APIGuild): Guild | undefined;
+export function createBroadcastedGuild(client: Client, data: Guild | APIGuild): Guild | null;
 export function createBroadcastedGuild(client: Client, data: Record<string, any>) {
   data = to_snake_case(data);
 
@@ -156,10 +157,11 @@ export function createBroadcastedGuild(client: Client, data: Record<string, any>
     return new Guild(client, data);
   } catch (error: any) {
     client.emit("error", error);
+    return null;
   }
 }
 
-export function createBroadcastedMessage(client: Client, data: Message | APIMessage): Message | undefined;
+export function createBroadcastedMessage(client: Client, data: Message | APIMessage): Message | null;
 export function createBroadcastedMessage(client: Client, data: Record<string, any>) {
   if ("mentions" in data) delete data.mentions;
   excludeNullishProperties(data);
@@ -171,10 +173,11 @@ export function createBroadcastedMessage(client: Client, data: Record<string, an
     return new Message(client, data);
   } catch (error: any) {
     client.emit("error", error);
+    return null;
   }
 }
 
-export function createBroadcastedUser(client: Client, data: User | APIUser): User | undefined;
+export function createBroadcastedUser(client: Client, data: User | APIUser): User | null;
 export function createBroadcastedUser(client: Client, data: Record<string, any>) {
   data = to_snake_case(data);
 
@@ -183,5 +186,6 @@ export function createBroadcastedUser(client: Client, data: Record<string, any>)
     return new User(client, data);
   } catch (error: any) {
     client.emit("error", error);
+    return null;
   }
 }

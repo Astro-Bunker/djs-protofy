@@ -30,53 +30,45 @@ export class GuildEmojis {
 
   /** @DJSProtofy */
   getByName(name: string | RegExp) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached => typeof cached.name === "string" && compareStrings(cached.name, name));
 
-    return this.cache.find(emoji => {
-      if (emoji.name === null) return false;
-
-      if (typeof name === "string") {
-        return compareStrings(emoji.name, name);
-      }
-
-      return name.test(emoji.name);
-    });
+    if (isRegExp(name)) return this.cache.find(cached => typeof cached.name === "string" && name.test(cached.name));
   }
 
   /** @DJSProtofy */
   filterByAuthorId(id: string) {
     if (typeof id !== "string") return new Collection<string, GuildEmoji>();
-    return this.cache.filter(emoji => emoji.author?.id === id);
+    return this.cache.filter(cached => cached.author?.id === id);
   }
 
   /** @DJSProtofy */
   filterAnimateds() {
-    return this.cache.filter(emoji => emoji.animated);
+    return this.cache.filter(cached => cached.animated);
   }
 
   /** @DJSProtofy */
   filterStatics() {
-    return this.cache.filter(emoji => !emoji.animated);
+    return this.cache.filter(cached => !cached.animated);
   }
 
   /** @DJSProtofy */
   filterAvailables() {
-    return this.cache.filter(emoji => emoji.available);
+    return this.cache.filter(cached => cached.available);
   }
 
   /** @DJSProtofy */
   filterUnavailables() {
-    return this.cache.filter(emoji => !emoji.available);
+    return this.cache.filter(cached => !cached.available);
   }
 
   /** @DJSProtofy */
   filterDeletables() {
-    return this.cache.filter(emoji => emoji.deletable);
+    return this.cache.filter(cached => cached.deletable);
   }
 
   /** @DJSProtofy */
   filterUndeletables() {
-    return this.cache.filter(emoji => !emoji.deletable);
+    return this.cache.filter(cached => !cached.deletable);
   }
 
   /** @DJSProtofy */
@@ -91,10 +83,10 @@ export class GuildEmojis {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(emoji =>
-        typeof emoji.name === "string" && (
-          typeof query.name === "string" && compareStrings(query.name, emoji.name) ||
-          isRegExp(query.name) && query.name.test(emoji.name)
+      this.cache.find(cached =>
+        typeof cached.name === "string" && (
+          typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+          isRegExp(query.name) && query.name.test(cached.name)
         ));
   }
 
@@ -110,16 +102,16 @@ export class GuildEmojis {
 
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((emoji) => typeof emoji.name === "string" && query.test(emoji.name));
+    return this.cache.find((cached) => typeof cached.name === "string" && query.test(cached.name));
   }
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query);
+    query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
-      this.cache.find((emoji) => [
-        emoji.name?.toLowerCase(),
-      ].includes(query.toLowerCase()));
+      this.cache.find((cached) => [
+        cached.name?.toLowerCase(),
+      ].includes(query));
   }
 }
 

@@ -1,5 +1,5 @@
 import { ChannelManager, ChannelType, Collection, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
-import { isRegExp } from "util/types";
+import { isRegExp, isSet } from "util/types";
 import type { ChannelTypeString, ChannelWithType } from "../@types";
 import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
 import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
@@ -44,20 +44,18 @@ export class Channels {
   getByName(name: string | RegExp): Channel | undefined;
   getByName<T extends ChannelType | ChannelTypeString>(name: string | RegExp, type: T): ChannelWithType<T> | undefined;
   getByName(name: string | RegExp, type?: ChannelType | ChannelTypeString) {
-    if (typeof name !== "string" && !isRegExp(name)) return;
-
     if (exists(type)) type = resolveEnum(ChannelType, type);
 
-    return this.cache.find(channel => {
-      if (exists(type) && channel.type !== type) return false;
+    if (typeof name === "string") return this.cache.find(cached => {
+      if (exists(type) && cached.type !== type) return false;
+      if ("name" in cached && typeof cached.name === "string") return compareStrings(cached.name, name);
+      return false;
+    });
 
-      if ("name" in channel && channel.name) {
-        if (typeof name === "string") {
-          return compareStrings(channel.name, name);
-        }
-
-        return name.test(channel.name);
-      }
+    if (isRegExp(name)) return this.cache.find(cached => {
+      if (exists(type) && cached.type !== type) return false;
+      if ("name" in cached && typeof cached.name === "string") return name.test(cached.name);
+      return false;
     });
   }
 
@@ -65,19 +63,18 @@ export class Channels {
   getByTopic(topic: string | RegExp): Channel | undefined;
   getByTopic<T extends ChannelType | ChannelTypeString>(topic: string | RegExp, type: T): ChannelWithType<T> | undefined;
   getByTopic(topic: string | RegExp, type?: ChannelType | ChannelTypeString) {
-    if (typeof topic !== "string" && !isRegExp(topic)) return;
-
     if (exists(type)) type = resolveEnum(ChannelType, type);
 
-    return this.cache.find(channel => {
-      if (exists(type) && channel.type !== type) return false;
+    if (typeof topic === "string") return this.cache.find(cached => {
+      if (exists(type) && cached.type !== type) return false;
+      if ("topic" in cached && typeof cached.topic === "string") return compareStrings(cached.name, topic);
+      return false;
+    });
 
-      if ("topic" in channel && channel.topic) {
-        if (typeof topic === "string")
-          return compareStrings(channel.topic, topic);
-
-        return topic.test(channel.topic);
-      }
+    if (isRegExp(topic)) return this.cache.find(cached => {
+      if (exists(type) && cached.type !== type) return false;
+      if ("topic" in cached && typeof cached.topic === "string") return topic.test(cached.name);
+      return false;
     });
   }
 
@@ -89,7 +86,7 @@ export class Channels {
 
     if (exists(type)) type = resolveEnum(ChannelType, type);
 
-    return this.cache.find(channel => channel.url === url && (exists(type) ? channel.type === type : true));
+    return this.cache.find(cached => cached.url === url && (exists(type) ? cached.type === type : true));
   }
 
   /** @DJSProtofy */
@@ -101,17 +98,13 @@ export class Channels {
 
   /** @DJSProtofy */
   getCategoryByName(name: string | RegExp): CategoryChannel | undefined {
-    if (typeof name !== "string" && !isRegExp(name)) return;
+    if (typeof name === "string") return this.cache.find(cached =>
+      cached.type === ChannelType.GuildCategory &&
+      compareStrings(cached.name, name)) as CategoryChannel;
 
-    return this.cache.find(channel => {
-      if (channel.type !== ChannelType.GuildCategory) return false;
-
-      if (typeof name === "string") {
-        return compareStrings(channel.name, name);
-      }
-
-      return name.test(channel.name);
-    }) as CategoryChannel;
+    if (isRegExp(name)) return this.cache.find(cached =>
+      cached.type === ChannelType.GuildCategory &&
+      name.test(cached.name)) as CategoryChannel;
   }
 
   /** @DJSProtofy */
@@ -120,12 +113,12 @@ export class Channels {
   async getInShardsById(id: string, allowApiChannel?: boolean) {
     if (typeof id !== "string") return null;
 
-    const existing = this.getById(id);
+    const existing = this.cache.get(id);
     if (existing) return existing;
 
     if (!this.client.shard) return null;
 
-    return await this.client.shard.broadcastEval((shard, id) => shard.channels.getById(id), { context: id })
+    return await this.client.shard.broadcastEval((shard, id) => shard.channels.cache.get(id), { context: id })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedChannel(this.client, data)
         ?? (allowApiChannel ? to_snake_case(data) : null) : null)
@@ -157,24 +150,19 @@ export class Channels {
   getVoiceByUserId(id: string): VoiceBasedChannel | undefined {
     if (typeof id !== "string") return;
 
-    return this.cache.find((channel) => {
-      if (!channel.isVoiceBased()) return false;
-
-      return channel.members.has(id);
-    }) as VoiceBasedChannel;
+    return this.cache.find((cached) => cached.isVoiceBased() && cached.members.has(id)) as VoiceBasedChannel;
   }
 
   /** @DJSProtofy */
   filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]): Collection<string, ChannelWithType<T>>;
-  filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[]) {
-    if (Array.isArray(type)) {
-      type.map(value => resolveEnum(ChannelType, value));
-      return this.cache.filter(channel => type.includes(channel.type as T));
-    }
+  filterByTypes<T extends ChannelType | ChannelTypeString>(type: T | T[] | Set<T>) {
+    if (Array.isArray(type)) type = new Set(type.map(value => resolveEnum(ChannelType, value))) as Set<T>;
+
+    if (isSet(type)) return this.cache.filter(cached => type.has(cached.type as T));
 
     const resolvedType = resolveEnum(ChannelType, type);
 
-    return this.cache.filter(channel => channel.type === resolvedType);
+    return this.cache.filter(cached => cached.type === resolvedType);
   }
 
   /** @DJSProtofy */
@@ -197,7 +185,7 @@ export class Channels {
     if (!this.client.shard) return { success: false };
 
     return await this.client.shard.broadcastEval(async (shard, { channelId, payload }) => {
-      const channel = shard.channels.getById(channelId);
+      const channel = shard.channels.cache.get(channelId);
       if (!channel || !("send" in channel)) return;
       return await channel.send(payload);
     }, { context: { channelId, payload } })
@@ -218,14 +206,14 @@ export class Channels {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(channel =>
-        "name" in channel && typeof channel.name === "string" && (
-          typeof query.name === "string" && compareStrings(query.name, channel.name) ||
-          isRegExp(query.name) && query.name.test(channel.name)
+      this.cache.find(cached =>
+        "name" in cached && typeof cached.name === "string" && (
+          typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+          isRegExp(query.name) && query.name.test(cached.name)
         ) ||
-        "topic" in channel && channel.topic && (
-          typeof query.name === "string" && compareStrings(query.name, channel.topic) ||
-          isRegExp(query.name) && query.name.test(channel.topic)
+        "topic" in cached && cached.topic && (
+          typeof query.name === "string" && compareStrings(query.name, cached.topic) ||
+          isRegExp(query.name) && query.name.test(cached.topic)
         ));
   }
 
@@ -241,19 +229,19 @@ export class Channels {
 
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
-    return this.cache.find((channel) =>
-      ("name" in channel && typeof channel.name === "string" && query.test(channel.name)) ||
-      ("topic" in channel && typeof channel.topic === "string" && query.test(channel.topic)));
+    return this.cache.find((cached) =>
+      ("name" in cached && typeof cached.name === "string" && query.test(cached.name)) ||
+      ("topic" in cached && typeof cached.topic === "string" && query.test(cached.topic)));
   }
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query);
+    query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
-      this.cache.find((channel) => [
-        "name" in channel && channel.name?.toLowerCase(),
-        "topic" in channel && channel.topic?.toLowerCase(),
-      ].includes(query.toLowerCase()));
+      this.cache.find((cached) => [
+        "name" in cached && cached.name?.toLowerCase(),
+        "topic" in cached && cached.topic?.toLowerCase(),
+      ].includes(query));
   }
 }
 
@@ -265,6 +253,6 @@ interface Search {
 
 interface Result {
   error?: Error
-  message?: Message
+  message?: Message | null
   success: boolean
 }

@@ -23,6 +23,7 @@ import type { Guilds } from "./src/prototypes/guilds";
 import type { SMessage } from "./src/prototypes/message";
 import type { Messages } from "./src/prototypes/messages";
 import type { Roles } from "./src/prototypes/roles";
+import type { SSet } from "./src/prototypes/set";
 import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
 import type { SString } from "./src/prototypes/string";
 import type { Users } from "./src/prototypes/users";
@@ -89,14 +90,22 @@ declare global {
   var animated: true;
   /** @DJSProtofy */
   var disabled: true;
-  /** @DJSProtofy */
+  /**
+   * @DJSProtofy
+   * @deprecated Supplying `ephemeral` for interaction response options is deprecated. Utilize flags instead.
+   */
   var ephemeral: true;
-  /** @DJSProtofy */
+  /**
+   * @DJSProtofy 
+   * @deprecated Supplying `fetchReply` for interaction response options is deprecated. Utilize `withResponse` instead or fetch the response after using the method.
+   */
   var fetchReply: true;
   /** @DJSProtofy */
   var inline: true;
   /** @DJSProtofy */
   var required: true;
+  /** @DJSProtofy */
+  var withResponse: true;
 
   /** @DJSProtofy */
   declare function sleep<T = void>(...args: Parameters<typeof setTimeout<T>>): ReturnType<typeof setTimeout<T>>;
@@ -107,6 +116,8 @@ declare global {
     random(amount: number, allowDuplicates: boolean): T[]
     random(amount: any): T;
   }
+
+  interface Set<T> extends SSet<T> { }
 
   interface String extends SString {
     limit<T extends typeof DiscordStringLimits>(size: keyof T | T[keyof T], enumLike?: T): string

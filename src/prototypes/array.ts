@@ -9,6 +9,7 @@ export class SArray<T> {
     Object.defineProperties(Array.prototype, {
       random: { value: this.random },
       shuffle: { value: this.shuffle },
+      toSet: { value: this.toSet },
     });
   }
 
@@ -37,5 +38,10 @@ export class SArray<T> {
   /** @DJSProtofy */
   shuffle() {
     return this.sort(() => Math.random() - 0.5);
+  }
+
+  /** @DJSProtofy */
+  toSet() {
+    return new Set<T>(this as unknown as Array<T>);
   }
 }

@@ -51,9 +51,9 @@ export function resolveEnum(enumLike: EnumLike<any, any>, value: any) {
   return value;
 }
 
-export function serializeRegExp(u: string | RegExp): { flags?: string, isRegExp: boolean, source: string };
 export function serializeRegExp<R extends RegExp>(R: R): { flags: R["flags"], isRegExp: true, source: R["source"] };
 export function serializeRegExp<S extends string>(S: S): { isRegExp: false, source: S };
+export function serializeRegExp<T>(u: T): { flags?: string, isRegExp: boolean, source: string };
 export function serializeRegExp(value: string | RegExp) {
   if (isRegExp(value)) {
     return {

@@ -19,6 +19,7 @@ import { Guilds } from "./prototypes/guilds";
 import { SMessage } from "./prototypes/message";
 import { Messages } from "./prototypes/messages";
 import { Roles } from "./prototypes/roles";
+import { SSet } from "./prototypes/set";
 import { SShardClientUtil } from "./prototypes/shardClientUtil";
 import { SString } from "./prototypes/string";
 import { Users } from "./prototypes/users";
@@ -31,14 +32,18 @@ export class DJSProtofy {
     Object.assign(globalThis, {
       animated: true,
       disabled: true,
+      /** @deprecated */
       ephemeral: true,
+      /** @deprecated */
       fetchReply: true,
       inline: true,
       required: true,
+      withResponse: true,
       sleep,
     });
 
     new SArray();
+    new SSet();
     new SString();
 
     new SApplicationCommand();

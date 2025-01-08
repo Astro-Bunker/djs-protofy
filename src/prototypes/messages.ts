@@ -27,14 +27,11 @@ export class Messages {
 
   /** @DJSProtofy */
   filterByContent(content: string | RegExp) {
-    if (typeof content !== "string" && !isRegExp(content)) return new Collection<string, Message>();
+    if (typeof content === "string") return this.cache.filter(cached => compareStrings(cached.content, content));
 
-    return this.cache.filter(message => {
-      if (typeof content === "string")
-        return compareStrings(message.content, content);
+    if (isRegExp(content)) return this.cache.filter(cached => content.test(cached.content));
 
-      return content.test(message.content);
-    });
+    return new Collection() as MessageManager["cache"];
   }
 
   /** @DJSProtofy */
