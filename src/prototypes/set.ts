@@ -7,6 +7,8 @@ export class SSet<T> {
 
   /** @DJSProtofy */
   toArray() {
-    return Array.from<T>(this as unknown as Set<T>);
+    return Array.from<T>(this);
   }
+
+  *[Symbol.iterator](): SetIterator<T> { }
 }

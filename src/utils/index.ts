@@ -23,8 +23,10 @@ export function compareStrings(s1: string, s2: string, ignoreCase = true): boole
 
 export function excludeNullishProperties<O extends Record<any, any>>(O: O): void;
 export function excludeNullishProperties(o: Record<any, any>) {
-  for (const [key, value] of Object.entries(o)) {
-    if (!exists(value)) delete o[key];
+  if (typeof o !== "object" || o === null) return;
+
+  for (const key in o) {
+    if (!exists(o[key])) delete o[key];
   }
 }
 

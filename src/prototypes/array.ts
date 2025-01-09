@@ -23,11 +23,23 @@ export class SArray<T> {
     if (typeof amount === "number") {
       if (this.length === 0 || isNaN(amount) || amount < 1) return [];
 
-      if (allowDuplicates) return Array.from({ length: amount }).map(() => this[randomInt(this.length)]);
+      const result = Array.from({ length: allowDuplicates ? amount : Math.min(amount, this.length) });
+
+      if (allowDuplicates) {
+        for (let i = 0; i < result.length; i++) {
+          result[i] = this[randomInt(this.length)];
+        }
+
+        return result;
+      }
 
       const clone = Array.from(this);
 
-      return Array.from({ length: Math.min(amount, this.length) }).map(() => clone.splice(randomInt(clone.length), 1)[0]);
+      for (let i = 0; i < result.length; i++) {
+        result[i] = clone.splice(randomInt(clone.length), 1)[0];
+      }
+
+      return result;
     }
 
     if (this.length === 0) return;
@@ -42,6 +54,8 @@ export class SArray<T> {
 
   /** @DJSProtofy */
   toSet() {
-    return new Set<T>(this as unknown as Array<T>);
+    return new Set<T>(this);
   }
+
+  *[Symbol.iterator](): ArrayIterator<T> { }
 }
