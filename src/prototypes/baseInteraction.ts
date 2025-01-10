@@ -1,7 +1,7 @@
-import { BaseInteraction } from "discord.js";
+import { BaseInteraction, type CacheType } from "discord.js";
 
-export class SBaseInteraction {
-  declare createdTimestamp: BaseInteraction["createdTimestamp"];
+export class SBaseInteraction<Cached extends CacheType = CacheType> {
+  declare createdTimestamp: BaseInteraction<Cached>["createdTimestamp"];
 
   constructor() {
     Object.defineProperties(BaseInteraction.prototype, {

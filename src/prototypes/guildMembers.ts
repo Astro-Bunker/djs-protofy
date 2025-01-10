@@ -28,7 +28,7 @@ export class GuildMembers {
 
   /** @DJSProtofy */
   getByDisplayName(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.displayName, name));
+    if (typeof name === "string") return this.cache.find(cached => name.equals(cached.displayName, true));
 
     if (isRegExp(name)) return this.cache.find(cached => name.test(cached.displayName));
   }
@@ -37,7 +37,7 @@ export class GuildMembers {
   getByNickname(name: string | RegExp) {
     if (typeof name === "string") return this.cache.find(cached =>
       typeof cached.nickname === "string" &&
-      compareStrings(cached.nickname, name));
+      name.equals(cached.nickname, true));
 
     if (isRegExp(name)) return this.cache.find(cached =>
       typeof cached.nickname === "string" &&
@@ -46,7 +46,7 @@ export class GuildMembers {
 
   /** @DJSProtofy */
   getByUserDisplayName(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.user.displayName, name));
+    if (typeof name === "string") return this.cache.find(cached => name.equals(cached.user.displayName, true));
 
     if (isRegExp(name)) return this.cache.find(cached => name.test(cached.user.displayName));
   }
@@ -55,7 +55,7 @@ export class GuildMembers {
   getByUserGlobalName(name: string | RegExp) {
     if (typeof name === "string") return this.cache.find(cached =>
       typeof cached.user.globalName === "string" &&
-      compareStrings(cached.user.globalName, name));
+      name.equals(cached.user.globalName, true));
 
     if (isRegExp(name)) return this.cache.find(cached =>
       typeof cached.user.globalName === "string" &&
@@ -64,7 +64,7 @@ export class GuildMembers {
 
   /** @DJSProtofy */
   getByUserUsername(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.user.username, name));
+    if (typeof name === "string") return this.cache.find(cached => name.equals(cached.user.username, true));
 
     if (isRegExp(name)) return this.cache.find(cached => name.test(cached.user.username));
   }
@@ -127,10 +127,10 @@ export class GuildMembers {
     query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
       this.cache.find((cached) => [
-        cached.displayName?.toLowerCase(),
+        cached.displayName.toLowerCase(),
         cached.nickname?.toLowerCase(),
         cached.user.globalName?.toLowerCase(),
-        cached.user.username?.toLowerCase(),
+        cached.user.username.toLowerCase(),
       ].includes(query));
   }
 }

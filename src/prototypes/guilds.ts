@@ -29,7 +29,7 @@ export class Guilds {
 
   /** @DJSProtofy */
   getByName(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.name, name));
+    if (typeof name === "string") return this.cache.find(cached => name.equals(cached.name, true));
 
     if (isRegExp(name)) return this.cache.find(cached => name.test(cached.name));
   }

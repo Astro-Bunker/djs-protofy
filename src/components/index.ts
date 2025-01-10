@@ -1,21 +1,21 @@
-import { ActionRowBuilder, createComponentBuilder, type APIActionRowComponent, type APIActionRowComponentTypes, type ActionRow, type AnyComponentBuilder, type MessageActionRowComponent, type ModalActionRowComponent } from "discord.js";
+import { ActionRowBuilder, createComponentBuilder, type APIActionRowComponentTypes, type ActionRow, type ActionRowComponent, type AnyComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
 export * from "./button";
 export * from "./selectmenu";
 
 export function mapComponents<
-  T extends ActionRow<MessageActionRowComponent | ModalActionRowComponent> | ActionRowBuilder<AnyComponentBuilder>
+  T extends ActionRow<ActionRowComponent> | ActionRowBuilder<AnyComponentBuilder>
 >(
   components: T[],
   callback: (component: APIActionRowComponentTypes, rowIndex: number, columnIndex: number) =>
     APIActionRowComponentTypes | AnyComponentBuilder | null,
 ) {
-  if (!Array.isArray(components)) throw Error("components is not a array");
-  if (typeof callback !== "function") throw Error("callback is not a function");
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
+  if (typeof callback !== "function") throw TypeError("callback is not a function");
 
   return components.reduce<T[]>((accRows, row, rowIndex) => {
-    const rowJson = row.toJSON() as APIActionRowComponent<APIActionRowComponentTypes>;
+    const rowJson = row.toJSON();
 
     const columns = rowJson.components.reduce<AnyComponentBuilder[]>((accColumns, column, columnIndex) => {
       const result = callback(column, rowIndex, columnIndex);

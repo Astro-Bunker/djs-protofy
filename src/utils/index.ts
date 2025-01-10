@@ -10,13 +10,12 @@ export function verifyDJSVersion() {
   }
 }
 
+export function compareStrings<C extends true>(s1: string, s2: string, ignoreCase?: C): boolean
+export function compareStrings<C extends boolean>(s1: string, s2: string, ignoreCase: C): boolean
 export function compareStrings(s1: string, s2: string, ignoreCase = true): boolean {
   if (typeof s1 !== "string" || typeof s2 !== "string") return false;
 
-  if (ignoreCase) {
-    s1 = s1.toLowerCase();
-    s2 = s2.toLowerCase();
-  }
+  if (ignoreCase) return s1.localeCompare(s2, undefined, { sensitivity: "accent" }) === 0;
 
   return s1 === s2;
 }
@@ -46,8 +45,8 @@ export function replaceMentionCharacters(s: string) {
   return s.replace(/<(?:(?:a?:|\/)\w{1,32}:|[@#][!&]?)(\d{17,})>/g, "$1");
 }
 
-export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum<T extends EnumLike<keyof T, T[keyof T]>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
+export function resolveEnum<T extends EnumLike<keyof T, unknown>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
 export function resolveEnum(enumLike: EnumLike<any, any>, value: any) {
   if (isNaN(value)) return enumLike[value] ?? (Object.values(enumLike).includes(value) ? value : undefined);
   return value;
@@ -55,7 +54,7 @@ export function resolveEnum(enumLike: EnumLike<any, any>, value: any) {
 
 export function serializeRegExp<R extends RegExp>(R: R): { flags: R["flags"], isRegExp: true, source: R["source"] };
 export function serializeRegExp<S extends string>(S: S): { isRegExp: false, source: S };
-export function serializeRegExp<T>(u: T): { flags?: string, isRegExp: boolean, source: string };
+export function serializeRegExp<T extends string | RegExp>(T: T): { flags?: string, isRegExp: boolean, source: string };
 export function serializeRegExp(value: string | RegExp) {
   if (isRegExp(value)) {
     return {

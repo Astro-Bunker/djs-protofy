@@ -31,7 +31,7 @@ export class Emojis {
 
   /** @DJSProtofy */
   getByName(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => typeof cached.name === "string" && compareStrings(cached.name, name));
+    if (typeof name === "string") return this.cache.find(cached => typeof cached.name === "string" && name.equals(cached.name, true));
 
     if (isRegExp(name)) return this.cache.find(cached => typeof cached.name === "string" && name.test(cached.name));
   }

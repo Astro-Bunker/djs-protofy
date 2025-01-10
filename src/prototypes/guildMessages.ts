@@ -1,6 +1,5 @@
-import { Collection, GuildMessageManager, type Message } from "discord.js";
+import { Collection, GuildMessageManager } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings } from "../utils";
 
 export class GuildMessages {
   declare cache: GuildMessageManager["cache"];
@@ -10,7 +9,7 @@ export class GuildMessages {
       getById: { value: this.getById },
       filterByAuthorId: { value: this.filterByAuthorId },
       filterByContent: { value: this.filterByContent },
-      filterByAuthorIsBots: { value: this.filterByAuthorIsBots },
+      filterByAuthorIsBot: { value: this.filterByAuthorIsBot },
     });
   }
 
@@ -20,22 +19,22 @@ export class GuildMessages {
   }
 
   /** @DJSProtofy */
-  filterByAuthorId(id: string) {
-    if (typeof id !== "string") return new Collection<string, Message>();
-    return this.cache.filter(cached => cached.author?.id === id);
+  filterByAuthorId(authorId: string) {
+    if (typeof authorId !== "string") return new Collection() as this["cache"];
+    return this.cache.filter(cached => cached.author?.id === authorId);
   }
 
   /** @DJSProtofy */
   filterByContent(content: string | RegExp) {
-    if (typeof content === "string") return this.cache.filter(cached => compareStrings(cached.content, content));
+    if (typeof content === "string") return this.cache.filter(cached => content.equals(cached.content, true));
 
     if (isRegExp(content)) return this.cache.filter(cached => content.test(cached.content));
 
-    return new Collection() as GuildMessageManager["cache"];
+    return new Collection() as this["cache"];
   }
 
   /** @DJSProtofy */
-  filterByAuthorIsBots() {
+  filterByAuthorIsBot() {
     return this.cache.filter(cached => cached.author?.bot);
   }
 }
