@@ -1,11 +1,11 @@
 import { Collection, GatewayIntentBits, Message, type Channel, type GuildBasedChannel, type GuildMember, type Role, type User } from "discord.js";
 import { ManyDiscordSnowflakesPattern } from "../utils/regexps";
 
-export class SMessage {
-  declare client: Message["client"];
-  declare content: Message["content"];
-  declare guild: Message["guild"];
-  declare mentions: Message["mentions"];
+export class SMessage<InGuild extends boolean = boolean> {
+  declare client: Message<InGuild>["client"];
+  declare content: Message<InGuild>["content"];
+  declare guild: Message<InGuild>["guild"];
+  declare mentions: Message<InGuild>["mentions"];
 
   constructor() {
     Object.defineProperties(Message.prototype, {
@@ -19,7 +19,7 @@ export class SMessage {
 
   /** @DJSProtofy */
   async parseMentions() {
-    await Promise.all([
+    await Promise.allSettled([
       new Promise(r => r(this.parseChannelMentions())),
       new Promise(r => r(this.parseRoleMentions())),
       this.parseMemberMentions(),
@@ -100,7 +100,7 @@ export class SMessage {
   async parseUserMentions(): Promise<Collection<string, User>> {
     const ids = this.content.match(ManyDiscordSnowflakesPattern);
 
-    if (ids) await Promise.all(ids.map(id => this.client.users.fetch(id).catch(() => null)));
+    if (ids) await Promise.allSettled(ids.map(id => this.client.users.fetch(id)));
 
     const queries = new Set(this.content.trim().split(/\s+/g));
 

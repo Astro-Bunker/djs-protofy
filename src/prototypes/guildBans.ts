@@ -60,9 +60,9 @@ export class GuildBans {
     query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
       this.cache.find((cached) => [
-        cached.user.displayName?.toLowerCase(),
+        cached.user.displayName.toLowerCase(),
         cached.user.globalName?.toLowerCase(),
-        cached.user.username?.toLowerCase(),
+        cached.user.username.toLowerCase(),
       ].includes(query));
   }
 }

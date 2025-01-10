@@ -1,8 +1,8 @@
 import { ApplicationCommand } from "discord.js";
 
-export class SApplicationCommand {
-  declare id: string;
-  declare name: string;
+export class SApplicationCommand<PermissionsFetchType = {}> {
+  declare id: ApplicationCommand<PermissionsFetchType>["id"];
+  declare name: ApplicationCommand<PermissionsFetchType>["name"];
   declare mention: string;
 
   constructor() {

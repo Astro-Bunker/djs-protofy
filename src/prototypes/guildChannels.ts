@@ -40,7 +40,7 @@ export class GuildChannels {
 
     if (typeof name === "string") return this.cache.find(cached => {
       if (exists(type) && cached.type !== type) return false;
-      return compareStrings(cached.name, name);
+      return name.equals(cached.name, true);
     });
 
     if (isRegExp(name)) return this.cache.find(cached => {
@@ -57,7 +57,7 @@ export class GuildChannels {
 
     if (typeof topic === "string") return this.cache.find(cached => {
       if (exists(type) && cached.type !== type) return false;
-      if ("topic" in cached && typeof cached.topic === "string") return compareStrings(cached.topic, topic);
+      if ("topic" in cached && typeof cached.topic === "string") return topic.equals(cached.topic, true);
       return false;
     });
 
@@ -88,7 +88,7 @@ export class GuildChannels {
   getCategoryByName(name: string | RegExp) {
     if (typeof name === "string") return this.cache.find(cached =>
       cached.type === ChannelType.GuildCategory &&
-      compareStrings(cached.name, name)) as CategoryChannel;
+      name.equals(cached.name, true)) as CategoryChannel;
 
     if (isRegExp(name)) return this.cache.find(cached =>
       cached.type === ChannelType.GuildCategory &&

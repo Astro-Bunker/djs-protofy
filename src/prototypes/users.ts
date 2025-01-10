@@ -31,7 +31,7 @@ export class Users {
 
   /** @DJSProtofy */
   getByDisplayName(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.displayName, name));
+    if (typeof name === "string") return this.cache.find(cached => name.equals(cached.displayName, true));
 
     if (isRegExp(name)) return this.cache.find(cached => name.test(cached.displayName));
   }
@@ -40,7 +40,7 @@ export class Users {
   getByGlobalName(name: string | RegExp) {
     if (typeof name === "string") return this.cache.find(cached =>
       typeof cached.globalName === "string" &&
-      compareStrings(cached.globalName, name));
+      name.equals(cached.globalName, true));
 
     if (isRegExp(name)) return this.cache.find(cached =>
       typeof cached.globalName === "string" &&
@@ -49,7 +49,7 @@ export class Users {
 
   /** @DJSProtofy */
   getByUsername(name: string | RegExp) {
-    if (typeof name === "string") return this.cache.find(cached => compareStrings(cached.username, name));
+    if (typeof name === "string") return this.cache.find(cached => name.equals(cached.username, true));
 
     if (isRegExp(name)) return this.cache.find(cached => name.test(cached.username));
   }
@@ -181,9 +181,9 @@ export class Users {
     query = replaceMentionCharacters(query).toLowerCase();
     return this.cache.get(query) ??
       this.cache.find((cached) => [
-        cached.displayName?.toLowerCase(),
+        cached.displayName.toLowerCase(),
         cached.globalName?.toLowerCase(),
-        cached.username?.toLowerCase(),
+        cached.username.toLowerCase(),
       ].includes(query));
   }
 }

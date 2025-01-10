@@ -48,8 +48,8 @@ export function mapSelectMenus<
   callback: (selectMenu: APISelectMenuComponent, rowIndex: number) =>
     APISelectMenuComponent | ComponentBuilder<APISelectMenuComponent> | null,
 ) {
-  if (!Array.isArray(components)) throw Error("components is not a array");
-  if (typeof callback !== "function") throw Error("callback is not a function");
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
+  if (typeof callback !== "function") throw TypeError("callback is not a function");
 
   return components.reduce<T[]>((accRows, row, rowIndex) => {
     const rowJson = row.toJSON() as APIActionRowComponent<APIMessageActionRowComponent>;
@@ -76,8 +76,8 @@ export function mapSelectMenuOptions<
   callback: (option: APISelectMenuOption, rowIndex: number, optionIndex: number, menu: APIStringSelectComponent) =>
     APISelectMenuOption | JSONEncodable<APISelectMenuOption> | null,
 ) {
-  if (!Array.isArray(components)) throw Error("components is not a array");
-  if (typeof callback !== "function") throw Error("callback is not a function");
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
+  if (typeof callback !== "function") throw TypeError("callback is not a function");
 
   return components.reduce<T[]>((accRows, row, rowIndex) => {
     const rowJson = row.toJSON() as APIActionRowComponent<APIStringSelectComponent>;
