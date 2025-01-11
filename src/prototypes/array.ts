@@ -1,5 +1,3 @@
-import { randomInt } from "crypto";
-
 export class SArray<T> {
   [n: number]: T
   declare length: Array<T>["length"];
@@ -23,28 +21,27 @@ export class SArray<T> {
     if (typeof amount === "number") {
       if (this.length === 0 || isNaN(amount) || amount < 1) return [];
 
-      const result = Array.from({ length: allowDuplicates ? amount : Math.min(amount, this.length) });
+      const length = allowDuplicates ? amount : Math.min(amount, this.length);
+
+      const result: T[] = [];
+      let i = 0;
 
       if (allowDuplicates) {
-        for (let i = 0; i < result.length; i++) {
-          result[i] = this[randomInt(this.length)];
-        }
+        while (i < length) result[i++] = this[Math.floor(Math.random() * length)];
 
         return result;
       }
 
       const clone = Array.from(this);
 
-      for (let i = 0; i < result.length; i++) {
-        result[i] = clone.splice(randomInt(clone.length), 1)[0];
-      }
+      while (i < length) result[i++] = clone.splice(Math.floor(Math.random() * clone.length), 1)[0];
 
       return result;
     }
 
     if (this.length === 0) return;
 
-    return this[randomInt(this.length)];
+    return this[Math.floor(Math.random() * this.length)];
   }
 
   /** @DJSProtofy */
