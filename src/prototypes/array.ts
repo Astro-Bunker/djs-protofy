@@ -34,7 +34,7 @@ export class SArray<T> {
 
       const clone = Array.from(this);
 
-      while (i < length) result[i++] = clone[Math.floor(Math.random() * clone.length)];
+      while (i < length) result[i++] = clone.splice(Math.floor(Math.random() * clone.length), 1)[0];
 
       return result;
     }
