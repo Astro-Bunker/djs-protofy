@@ -9,7 +9,7 @@ export class SCollection<K, V> {
       keysToArray: { value: this.keysToArray },
       keysToSet: { value: this.keysToSet },
       valuesToArray: { value: this.valuesToArray },
-      toJSON: { value: this.toJSON },
+      valuesToSet: { value: this.valuesToSet },
     });
   }
 
@@ -29,7 +29,7 @@ export class SCollection<K, V> {
   }
 
   /** @DJSProtofy */
-  toJSON() {
-    return this.values().toArray();
+  valuesToSet() {
+    return new Set(this.values());
   }
 }
