@@ -1,5 +1,3 @@
-import { randomInt } from "crypto";
-
 export class SArray<T> {
   [n: number]: T
   declare length: Array<T>["length"];
@@ -43,7 +41,7 @@ export class SArray<T> {
 
     if (this.length === 0) return;
 
-    return this[randomInt(this.length)];
+    return this[Math.floor(Math.random() * this.length)];
   }
 
   /** @DJSProtofy */
