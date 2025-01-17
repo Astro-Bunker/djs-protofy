@@ -1,6 +1,6 @@
 export class SSet<T> {
   constructor() {
-    Object.defineProperties(Array.prototype, {
+    Object.defineProperties(Set.prototype, {
       toArray: { value: this.toArray },
     });
   }
