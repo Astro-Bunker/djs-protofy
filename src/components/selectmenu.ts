@@ -1,13 +1,13 @@
 import { type APIActionRowComponent, type APIActionRowComponentTypes, type APIMessageActionRowComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, ActionRowBuilder, type ComponentBuilder, ComponentType, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder, type SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder } from "discord.js";
 import { exists } from "../utils";
 
-const selectMenuTypes = [
+const selectMenuTypes = new Set([
   ComponentType.StringSelect,
   ComponentType.UserSelect,
   ComponentType.RoleSelect,
   ComponentType.MentionableSelect,
   ComponentType.ChannelSelect,
-];
+]);
 
 export function getDefaultOptionFromSelectMenu(
   components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
@@ -54,7 +54,8 @@ export function mapSelectMenus<
   return components.reduce<T[]>((accRows, row, rowIndex) => {
     const rowJson = row.toJSON() as APIActionRowComponent<APIMessageActionRowComponent>;
 
-    if (!selectMenuTypes.includes(rowJson.components[0]?.type)) return accRows.concat(row);
+    if (!rowJson.components.length) return accRows;
+    if (!selectMenuTypes.has(rowJson.components[0]?.type)) return accRows.concat(row);
 
     const menus = rowJson.components.reduce<ComponentBuilder<APISelectMenuComponent>[]>((accMenus, menu) => {
       const result = callback(menu as APISelectMenuComponent, rowIndex);
@@ -82,10 +83,9 @@ export function mapSelectMenuOptions<
   return components.reduce<T[]>((accRows, row, rowIndex) => {
     const rowJson = row.toJSON() as APIActionRowComponent<APIStringSelectComponent>;
 
-    if (exists(rowJson.components[0])) {
-      if (!("options" in rowJson.components[0])) return accRows.concat(row);
-      if (!rowJson.components[0].options.length) return accRows;
-    }
+    if (!rowJson.components.length) return accRows;
+    if (!("options" in rowJson.components[0])) return accRows.concat(row);
+    if (!rowJson.components[0].options.length) return accRows;
 
     const rowComponents = rowJson.components.reduce<StringSelectMenuBuilder[]>((accMenus, menu) => {
       const options = menu.options.reduce<StringSelectMenuOptionBuilder[]>((accOptions, option, optionIndex) => {

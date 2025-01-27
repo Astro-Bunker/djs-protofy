@@ -24,6 +24,7 @@ import { SShardClientUtil } from "./prototypes/shardClientUtil";
 import { SString } from "./prototypes/string";
 import { Users } from "./prototypes/users";
 import { verifyDJSVersion } from "./utils";
+import { MessageFlags } from "discord.js";
 
 export class DJSProtofy {
   constructor() {
@@ -36,6 +37,7 @@ export class DJSProtofy {
       ephemeral: true,
       /** @deprecated */
       fetchReply: true,
+      flags: MessageFlags.Ephemeral,
       inline: true,
       required: true,
       withResponse: true,
