@@ -1,4 +1,6 @@
 import { type APIActionRowComponent, type APIActionRowComponentTypes, type APIMessageActionRowComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, ActionRowBuilder, type ComponentBuilder, ComponentType, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder, type SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder } from "discord.js";
+import { isRegExp } from "util/types";
+import { type APISelectMenuComponentWithDefaultValue } from "../@types";
 import { exists } from "../utils";
 
 const selectMenuTypes = new Set([
@@ -11,14 +13,17 @@ const selectMenuTypes = new Set([
 
 export function getDefaultOptionFromSelectMenu(
   components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
-  customId?: string,
+  customId?: string | RegExp,
 ) {
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
+
   let optionDefault: APISelectMenuOption | undefined;
 
-  components?.some(row =>
+  components.some(row =>
     row.toJSON().components.some(element =>
       "options" in element &&
-      (typeof customId === "string" ? element.custom_id === customId : true) &&
+      (typeof customId === "string" ? element.custom_id === customId
+        : isRegExp(customId) ? customId.test(element.custom_id) : true) &&
       element.options.some(option =>
         option.default && (optionDefault = option))));
 
@@ -27,18 +32,55 @@ export function getDefaultOptionFromSelectMenu(
 
 export function getDefaultValuesFromSelectMenu<D extends SelectMenuDefaultValueType>(
   components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
-  customId?: string,
+  callback: (selectMenu: APISelectMenuComponent, rowIndex: number) => boolean,
+): APISelectMenuDefaultValue<D>[]
+export function getDefaultValuesFromSelectMenu<D extends SelectMenuDefaultValueType>(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  customId?: string | RegExp,
+): APISelectMenuDefaultValue<D>[]
+export function getDefaultValuesFromSelectMenu(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  customId?: any,
 ) {
-  let default_values: APISelectMenuDefaultValue<D>[] | undefined;
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
 
-  components?.some(row =>
+  if (typeof customId === "function") return getDefaultValuesFromSelectMenuWithCallback(components, customId);
+
+  let default_values;
+
+  components.some(row =>
     row.toJSON().components.some(column =>
       "default_values" in column &&
-      (typeof customId === "string" ? column.custom_id === customId : true) &&
-      // @ts-expect-error ts(2322)
+      (typeof customId === "string" ? column.custom_id === customId
+        : isRegExp(customId) ? customId.test(column.custom_id) : true) &&
       (default_values = column.default_values)));
 
   return default_values ?? [];
+}
+
+function getDefaultValuesFromSelectMenuWithCallback<D extends SelectMenuDefaultValueType>(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  callback: (selectMenu: APISelectMenuComponentWithDefaultValue<D>, rowIndex: number) => boolean,
+): APISelectMenuDefaultValue<D>[]
+function getDefaultValuesFromSelectMenuWithCallback(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  callback: (selectMenu: any, rowIndex: number) => boolean,
+) {
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
+  if (typeof callback !== "function") throw TypeError("callback is not a function");
+
+  const default_values: any[] = [];
+
+  for (let i = 0; i < components.length; i++) {
+    const row = components[i].toJSON();
+
+    for (const column of row.components) {
+      if (!("default_values" in column) || !Array.isArray(column.default_values) || !callback(column, i)) continue;
+      default_values.push(...column.default_values);
+    }
+  }
+
+  return default_values;
 }
 
 export function mapSelectMenus<
