@@ -1,8 +1,9 @@
 import { ChannelManager, ChannelType, Collection, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
 import { isRegExp, isSet } from "util/types";
 import type { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp } from "../utils";
 import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
+import { to_snake_case } from "../utils/case";
 
 export class Channels {
   declare cache: ChannelManager["cache"];
