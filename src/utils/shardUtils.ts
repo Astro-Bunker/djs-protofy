@@ -1,5 +1,6 @@
 import { type APIChannel, type APIGuild, type APIMessage, type APIUser, CategoryChannel, type Channel, ChannelType, type Client, DMChannel, DirectoryChannel, ForumChannel, Guild, MediaChannel, Message, NewsChannel, PartialGroupDMChannel, StageChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
-import { excludeNullishProperties, to_snake_case } from ".";
+import { excludeNullishProperties } from ".";
+import { to_snake_case } from "./case";
 
 function createChannel(
   client: Client<true>,
