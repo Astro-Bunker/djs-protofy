@@ -1,6 +1,7 @@
 import { Collection, GuildManager, type APIGuild, type Guild } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, replaceMentionCharacters, serializeRegExp } from "../utils";
+import { snakify } from "../utils/case";
 import { createBroadcastedGuild } from "../utils/shardUtils";
 
 export class Guilds {
@@ -48,7 +49,7 @@ export class Guilds {
     return await this.client.shard.broadcastEval((shard, id) => shard.guilds.cache.get(id), { context: id })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedGuild(this.client, data)
-        ?? (allowApiGuild ? to_snake_case(data) : null) : null)
+        ?? (allowApiGuild ? snakify(data) : null) : null)
       .catch(console.error);
   }
 
@@ -69,7 +70,7 @@ export class Guilds {
       shard.guilds.getByName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedGuild(this.client, data)
-        ?? (allowApiGuild ? to_snake_case(data) : null) : null)
+        ?? (allowApiGuild ? snakify(data) : null) : null)
       .catch(() => null);
   }
 

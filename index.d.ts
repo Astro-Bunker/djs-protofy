@@ -1,5 +1,5 @@
 /* eslint-disable no-var */
-import type { EnumLike } from "discord.js";
+import type { EnumLike, MessageFlags } from "discord.js";
 import type { setTimeout } from "timers/promises";
 import type { DiscordStringLimits } from "./src/@enum";
 import type { AwaitOptions } from "./src/@types";
@@ -100,6 +100,11 @@ declare global {
    * @deprecated Supplying `fetchReply` for interaction response options is deprecated. Utilize `withResponse` instead or fetch the response after using the method.
    */
   var fetchReply: true;
+  /**
+   * @DJSProtofy
+   * @description Shortcut for the `MessageFlags#Ephemeral` flag
+   */
+  var flags: MessageFlags.Ephemeral
   /** @DJSProtofy */
   var inline: true;
   /** @DJSProtofy */

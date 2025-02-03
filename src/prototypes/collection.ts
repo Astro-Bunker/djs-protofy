@@ -1,4 +1,5 @@
 import { Collection } from "discord.js";
+import { MapIteratorHasToArrayMethod } from "../utils/types";
 
 export class SCollection<K, V> {
   declare keys: Collection<K, V>["keys"];
@@ -15,7 +16,7 @@ export class SCollection<K, V> {
 
   /** @DJSProtofy */
   keysToArray() {
-    return this.keys().toArray();
+    return MapIteratorHasToArrayMethod ? this.keys().toArray() : Array.from(this.keys());
   }
 
   /** @DJSProtofy */
@@ -25,7 +26,7 @@ export class SCollection<K, V> {
 
   /** @DJSProtofy */
   valuesToArray() {
-    return this.values().toArray();
+    return MapIteratorHasToArrayMethod ? this.values().toArray() : Array.from(this.values());
   }
 
   /** @DJSProtofy */

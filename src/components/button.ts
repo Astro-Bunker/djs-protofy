@@ -13,7 +13,8 @@ export function mapButtons<
   return components.reduce<T[]>((accRows, row, rowIndex) => {
     const rowJson = row.toJSON();
 
-    if (rowJson.components[0]?.type !== ComponentType.Button) return accRows.concat(row);
+    if (!rowJson.components.length) return accRows;
+    if (rowJson.components[0].type !== ComponentType.Button) return accRows.concat(row);
 
     const buttons = rowJson.components.reduce<ButtonBuilder[]>((accButtons, button, buttonIndex) => {
       const result = callback(button as APIButtonComponent, rowIndex, buttonIndex);

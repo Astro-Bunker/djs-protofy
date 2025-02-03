@@ -1,5 +1,6 @@
 import { type APIChannel, type APIGuild, type APIMessage, type APIUser, CategoryChannel, type Channel, ChannelType, type Client, DMChannel, DirectoryChannel, ForumChannel, Guild, MediaChannel, Message, NewsChannel, PartialGroupDMChannel, StageChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
-import { excludeNullishProperties, to_snake_case } from ".";
+import { excludeNullishProperties } from ".";
+import { snakify } from "./case";
 
 function createChannel(
   client: Client<true>,
@@ -84,7 +85,7 @@ export function createBroadcastedChannel(client: Client, data: Record<string, an
   if ("recipients" in data) delete data.recipients;
   // if ("threadMetadata" in data) delete data.threadMetadata;
 
-  data = to_snake_case(data);
+  data = snakify(data);
 
   // const clone = Object.assign(Object.create(data), data);
   const guild = client.guilds.cache.get(data.guild_id);
@@ -115,7 +116,7 @@ export function createBroadcastedChannel(client: Client, data: Record<string, an
 
 export function createBroadcastedGuild(client: Client, data: Guild | APIGuild): Guild | null;
 export function createBroadcastedGuild(client: Client, data: Record<string, any>) {
-  data = to_snake_case(data);
+  data = snakify(data);
 
   const clone = Object.assign(Object.create(data), data);
   const guild = client.guilds.getById(data.id);
@@ -166,7 +167,7 @@ export function createBroadcastedMessage(client: Client, data: Record<string, an
   if ("mentions" in data) delete data.mentions;
   excludeNullishProperties(data);
 
-  data = to_snake_case(data);
+  data = snakify(data);
 
   try {
     // @ts-expect-error ts(2673)
@@ -179,7 +180,7 @@ export function createBroadcastedMessage(client: Client, data: Record<string, an
 
 export function createBroadcastedUser(client: Client, data: User | APIUser): User | null;
 export function createBroadcastedUser(client: Client, data: Record<string, any>) {
-  data = to_snake_case(data);
+  data = snakify(data);
 
   try {
     // @ts-expect-error ts(2674)

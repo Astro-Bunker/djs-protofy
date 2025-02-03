@@ -21,7 +21,7 @@ export class SArray<T> {
     if (typeof amount === "number") {
       if (this.length === 0 || isNaN(amount) || amount < 1) return [];
 
-      const length = denyDuplicates ? Math.min(amount, this.length) : amount;
+      if (denyDuplicates) amount = Math.min(amount, this.length);
 
       const result: T[] = [];
       let i = 0;
@@ -29,12 +29,12 @@ export class SArray<T> {
       if (denyDuplicates) {
         const clone = Array.from(this);
 
-        while (i < length) result[i++] = clone.splice(Math.floor(Math.random() * clone.length), 1)[0];
+        while (i < amount) result[i++] = clone.splice(Math.floor(Math.random() * clone.length), 1)[0];
 
         return result;
       }
 
-      while (i < length) result[i++] = this[Math.floor(Math.random() * length)];
+      while (i < amount) result[i++] = this[Math.floor(Math.random() * amount)];
 
       return result;
     }

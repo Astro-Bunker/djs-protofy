@@ -1,6 +1,7 @@
 import { Collection, UserManager, type APIUser, type User } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, replaceMentionCharacters, serializeRegExp } from "../utils";
+import { snakify } from "../utils/case";
 import { createBroadcastedUser } from "../utils/shardUtils";
 
 export class Users {
@@ -68,7 +69,7 @@ export class Users {
     return await this.client.shard.broadcastEval((shard, id) => shard.users.cache.get(id), { context: id })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedUser(this.client, data)
-        ?? (allowApiUser ? to_snake_case(data) : null) : null)
+        ?? (allowApiUser ? snakify(data) : null) : null)
       .catch(() => null);
   }
 
@@ -89,7 +90,7 @@ export class Users {
       shard.users.getByDisplayName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedUser(this.client, data)
-        ?? (allowApiUser ? to_snake_case(data) : null) : null)
+        ?? (allowApiUser ? snakify(data) : null) : null)
       .catch(() => null);
   }
 
@@ -110,7 +111,7 @@ export class Users {
       shard.users.getByGlobalName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedUser(this.client, data)
-        ?? (allowApiUser ? to_snake_case(data) : null) : null)
+        ?? (allowApiUser ? snakify(data) : null) : null)
       .catch(() => null);
   }
 
@@ -131,7 +132,7 @@ export class Users {
       shard.users.getByUsername(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedUser(this.client, data)
-        ?? (allowApiUser ? to_snake_case(data) : null) : null)
+        ?? (allowApiUser ? snakify(data) : null) : null)
       .catch(() => null);
   }
 

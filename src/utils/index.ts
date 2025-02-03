@@ -69,19 +69,3 @@ export function serializeRegExp(value: string | RegExp) {
     isRegExp: false,
   };
 }
-
-export function to_snake_case<U>(U: U): U;
-export function to_snake_case<S extends string>(S: S): string;
-export function to_snake_case<R extends Record<string, unknown>>(R: R): R;
-export function to_snake_case(u: unknown) {
-  if (!exists(u)) return u;
-
-  if (typeof u === "string")
-    return u.replace(/(^[A-Z])|([A-Z])/g, (_, a, b) => a ? a.toLowerCase() : `_${b.toLowerCase()}`);
-
-  if (Array.isArray(u))
-    return u.map(v => typeof v === "object" ? to_snake_case(v) : v);
-
-  return Object.entries(u)
-    .reduce((a, [k, v]) => Object.assign(a, { [to_snake_case(k)]: typeof v === "object" ? to_snake_case(v) : v }), {});
-}

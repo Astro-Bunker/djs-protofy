@@ -1,7 +1,8 @@
 import { ChannelManager, ChannelType, Collection, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
 import { isRegExp, isSet } from "util/types";
 import type { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp, to_snake_case } from "../utils";
+import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp } from "../utils";
+import { snakify } from "../utils/case";
 import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
 
 export class Channels {
@@ -121,7 +122,7 @@ export class Channels {
     return await this.client.shard.broadcastEval((shard, id) => shard.channels.cache.get(id), { context: id })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedChannel(this.client, data)
-        ?? (allowApiChannel ? to_snake_case(data) : null) : null)
+        ?? (allowApiChannel ? snakify(data) : null) : null)
       .catch(() => null);
   }
 
@@ -142,7 +143,7 @@ export class Channels {
       shard.channels.getByName(isRegExp ? RegExp(source, flags) : source), { context })
       .then(res => res.find(Boolean) as any)
       .then(data => data ? createBroadcastedChannel(this.client, data)
-        ?? (allowApiChannel ? to_snake_case(data) : null) : null)
+        ?? (allowApiChannel ? snakify(data) : null) : null)
       .catch(() => null);
   }
 
