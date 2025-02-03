@@ -1,41 +1,41 @@
 import assert from "assert";
 import { describe, test } from "node:test";
-import { to_snake_case } from "../../utils/case";
+import { snakify } from "../../utils/case";
 
-describe("Testing to_snake_case", () => {
-  test("to_snake_case(string)", () => {
-    assert.strictEqual(to_snake_case("ToSnakeCase"), "to_snake_case");
+describe("Testing snakify", () => {
+  test("snakify(string)", () => {
+    assert.strictEqual(snakify("ToSnakeCase"), "to_snake_case");
   });
 
-  test("to_snake_case(object)", () => {
-    const actual = to_snake_case({
+  test("snakify(object)", () => {
+    const actual = snakify({
       name: "name",
-      serverId: "server_id",
-      UserId: "user_id",
+      serverId: "serverId",
+      UserId: "UserId",
     });
 
     const expected = {
       name: "name",
-      server_id: "server_id",
-      user_id: "user_id",
+      server_id: "serverId",
+      user_id: "UserId",
     };
 
-    assert.deepStrictEqual(to_snake_case(actual), expected);
+    assert.deepStrictEqual(actual, expected);
   });
 
-  test("to_snake_case(array)", () => {
-    const actual = to_snake_case([{
+  test("snakify(array)", () => {
+    const actual = snakify([{
       name: "name",
-      serverId: "server_id",
-      UserId: "user_id",
+      serverId: "serverId",
+      UserId: "UserId",
     }]);
 
     const expected = [{
       name: "name",
-      server_id: "server_id",
-      user_id: "user_id",
+      server_id: "serverId",
+      user_id: "UserId",
     }];
 
-    assert.deepStrictEqual(to_snake_case(actual), expected);
+    assert.deepStrictEqual(snakify(actual), expected);
   });
 });
