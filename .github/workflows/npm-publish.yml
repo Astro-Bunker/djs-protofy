@@ -28,10 +28,17 @@ jobs:
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org/
+
+      - name: Get short SHA
+        id: short_github_sha
+        run: |
+          id=$(echo ${{github.sha}} | cut -c 1-7)
+          echo "id=$id" >> $GITHUB_OUTPUT
+
       - run: yarn
       - if: ${{ github.event.release.prerelease }}
         run: |
-          npm version prerelease --preid=beta.$(date +%s) --no-git-tag-version
+          npm version pre --preid="${{ steps.short_github_sha.outputs.id }}" --no-git-tag-version
           npm publish --tag=beta
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
