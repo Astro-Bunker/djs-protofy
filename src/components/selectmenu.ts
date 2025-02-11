@@ -1,7 +1,6 @@
 import { type APIActionRowComponent, type APIActionRowComponentTypes, type APIMessageActionRowComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, ActionRowBuilder, type ComponentBuilder, ComponentType, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder, type SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder } from "discord.js";
 import { isRegExp } from "util/types";
 import { type APISelectMenuComponentWithDefaultValue } from "../@types";
-import { exists } from "../utils";
 
 const selectMenuTypes = new Set([
   ComponentType.StringSelect,
@@ -102,7 +101,7 @@ export function mapSelectMenus<
     const menus = rowJson.components.reduce<ComponentBuilder<APISelectMenuComponent>[]>((accMenus, menu) => {
       const result = callback(menu as APISelectMenuComponent, rowIndex);
       // @ts-expect-error ts(2769)
-      if (exists(result)) return accMenus.concat(createComponentBuilder(result));
+      if (result) return accMenus.concat(createComponentBuilder(result));
       return accMenus;
     }, []);
 
@@ -132,7 +131,7 @@ export function mapSelectMenuOptions<
     const rowComponents = rowJson.components.reduce<StringSelectMenuBuilder[]>((accMenus, menu) => {
       const options = menu.options.reduce<StringSelectMenuOptionBuilder[]>((accOptions, option, optionIndex) => {
         const result = callback(option, rowIndex, optionIndex, menu);
-        if (exists(result)) return accOptions.concat(StringSelectMenuOptionBuilder.from(result));
+        if (result) return accOptions.concat(StringSelectMenuOptionBuilder.from(result));
         return accOptions;
       }, []);
 

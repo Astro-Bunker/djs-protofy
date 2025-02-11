@@ -1,5 +1,4 @@
 import { ActionRowBuilder, createComponentBuilder, type APIActionRowComponentTypes, type ActionRow, type ActionRowComponent, type AnyComponentBuilder } from "discord.js";
-import { exists } from "../utils";
 
 export * from "./button";
 export * from "./selectmenu";
@@ -20,7 +19,7 @@ export function mapComponents<
     const columns = rowJson.components.reduce<AnyComponentBuilder[]>((accColumns, column, columnIndex) => {
       const result = callback(column, rowIndex, columnIndex);
       // @ts-expect-error ts(2769)
-      if (exists(result)) return accColumns.concat(createComponentBuilder(result));
+      if (result) return accColumns.concat(createComponentBuilder(result));
       return accColumns;
     }, []);
 
