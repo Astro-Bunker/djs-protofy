@@ -32,7 +32,7 @@ jobs:
       - name: Get short SHA
         id: short_github_sha
         run: |
-          id=$(echo ${{github.sha}} | cut -c 1-7)
+          id=$(echo ${{ github.sha }} | cut -c 1-7)
           echo "id=$id" >> $GITHUB_OUTPUT
 
       - run: yarn
