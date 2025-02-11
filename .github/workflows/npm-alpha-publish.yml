@@ -1,11 +1,11 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Node.js Package
+name: Node.js Pre Package
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: ["**"]
 
 jobs:
   build:
@@ -32,17 +32,12 @@ jobs:
       - name: Get short SHA
         id: short_github_sha
         run: |
-          id=$(echo ${{ github.sha }} | cut -c 1-7)
+          id=$(echo ${{github.sha}} | cut -c 1-7)
           echo "id=$id" >> $GITHUB_OUTPUT
 
       - run: yarn
-      - if: github.event.release.prerelease
-        run: |
+      - run: |
           npm version pre --preid=${{ steps.short_github_sha.outputs.id }} --no-git-tag-version
-          npm publish --tag=beta
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - if: github.event.release.prerelease == false
-        run: npm publish
+          npm publish --tag=alpha
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
