@@ -9,6 +9,7 @@ export class SBaseInteraction<Cached extends CacheType = CacheType> {
     });
   }
 
+  /** @DJSProtofy */
   get hasExpired() {
     return this.createdTimestamp + 900_000 < Date.now();
   }

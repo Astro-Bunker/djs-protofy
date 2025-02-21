@@ -14,6 +14,7 @@ export class SString {
     });
   }
 
+  /** @DJSProtofy */
   equals(other: string, ignoreCase?: boolean) {
     if (typeof other !== "string") return false;
 
