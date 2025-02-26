@@ -31,7 +31,7 @@ import type { Users } from "./src/prototypes/users";
 export * from "./src";
 
 declare module "discord.js" {
-  interface ApplicationCommand extends SApplicationCommand { }
+  interface ApplicationCommand<PermissionsFetchType = {}> extends SApplicationCommand<PermissionsFetchType> { }
 
   interface ApplicationCommandManager<
     ApplicationCommandScope = ApplicationCommand<{ guild: GuildResolvable; }>,
@@ -45,7 +45,7 @@ declare module "discord.js" {
 
   interface BaseGuildEmojiManager extends Emojis { }
 
-  interface BaseInteraction extends SBaseInteraction { }
+  interface BaseInteraction<Cached extends CacheType = CacheType> extends SBaseInteraction<Cached> { }
 
   interface ChannelManager extends Channels { }
 
@@ -72,9 +72,9 @@ declare module "discord.js" {
 
   interface GuildManager extends Guilds { }
 
-  interface Message extends SMessage { }
+  interface Message<InGuild extends boolean = boolean> extends SMessage<InGuild> { }
 
-  interface MessageManager extends Messages { }
+  interface MessageManager<InGuild extends boolean = boolean> extends Messages<InGuild> { }
 
   interface RoleManager extends Roles { }
 
