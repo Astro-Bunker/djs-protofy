@@ -1,7 +1,7 @@
 import { Embed } from "discord.js";
 import { isRegExp } from "util/types";
 
-export class SEmbed {
+export class EmbedExtension {
   declare fields: Embed["fields"];
 
   constructor() {

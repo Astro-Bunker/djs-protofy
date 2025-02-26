@@ -10,7 +10,14 @@ export type ChannelWithType<T extends ChannelType | ChannelTypeString> =
   Extract<Channel, { type: T extends string ? (typeof ChannelType)[T] : T }>;
 
 export type GuildChannelWithType<T extends GuildChannelType | GuildChannelTypeString> =
-  Extract<GuildBasedChannel, { type: T extends string ? (typeof ChannelType)[T] : T }>;
+  Extract<GuildBasedChannel, { type: T extends ChannelTypeString ? (typeof ChannelType)[T] : T }>;
+
+export type GuildChannelWithTopic = Extract<GuildBasedChannel, { topic: string | null }>;
+
+export type GuildChannelWithTopicType = GuildChannelWithTopic["type"];
+
+export type GuildChannelWithTopicWithType<T extends GuildChannelWithTopicType | GuildChannelTypeString> =
+  GuildChannelWithTopic & GuildChannelWithType<T>;
 
 export interface AwaitOptions {
   time?: number;

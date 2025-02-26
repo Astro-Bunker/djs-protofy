@@ -3,86 +3,86 @@ import type { EnumLike, MessageFlags } from "discord.js";
 import type { setTimeout } from "timers/promises";
 import type { DiscordStringLimits } from "./src/@enum";
 import type { AwaitOptions } from "./src/@types";
-import type { SApplicationCommand } from "./src/prototypes/applicationCommand";
-import type { ApplicationCommands } from "./src/prototypes/applicationCommands";
-import type { SArray } from "./src/prototypes/array";
-import type { SBaseInteraction } from "./src/prototypes/baseInteraction";
-import type { Channels } from "./src/prototypes/channels";
-import type { SClient } from "./src/prototypes/client";
-import type { SCollection } from "./src/prototypes/collection";
-import type { SEmbed } from "./src/prototypes/embed";
-import type { SEmbedBuilder } from "./src/prototypes/embedBuilder";
-import type { Emojis } from "./src/prototypes/emojis";
-import type { GuildBans } from "./src/prototypes/guildBans";
-import type { GuildChannels } from "./src/prototypes/guildChannels";
-import type { GuildEmojis } from "./src/prototypes/guildEmojis";
-import type { SGuildMember } from "./src/prototypes/guildMember";
-import type { GuildMembers } from "./src/prototypes/guildMembers";
-import type { GuildMessages } from "./src/prototypes/guildMessages";
-import type { Guilds } from "./src/prototypes/guilds";
-import type { SMessage } from "./src/prototypes/message";
-import type { Messages } from "./src/prototypes/messages";
-import type { Roles } from "./src/prototypes/roles";
-import type { SSet } from "./src/prototypes/set";
-import type { SShardClientUtil } from "./src/prototypes/shardClientUtil";
-import type { SString } from "./src/prototypes/string";
-import type { Users } from "./src/prototypes/users";
+import type { ApplicationCommandExtension } from "./src/prototypes/applicationCommand";
+import type { ApplicationCommandManagerExtension } from "./src/prototypes/applicationCommands";
+import type { ArrayExtension } from "./src/prototypes/array";
+import type { BaseInteractionExtension } from "./src/prototypes/baseInteraction";
+import type { ChannelManagerExtension } from "./src/prototypes/channels";
+import type { ClientExtension } from "./src/prototypes/client";
+import type { CollectionExtension } from "./src/prototypes/collection";
+import type { EmbedExtension } from "./src/prototypes/embed";
+import type { EmbedBuilderExtension } from "./src/prototypes/embedBuilder";
+import type { BaseGuildEmojiManagerExtension } from "./src/prototypes/emojis";
+import type { GuildBanManagerExtension } from "./src/prototypes/guildBans";
+import type { GuildChannelManagerExtension } from "./src/prototypes/guildChannels";
+import type { GuildEmojiManagerExtension } from "./src/prototypes/guildEmojis";
+import type { GuildMemberExtension } from "./src/prototypes/guildMember";
+import type { GuildMemberManagerExtension } from "./src/prototypes/guildMembers";
+import type { GuildMessageManagerExtension } from "./src/prototypes/guildMessages";
+import type { GuildManagerExtension } from "./src/prototypes/guilds";
+import type { MessageExtension } from "./src/prototypes/message";
+import type { MessageManagerExtension } from "./src/prototypes/messages";
+import type { RoleManagerExtension } from "./src/prototypes/roles";
+import type { SetExtension } from "./src/prototypes/set";
+import type { ShardClientUtilExtension } from "./src/prototypes/shardClientUtil";
+import type { StringExtension } from "./src/prototypes/string";
+import type { UserManagerExtension } from "./src/prototypes/users";
 
 export * from "./src";
 
 declare module "discord.js" {
-  interface ApplicationCommand<PermissionsFetchType = {}> extends SApplicationCommand<PermissionsFetchType> { }
+  interface ApplicationCommand<PermissionsFetchType = {}> extends ApplicationCommandExtension<PermissionsFetchType> { }
 
   interface ApplicationCommandManager<
     ApplicationCommandScope = ApplicationCommand<{ guild: GuildResolvable; }>,
     PermissionsOptionsExtras = { guild: GuildResolvable; },
     PermissionsGuildType = null
-  > extends ApplicationCommands<
+    > extends ApplicationCommandManagerExtension<
     ApplicationCommandScope,
     PermissionsOptionsExtras,
     PermissionsGuildType,
   > { }
 
-  interface BaseGuildEmojiManager extends Emojis { }
+  interface BaseGuildEmojiManager extends BaseGuildEmojiManagerExtension { }
 
-  interface BaseInteraction<Cached extends CacheType = CacheType> extends SBaseInteraction<Cached> { }
+  interface BaseInteraction<Cached extends CacheType = CacheType> extends BaseInteractionExtension<Cached> { }
 
-  interface ChannelManager extends Channels { }
+  interface ChannelManager extends ChannelManagerExtension { }
 
-  interface Client<Ready> extends SClient<Ready> {
+  interface Client<Ready> extends ClientExtension<Ready> {
     awaitReady(): Promise<this is Client<true>>;
     awaitReady(options: AwaitOptions): Promise<this is Client<true>>;
   }
 
-  interface Embed extends SEmbed { }
+  interface Embed extends EmbedExtension { }
 
-  interface EmbedBuilder extends SEmbedBuilder { }
+  interface EmbedBuilder extends EmbedBuilderExtension { }
 
-  interface GuildBanManager extends GuildBans { }
+  interface GuildBanManager extends GuildBanManagerExtension { }
 
-  interface GuildChannelManager extends GuildChannels { }
+  interface GuildChannelManager extends GuildChannelManagerExtension { }
 
-  interface GuildEmojiManager extends GuildEmojis { }
+  interface GuildEmojiManager extends GuildEmojiManagerExtension { }
 
-  interface GuildMember extends SGuildMember { }
+  interface GuildMember extends GuildMemberExtension { }
 
-  interface GuildMemberManager extends GuildMembers { }
+  interface GuildMemberManager extends GuildMemberManagerExtension { }
 
-  interface GuildMessageManager extends GuildMessages { }
+  interface GuildMessageManager extends GuildMessageManagerExtension { }
 
-  interface GuildManager extends Guilds { }
+  interface GuildManager extends GuildManagerExtension { }
 
-  interface Message<InGuild extends boolean = boolean> extends SMessage<InGuild> { }
+  interface Message<InGuild extends boolean = boolean> extends MessageExtension<InGuild> { }
 
-  interface MessageManager<InGuild extends boolean = boolean> extends Messages<InGuild> { }
+  interface MessageManager<InGuild extends boolean = boolean> extends MessageManagerExtension<InGuild> { }
 
-  interface RoleManager extends Roles { }
+  interface RoleManager extends RoleManagerExtension { }
 
-  interface ShardClientUtil extends SShardClientUtil { }
+  interface ShardClientUtil extends ShardClientUtilExtension { }
 
-  interface UserManager extends Users { }
+  interface UserManager extends UserManagerExtension { }
 
-  interface Collection<K, V> extends SCollection<K, V> { }
+  interface Collection<K, V> extends CollectionExtension<K, V> { }
 }
 
 declare global {
@@ -115,16 +115,16 @@ declare global {
   /** @DJSProtofy */
   declare function sleep<T = void>(...args: Parameters<typeof setTimeout<T>>): ReturnType<typeof setTimeout<T>>;
 
-  interface Array<T> extends SArray<T> {
+  interface Array<T> extends ArrayExtension<T> {
     random(): T
     random(amount: number): T[]
     random(amount: number, allowDuplicates: boolean): T[]
     random(amount: any): T;
   }
 
-  interface Set<T> extends SSet<T> { }
+  interface Set<T> extends SetExtension<T> { }
 
-  interface String extends SString {
+  interface String extends StringExtension {
     limit<T extends typeof DiscordStringLimits>(size: keyof T | T[keyof T], enumLike?: T): string
     limit<T extends EnumLike>(size: keyof T | T[keyof T] | number, enumLike: T): string
     limit(size: number): string

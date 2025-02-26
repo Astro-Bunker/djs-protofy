@@ -1,9 +1,9 @@
 import assert from "assert";
 import test, { describe } from "node:test";
 import { DiscordStringLimits } from "../../@enum";
-import { SString } from "../../prototypes/string";
+import { StringExtension } from "../../prototypes/string";
 
-new SString();
+new StringExtension();
 
 describe("Testing the String#equals", () => {
   const STRING = "Lorem ipsum" as const;

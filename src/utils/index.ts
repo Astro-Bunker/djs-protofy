@@ -1,14 +1,5 @@
-import { version, type EnumLike } from "discord.js";
+import { type EnumLike } from "discord.js";
 import { isRegExp } from "util/types";
-import { suportedDJSVersion } from "./constants";
-
-export function verifyDJSVersion() {
-  const v = Number(version.split(".")[0]);
-
-  if (v !== suportedDJSVersion) {
-    process.emitWarning(`Expected discord.js@${suportedDJSVersion}. Some features may not work correctly.`);
-  }
-}
 
 export function compareStrings<C extends true>(s1: string, s2: string, ignoreCase?: C): boolean
 export function compareStrings<C extends boolean>(s1: string, s2: string, ignoreCase: C): boolean

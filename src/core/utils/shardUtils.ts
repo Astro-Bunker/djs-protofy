@@ -1,6 +1,6 @@
 import { type APIChannel, type APIGuild, type APIMessage, type APIUser, CategoryChannel, type Channel, ChannelType, type Client, DMChannel, DirectoryChannel, ForumChannel, Guild, MediaChannel, Message, NewsChannel, PartialGroupDMChannel, StageChannel, TextChannel, ThreadChannel, User, VoiceChannel } from "discord.js";
-import { excludeNullishProperties } from ".";
-import { snakify } from "./case";
+import { excludeNullishProperties } from "../../utils";
+import { snakify } from "../../utils/case";
 
 function createChannel(
   client: Client<true>,

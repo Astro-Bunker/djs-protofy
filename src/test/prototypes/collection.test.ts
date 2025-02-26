@@ -1,9 +1,9 @@
 import assert from "assert";
 import { Collection } from "discord.js";
 import test, { describe } from "node:test";
-import { SCollection } from "../../prototypes/collection";
+import { CollectionExtension } from "../../prototypes/collection";
 
-new SCollection();
+new CollectionExtension();
 
 describe("Testing Collection prototypes", () => {
   const collection = new Collection(Array.from({ length: 10 }).map((_, i) => ([`key${i}`, `value${i}`])));

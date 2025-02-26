@@ -1,8 +1,8 @@
 import { Collection, GuildEmojiManager, type GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters } from "../utils";
+import { replaceMentionCharacters } from "../utils";
 
-export class GuildEmojis {
+export class GuildEmojiManagerExtension {
   declare cache: GuildEmojiManager["cache"];
 
   constructor() {
@@ -85,7 +85,7 @@ export class GuildEmojis {
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
         typeof cached.name === "string" && (
-          typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+          typeof query.name === "string" && cached.name.equals(query.name, true) ||
           isRegExp(query.name) && query.name.test(cached.name)
         ));
   }
@@ -107,10 +107,10 @@ export class GuildEmojis {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        cached.name?.toLowerCase(),
+        ...typeof cached.name === "string" ? [cached.name.toLowerCase()] : [],
       ].includes(query));
   }
 }

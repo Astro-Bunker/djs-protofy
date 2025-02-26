@@ -1,8 +1,8 @@
 import { Collection, GuildMemberManager, type GuildMember, type RoleResolvable } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters } from "../utils";
+import { replaceMentionCharacters } from "../utils";
 
-export class GuildMembers {
+export class GuildMemberManagerExtension {
   declare cache: GuildMemberManager["cache"];
 
   constructor() {
@@ -89,16 +89,16 @@ export class GuildMembers {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.displayName === "string" && compareStrings(query.displayName, cached.displayName) ||
+        typeof query.displayName === "string" && cached.displayName.equals(query.displayName, true) ||
         isRegExp(query.displayName) && query.displayName.test(cached.displayName) ||
-        typeof query.username === "string" && compareStrings(query.username, cached.user.username) ||
+        typeof query.username === "string" && cached.user.username.equals(query.username, true) ||
         isRegExp(query.username) && query.username.test(cached.user.username) ||
         typeof cached.nickname === "string" && (
-          typeof query.nickname === "string" && compareStrings(query.nickname, cached.nickname) ||
+          typeof query.nickname === "string" && cached.nickname.equals(query.nickname, true) ||
           isRegExp(query.nickname) && query.nickname.test(cached.nickname)
         ) ||
         typeof cached.user.globalName === "string" && (
-          typeof query.globalName === "string" && compareStrings(query.globalName, cached.user.globalName) ||
+          typeof query.globalName === "string" && cached.user.globalName.equals(query.globalName, true) ||
           isRegExp(query.globalName) && query.globalName.test(cached.user.globalName)
         ));
   }
@@ -118,18 +118,18 @@ export class GuildMembers {
     return this.cache.find((cached) =>
       query.test(cached.displayName) ||
       query.test(cached.user.username) ||
-      (cached.nickname && query.test(cached.nickname)) ||
+      (typeof cached.nickname === "string" && query.test(cached.nickname)) ||
       (typeof cached.user.globalName === "string" && query.test(cached.user.globalName)));
   }
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
         cached.displayName.toLowerCase(),
-        cached.nickname?.toLowerCase(),
-        cached.user.globalName?.toLowerCase(),
+        ...cached.nickname ? [cached.nickname.toLowerCase()] : [],
+        ...cached.user.globalName ? [cached.user.globalName.toLowerCase()] : [],
         cached.user.username.toLowerCase(),
       ].includes(query));
   }

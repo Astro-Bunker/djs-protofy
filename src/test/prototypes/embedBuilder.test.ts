@@ -1,11 +1,11 @@
 import assert from "assert";
 import { codeBlock, EmbedBuilder } from "discord.js";
 import test, { describe } from "node:test";
-import { SEmbedBuilder } from "../../prototypes/embedBuilder";
-import { SString } from "../../prototypes/string";
+import { EmbedBuilderExtension } from "../../prototypes/embedBuilder";
+import { StringExtension } from "../../prototypes/string";
 
-new SEmbedBuilder();
-new SString();
+new StringExtension();
+new EmbedBuilderExtension();
 
 describe("Testing EmbedBuilder#setCodeBlockedDescription", () => {
   const embed = new EmbedBuilder();

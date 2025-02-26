@@ -1,9 +1,9 @@
 import { ChannelType, Collection, GuildChannelManager, type CategoryChannel, type GuildBasedChannel, type GuildChannelType, type VoiceBasedChannel } from "discord.js";
 import { isRegExp, isSet } from "util/types";
-import { type GuildChannelTypeString, type GuildChannelWithType } from "../@types";
-import { compareStrings, exists, replaceMentionCharacters, resolveEnum } from "../utils";
+import { type GuildChannelTypeString, type GuildChannelWithTopic, type GuildChannelWithTopicType, type GuildChannelWithTopicWithType, type GuildChannelWithType } from "../@types";
+import { exists, replaceMentionCharacters, resolveEnum } from "../utils";
 
-export class GuildChannels {
+export class GuildChannelManagerExtension {
   declare cache: GuildChannelManager["cache"];
 
   constructor() {
@@ -50,10 +50,10 @@ export class GuildChannels {
   }
 
   /** @DJSProtofy */
-  getByTopic(topic: string | RegExp): GuildBasedChannel | undefined;
-  getByTopic<T extends GuildChannelType | GuildChannelTypeString>(topic: string | RegExp, type: T): GuildChannelWithType<T> | undefined;
-  getByTopic(topic: string | RegExp, type?: GuildChannelType | GuildChannelTypeString) {
-    if (exists(type)) type = resolveEnum(ChannelType, type) as GuildChannelType;
+  getByTopic(topic: string | RegExp): GuildChannelWithTopic | undefined;
+  getByTopic<T extends GuildChannelWithTopicType | GuildChannelTypeString>(topic: string | RegExp, type: T): GuildChannelWithTopicWithType<T> | undefined;
+  getByTopic(topic: string | RegExp, type?: ChannelType | GuildChannelTypeString) {
+    if (exists(type)) type = resolveEnum(ChannelType, type);
 
     if (typeof topic === "string") return this.cache.find(cached => {
       if (exists(type) && cached.type !== type) return false;
@@ -127,11 +127,11 @@ export class GuildChannels {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+        typeof query.name === "string" && cached.name.equals(query.name, true) ||
         isRegExp(query.name) && query.name.test(cached.name) ||
         "topic" in cached && typeof cached.topic === "string" && (
-          typeof query.name === "string" && compareStrings(query.name, cached.topic) ||
-          isRegExp(query.name) && query.name.test(cached.topic)
+          typeof query.topic === "string" && cached.topic.equals(query.topic, true) ||
+          isRegExp(query.topic) && query.topic.test(cached.topic)
         ));
   }
 
@@ -154,11 +154,11 @@ export class GuildChannels {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
         cached.name.toLowerCase(),
-        "topic" in cached && cached.topic?.toLowerCase(),
+        ..."topic" in cached && typeof cached.topic === "string" ? [cached.topic.toLowerCase()] : [],
       ].includes(query));
   }
 }
