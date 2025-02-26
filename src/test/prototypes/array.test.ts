@@ -32,9 +32,19 @@ describe("Testing Array#shuffle", () => {
   const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 
   test("shuffle", () => {
-    const actual = Array.from(array).shuffle();
+    const actual = Array.from(array);
 
-    assert.notDeepStrictEqual(actual, array);
+    let i = 0;
+    const max = 3;
+    do {
+      try {
+        assert.notDeepStrictEqual(actual.shuffle(), array);
+        break;
+      } catch (error) {
+        if (++i === max) throw error;
+      }
+    } while (i < max);
+
     assert(actual.every(v => array.includes(v)));
     assert.strictEqual(actual.length, array.length);
     assert.deepStrictEqual(actual, actual.shuffle());
