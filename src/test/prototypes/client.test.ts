@@ -1,9 +1,9 @@
 import assert from "assert";
 import { Client, Events, Status } from "discord.js";
 import test, { describe } from "node:test";
-import { SClient } from "../../prototypes/client";
+import { ClientExtension } from "../../prototypes/client";
 
-new SClient();
+new ClientExtension();
 
 describe("Testing Client#awaitReady", () => {
   const client = new Client({ intents: 0 });

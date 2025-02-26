@@ -1,10 +1,10 @@
 import { Collection, UserManager, type APIUser, type User } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters, serializeRegExp } from "../utils";
+import { createBroadcastedUser } from "../core/utils/shardUtils";
+import { replaceMentionCharacters, serializeRegExp } from "../utils";
 import { snakify } from "../utils/case";
-import { createBroadcastedUser } from "../utils/shardUtils";
 
-export class Users {
+export class UserManagerExtension {
   declare cache: UserManager["cache"];
   declare client: UserManager["client"];
 
@@ -149,12 +149,12 @@ export class Users {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.displayName === "string" && compareStrings(query.displayName, cached.displayName) ||
+        typeof query.displayName === "string" && cached.displayName.equals(query.displayName, true) ||
         isRegExp(query.displayName) && query.displayName.test(cached.displayName) ||
-        typeof query.username === "string" && compareStrings(query.username, cached.username) ||
+        typeof query.username === "string" && cached.username.equals(query.username, true) ||
         isRegExp(query.username) && query.username.test(cached.username) ||
         typeof cached.globalName === "string" && (
-          typeof query.globalName === "string" && compareStrings(query.globalName, cached.globalName) ||
+          typeof query.globalName === "string" && cached.globalName.equals(query.globalName, true) ||
           isRegExp(query.globalName) && query.globalName.test(cached.globalName)
         ));
   }
@@ -179,11 +179,11 @@ export class Users {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
         cached.displayName.toLowerCase(),
-        cached.globalName?.toLowerCase(),
+        ...cached.globalName ? [cached.globalName.toLowerCase()] : [],
         cached.username.toLowerCase(),
       ].includes(query));
   }

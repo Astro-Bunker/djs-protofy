@@ -1,11 +1,11 @@
 import { ChannelManager, ChannelType, Collection, type APIChannel, type CategoryChannel, type Channel, type ChannelResolvable, type Message, type MessageCreateOptions, type MessagePayload, type VoiceBasedChannel } from "discord.js";
 import { isRegExp, isSet } from "util/types";
 import type { ChannelTypeString, ChannelWithType } from "../@types";
-import { compareStrings, exists, replaceMentionCharacters, resolveEnum, serializeRegExp } from "../utils";
+import { createBroadcastedChannel, createBroadcastedMessage } from "../core/utils/shardUtils";
+import { exists, replaceMentionCharacters, resolveEnum, serializeRegExp } from "../utils";
 import { snakify } from "../utils/case";
-import { createBroadcastedChannel, createBroadcastedMessage } from "../utils/shardUtils";
 
-export class Channels {
+export class ChannelManagerExtension {
   declare cache: ChannelManager["cache"];
   declare client: ChannelManager["client"];
   declare fetch: ChannelManager["fetch"];
@@ -207,14 +207,14 @@ export class Channels {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(cached =>
+      (query.name || query.topic) && this.cache.find(cached =>
         "name" in cached && typeof cached.name === "string" && (
-          typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+          typeof query.name === "string" && cached.name.equals(query.name, true) ||
           isRegExp(query.name) && query.name.test(cached.name)
         ) ||
-        "topic" in cached && cached.topic && (
-          typeof query.name === "string" && compareStrings(query.name, cached.topic) ||
-          isRegExp(query.name) && query.name.test(cached.topic)
+        "topic" in cached && typeof cached.topic === "string" && (
+          typeof query.topic === "string" && cached.topic.equals(query.topic, true) ||
+          isRegExp(query.topic) && query.topic.test(cached.topic)
         ));
   }
 
@@ -237,11 +237,11 @@ export class Channels {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        "name" in cached && cached.name?.toLowerCase(),
-        "topic" in cached && cached.topic?.toLowerCase(),
+        ..."name" in cached && typeof cached.name === "string" ? [cached.name.toLowerCase()] : [],
+        ..."topic" in cached && typeof cached.topic === "string" ? [cached.topic.toLowerCase()] : [],
       ].includes(query));
   }
 }

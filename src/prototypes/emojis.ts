@@ -1,8 +1,8 @@
 import { BaseGuildEmojiManager, Collection, type GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters } from "../utils";
+import { replaceMentionCharacters } from "../utils";
 
-export class Emojis {
+export class BaseGuildEmojiManagerExtension {
   declare cache: BaseGuildEmojiManager["cache"];
 
   constructor() {
@@ -90,9 +90,9 @@ export class Emojis {
     if (isRegExp(query)) return this._searchByRegExp(query);
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
-      this.cache.find(cached =>
+      (query.name) && this.cache.find(cached =>
         typeof cached.name === "string" && (
-          typeof query.name === "string" && compareStrings(query.name, cached.name) ||
+          typeof query.name === "string" && cached.name.equals(query.name, true) ||
           isRegExp(query.name) && query.name.test(cached.name)
         ));
   }
@@ -114,10 +114,10 @@ export class Emojis {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        cached.name?.toLowerCase(),
+        ...typeof cached.name === "string" ? [cached.name.toLowerCase()] : [],
       ].includes(query));
   }
 }

@@ -2,7 +2,7 @@ import { type APIDMChannel, type APITextChannel, ChannelType, Client, Guild, Gui
 import { type RawGuildData } from "discord.js/typings/rawDataTypes";
 import assert from "node:assert";
 import test, { describe } from "node:test";
-import { createBroadcastedChannel } from "../../utils/shardUtils";
+import { createBroadcastedChannel } from "../../core/utils/shardUtils";
 
 describe("Testing createBroadcastedChannel", () => {
   const client = new Client({ intents: [] });

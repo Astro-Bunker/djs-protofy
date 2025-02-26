@@ -1,7 +1,7 @@
 import { codeBlock, EmbedBuilder } from "discord.js";
 import { DiscordStringLimits } from "../@enum";
 
-export class SEmbedBuilder {
+export class EmbedBuilderExtension {
   declare setDescription: EmbedBuilder["setDescription"];
 
   constructor() {

@@ -1,10 +1,10 @@
 import { ApplicationCommandManager, type ApplicationCommand, type GuildResolvable } from "discord.js";
 import { isRegExp } from "util/types";
 
-export class ApplicationCommands<
-  ApplicationCommandScope extends ApplicationCommand = ApplicationCommand<{ guild: GuildResolvable; }>,
-  PermissionsOptionsExtras = { guild: GuildResolvable; },
-  PermissionsGuildType = null
+export class ApplicationCommandManagerExtension<
+  ApplicationCommandScope extends ApplicationCommand = ApplicationCommand<{ guild: GuildResolvable }>,
+  PermissionsOptionsExtras = { guild: GuildResolvable },
+  PermissionsGuildType = null,
 > {
   declare cache: ApplicationCommandManager<ApplicationCommandScope, PermissionsOptionsExtras, PermissionsGuildType>["cache"];
   declare fetch: ApplicationCommandManager<ApplicationCommandScope, PermissionsOptionsExtras, PermissionsGuildType>["fetch"];

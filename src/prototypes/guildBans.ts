@@ -1,8 +1,8 @@
 import { Collection, GuildBanManager, type GuildBan } from "discord.js";
 import { isRegExp } from "util/types";
-import { compareStrings, replaceMentionCharacters } from "../utils";
+import { replaceMentionCharacters } from "../utils";
 
-export class GuildBans {
+export class GuildBanManagerExtension {
   declare cache: GuildBanManager["cache"];
 
   constructor() {
@@ -27,12 +27,12 @@ export class GuildBans {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.displayName === "string" && compareStrings(query.displayName, cached.user.displayName) ||
+        typeof query.displayName === "string" && cached.user.displayName.equals(query.displayName, true) ||
         isRegExp(query.displayName) && query.displayName.test(cached.user.displayName) ||
-        typeof query.username === "string" && compareStrings(query.username, cached.user.username) ||
+        typeof query.username === "string" && cached.user.username.equals(cached.user.username, true) ||
         isRegExp(query.username) && query.username.test(cached.user.username) ||
         typeof cached.user.globalName === "string" && (
-          typeof query.globalName === "string" && compareStrings(query.globalName, cached.user.globalName) ||
+          typeof query.globalName === "string" && cached.user.globalName.equals(query.globalName, true) ||
           isRegExp(query.globalName) && query.globalName.test(cached.user.globalName)
         ));
   }
@@ -57,11 +57,11 @@ export class GuildBans {
 
   /** @DJSProtofy */
   protected _searchByString(query: string) {
-    query = replaceMentionCharacters(query).toLowerCase();
-    return this.cache.get(query) ??
+    query = query.toLowerCase();
+    return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
         cached.user.displayName.toLowerCase(),
-        cached.user.globalName?.toLowerCase(),
+        ...cached.user.globalName ? [cached.user.globalName.toLowerCase()] : [],
         cached.user.username.toLowerCase(),
       ].includes(query));
   }

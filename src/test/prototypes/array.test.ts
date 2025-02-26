@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import test, { describe } from "node:test";
-import { SArray } from "../../prototypes/array";
+import { ArrayExtension } from "../../prototypes/array";
 
-new SArray();
+new ArrayExtension();
 
 describe("Testing Array#random", () => {
   const array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
