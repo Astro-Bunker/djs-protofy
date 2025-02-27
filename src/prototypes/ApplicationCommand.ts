@@ -1,6 +1,6 @@
 import { ApplicationCommand } from "discord.js";
 
-export class ApplicationCommandExtension<PermissionsFetchType = {}> {
+export default class ApplicationCommandExtension<PermissionsFetchType = {}> {
   declare id: ApplicationCommand<PermissionsFetchType>["id"];
   declare name: ApplicationCommand<PermissionsFetchType>["name"];
   declare mention: string;

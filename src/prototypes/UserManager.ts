@@ -4,7 +4,7 @@ import { createBroadcastedUser } from "../core/utils/shardUtils";
 import { replaceMentionCharacters, serializeRegExp } from "../utils";
 import { snakify } from "../utils/case";
 
-export class UserManagerExtension {
+export default class UserManagerExtension {
   declare cache: UserManager["cache"];
   declare client: UserManager["client"];
 

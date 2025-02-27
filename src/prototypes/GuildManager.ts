@@ -4,7 +4,7 @@ import { createBroadcastedGuild } from "../core/utils/shardUtils";
 import { replaceMentionCharacters, serializeRegExp } from "../utils";
 import { snakify } from "../utils/case";
 
-export class GuildManagerExtension {
+export default class GuildManagerExtension {
   declare cache: GuildManager["cache"];
   declare client: GuildManager["client"];
 

@@ -2,7 +2,7 @@ import { type EnumLike } from "discord.js";
 import { DiscordStringLimits } from "../@enum";
 import { exists, resolveEnum } from "../utils";
 
-export class StringExtension {
+export default class StringExtension {
   declare length: string["length"];
   declare slice: string["slice"];
   declare localeCompare: string["localeCompare"];

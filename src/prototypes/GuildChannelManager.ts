@@ -3,7 +3,7 @@ import { isRegExp, isSet } from "util/types";
 import { type GuildChannelTypeString, type GuildChannelWithTopic, type GuildChannelWithTopicType, type GuildChannelWithTopicWithType, type GuildChannelWithType } from "../@types";
 import { exists, replaceMentionCharacters, resolveEnum } from "../utils";
 
-export class GuildChannelManagerExtension {
+export default class GuildChannelManagerExtension {
   declare cache: GuildChannelManager["cache"];
 
   constructor() {

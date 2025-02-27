@@ -2,7 +2,7 @@ import { Collection, RoleManager, type PermissionResolvable, type Role } from "d
 import { isRegExp } from "util/types";
 import { replaceMentionCharacters } from "../utils";
 
-export class RoleManagerExtension {
+export default class RoleManagerExtension {
   declare cache: RoleManager["cache"];
 
   constructor() {

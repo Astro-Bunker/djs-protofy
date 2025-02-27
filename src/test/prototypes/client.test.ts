@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Client, Events, Status } from "discord.js";
 import test, { describe } from "node:test";
-import { ClientExtension } from "../../prototypes/Client";
+import ClientExtension from "../../prototypes/Client";
 
 new ClientExtension();
 

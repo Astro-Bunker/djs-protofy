@@ -1,7 +1,7 @@
 import { Collection, GatewayIntentBits, Message, type Channel, type GuildBasedChannel, type GuildMember, type Role, type User } from "discord.js";
 import { ManyDiscordSnowflakesPattern } from "../utils/regexps";
 
-export class MessageExtension<InGuild extends boolean = boolean> {
+export default class MessageExtension<InGuild extends boolean = boolean> {
   declare client: Message<InGuild>["client"];
   declare content: Message<InGuild>["content"];
   declare guild: Message<InGuild>["guild"];

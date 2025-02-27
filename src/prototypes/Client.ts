@@ -1,7 +1,7 @@
 import { Client, Events } from "discord.js";
 import type { AwaitOptions } from "../@types";
 
-export class ClientExtension<Ready extends boolean = boolean> {
+export default class ClientExtension<Ready extends boolean = boolean> {
   declare isReady: Client<Ready>["isReady"];
   declare off: Client<Ready>["off"];
   declare once: Client<Ready>["once"];

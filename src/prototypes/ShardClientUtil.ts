@@ -1,6 +1,6 @@
 import { ShardClientUtil } from "discord.js";
 
-export class ShardClientUtilExtension {
+export default class ShardClientUtilExtension {
   /** @DJSProtofy */
   declare id: ShardClientUtil["ids"][number];
   declare ids: ShardClientUtil["ids"];

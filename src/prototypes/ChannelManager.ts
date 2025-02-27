@@ -5,7 +5,7 @@ import { createBroadcastedChannel, createBroadcastedMessage } from "../core/util
 import { exists, replaceMentionCharacters, resolveEnum, serializeRegExp } from "../utils";
 import { snakify } from "../utils/case";
 
-export class ChannelManagerExtension {
+export default class ChannelManagerExtension {
   declare cache: ChannelManager["cache"];
   declare client: ChannelManager["client"];
   declare fetch: ChannelManager["fetch"];

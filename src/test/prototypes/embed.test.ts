@@ -1,8 +1,8 @@
 import assert from "assert";
 import { type APIEmbed, Embed } from "discord.js";
 import test, { describe } from "node:test";
-import { EmbedExtension } from "../../prototypes/Embed";
-import { StringExtension } from "../../prototypes/String";
+import EmbedExtension from "../../prototypes/Embed";
+import StringExtension from "../../prototypes/String";
 
 new StringExtension();
 new EmbedExtension();

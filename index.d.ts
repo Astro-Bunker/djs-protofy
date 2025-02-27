@@ -3,30 +3,31 @@ import type { EnumLike, MessageFlags } from "discord.js";
 import type { setTimeout } from "timers/promises";
 import type { DiscordStringLimits } from "./src/@enum";
 import type { AwaitOptions } from "./src/@types";
-import type { ApplicationCommandExtension } from "./src/prototypes/ApplicationCommand";
-import type { ApplicationCommandManagerExtension } from "./src/prototypes/ApplicationCommandManager";
-import type { ArrayExtension } from "./src/prototypes/Array";
-import type { BaseGuildEmojiManagerExtension } from "./src/prototypes/BaseGuildEmojiManager";
-import type { BaseInteractionExtension } from "./src/prototypes/BaseInteraction";
-import type { ChannelManagerExtension } from "./src/prototypes/ChannelManager";
-import type { ClientExtension } from "./src/prototypes/Client";
-import type { CollectionExtension } from "./src/prototypes/Collection";
-import type { EmbedExtension } from "./src/prototypes/Embed";
-import type { EmbedBuilderExtension } from "./src/prototypes/EmbedBuilder";
-import type { GuildBanManagerExtension } from "./src/prototypes/GuildBanManager";
-import type { GuildChannelManagerExtension } from "./src/prototypes/GuildChannelManager";
-import type { GuildEmojiManagerExtension } from "./src/prototypes/GuildEmojiManager";
-import type { GuildManagerExtension } from "./src/prototypes/GuildManager";
-import type { GuildMemberExtension } from "./src/prototypes/GuildMember";
-import type { GuildMemberManagerExtension } from "./src/prototypes/GuildMemberManager";
-import type { GuildMessageManagerExtension } from "./src/prototypes/GuildMessageManager";
-import type { MessageExtension } from "./src/prototypes/Message";
-import type { MessageManagerExtension } from "./src/prototypes/MessageManager";
-import type { RoleManagerExtension } from "./src/prototypes/RoleManager";
-import type { SetExtension } from "./src/prototypes/Set";
-import type { ShardClientUtilExtension } from "./src/prototypes/ShardClientUtil";
-import type { StringExtension } from "./src/prototypes/String";
-import type { UserManagerExtension } from "./src/prototypes/UserManager";
+import type ApplicationCommandExtension from "./src/prototypes/ApplicationCommand";
+import type ApplicationCommandManagerExtension from "./src/prototypes/ApplicationCommandManager";
+import ApplicationEmojiManagerExtension from "./src/prototypes/ApplicationEmojiManager";
+import type ArrayExtension from "./src/prototypes/Array";
+import type BaseGuildEmojiManagerExtension from "./src/prototypes/BaseGuildEmojiManager";
+import type BaseInteractionExtension from "./src/prototypes/BaseInteraction";
+import type ChannelManagerExtension from "./src/prototypes/ChannelManager";
+import type ClientExtension from "./src/prototypes/Client";
+import type CollectionExtension from "./src/prototypes/Collection";
+import type EmbedExtension from "./src/prototypes/Embed";
+import type EmbedBuilderExtension from "./src/prototypes/EmbedBuilder";
+import type GuildBanManagerExtension from "./src/prototypes/GuildBanManager";
+import type GuildChannelManagerExtension from "./src/prototypes/GuildChannelManager";
+import type GuildEmojiManagerExtension from "./src/prototypes/GuildEmojiManager";
+import type GuildManagerExtension from "./src/prototypes/GuildManager";
+import type GuildMemberExtension from "./src/prototypes/GuildMember";
+import type GuildMemberManagerExtension from "./src/prototypes/GuildMemberManager";
+import type GuildMessageManagerExtension from "./src/prototypes/GuildMessageManager";
+import type MessageExtension from "./src/prototypes/Message";
+import type MessageManagerExtension from "./src/prototypes/MessageManager";
+import type RoleManagerExtension from "./src/prototypes/RoleManager";
+import type SetExtension from "./src/prototypes/Set";
+import type ShardClientUtilExtension from "./src/prototypes/ShardClientUtil";
+import type StringExtension from "./src/prototypes/String";
+import type UserManagerExtension from "./src/prototypes/UserManager";
 
 export * from "./src";
 
@@ -41,7 +42,9 @@ declare module "discord.js" {
     ApplicationCommandScope,
     PermissionsOptionsExtras,
     PermissionsGuildType,
-  > { }
+    > { }
+
+  interface ApplicationEmojiManager extends ApplicationEmojiManagerExtension { }
 
   interface BaseGuildEmojiManager extends BaseGuildEmojiManagerExtension { }
 
@@ -53,6 +56,8 @@ declare module "discord.js" {
     awaitReady(): Promise<this is Client<true>>;
     awaitReady(options: AwaitOptions): Promise<this is Client<true>>;
   }
+
+  interface Collection<K, V> extends CollectionExtension<K, V> { }
 
   interface Embed extends EmbedExtension { }
 
@@ -81,8 +86,6 @@ declare module "discord.js" {
   interface ShardClientUtil extends ShardClientUtilExtension { }
 
   interface UserManager extends UserManagerExtension { }
-
-  interface Collection<K, V> extends CollectionExtension<K, V> { }
 }
 
 declare global {

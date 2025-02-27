@@ -2,7 +2,7 @@ import { Collection, GuildMemberManager, type GuildMember, type RoleResolvable }
 import { isRegExp } from "util/types";
 import { replaceMentionCharacters } from "../utils";
 
-export class GuildMemberManagerExtension {
+export default class GuildMemberManagerExtension {
   declare cache: GuildMemberManager["cache"];
 
   constructor() {

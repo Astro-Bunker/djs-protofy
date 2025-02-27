@@ -1,7 +1,7 @@
 import { ApplicationCommandManager, type ApplicationCommand, type GuildResolvable } from "discord.js";
 import { isRegExp } from "util/types";
 
-export class ApplicationCommandManagerExtension<
+export default class ApplicationCommandManagerExtension<
   ApplicationCommandScope extends ApplicationCommand = ApplicationCommand<{ guild: GuildResolvable }>,
   PermissionsOptionsExtras = { guild: GuildResolvable },
   PermissionsGuildType = null,

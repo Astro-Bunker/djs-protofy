@@ -1,4 +1,4 @@
-export class ArrayExtension<T> {
+export default class ArrayExtension<T> {
   [n: number]: T
   declare length: Array<T>["length"];
   declare sort: Array<T>["sort"];

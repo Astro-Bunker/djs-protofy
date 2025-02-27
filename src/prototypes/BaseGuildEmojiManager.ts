@@ -2,7 +2,7 @@ import { BaseGuildEmojiManager, Collection, type GuildEmoji } from "discord.js";
 import { isRegExp } from "util/types";
 import { replaceMentionCharacters } from "../utils";
 
-export class BaseGuildEmojiManagerExtension {
+export default class BaseGuildEmojiManagerExtension {
   declare cache: BaseGuildEmojiManager["cache"];
 
   constructor() {

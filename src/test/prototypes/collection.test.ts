@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Collection } from "discord.js";
 import test, { describe } from "node:test";
-import { CollectionExtension } from "../../prototypes/Collection";
+import CollectionExtension from "../../prototypes/Collection";
 
 new CollectionExtension();
 

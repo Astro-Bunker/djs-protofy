@@ -1,7 +1,7 @@
 import { Collection, MessageManager, type Message } from "discord.js";
 import { isRegExp } from "util/types";
 
-export class MessageManagerExtension<InGuild extends boolean = boolean> {
+export default class MessageManagerExtension<InGuild extends boolean = boolean> {
   declare cache: MessageManager<InGuild>["cache"];
 
   constructor() {

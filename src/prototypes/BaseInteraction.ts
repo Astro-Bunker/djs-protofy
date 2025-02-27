@@ -1,7 +1,7 @@
 import { BaseInteraction, type CacheType } from "discord.js";
 import { InteractionTokenExpirationTime } from "../utils/constants";
 
-export class BaseInteractionExtension<Cached extends CacheType = CacheType> {
+export default class BaseInteractionExtension<Cached extends CacheType = CacheType> {
   declare createdTimestamp: BaseInteraction<Cached>["createdTimestamp"];
 
   constructor() {

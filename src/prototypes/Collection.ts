@@ -1,7 +1,7 @@
 import { Collection } from "discord.js";
 import { MapIteratorHasToArrayMethod } from "../core/utils/types";
 
-export class CollectionExtension<K, V> {
+export default class CollectionExtension<K, V> {
   declare keys: Collection<K, V>["keys"];
   declare values: Collection<K, V>["values"];
 

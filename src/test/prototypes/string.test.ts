@@ -1,7 +1,7 @@
 import assert from "assert";
 import test, { describe } from "node:test";
 import { DiscordStringLimits } from "../../@enum";
-import { StringExtension } from "../../prototypes/String";
+import StringExtension from "../../prototypes/String";
 
 new StringExtension();
 

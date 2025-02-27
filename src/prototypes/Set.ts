@@ -1,4 +1,4 @@
-export class SetExtension<T> {
+export default class SetExtension<T> {
   constructor() {
     Object.defineProperties(Set.prototype, {
       toArray: { value: this.toArray },

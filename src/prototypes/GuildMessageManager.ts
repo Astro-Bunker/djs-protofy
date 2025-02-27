@@ -1,7 +1,7 @@
 import { Collection, GuildMessageManager } from "discord.js";
 import { isRegExp } from "util/types";
 
-export class GuildMessageManagerExtension {
+export default class GuildMessageManagerExtension {
   declare cache: GuildMessageManager["cache"];
 
   constructor() {

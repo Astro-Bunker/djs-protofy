@@ -2,7 +2,7 @@ import { Collection, GuildBanManager, type GuildBan } from "discord.js";
 import { isRegExp } from "util/types";
 import { replaceMentionCharacters } from "../utils";
 
-export class GuildBanManagerExtension {
+export default class GuildBanManagerExtension {
   declare cache: GuildBanManager["cache"];
 
   constructor() {
