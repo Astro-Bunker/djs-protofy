@@ -1,5 +1,6 @@
 import { type EnumLike } from "discord.js";
 import { isRegExp } from "util/types";
+import { DiscordMentionPattern } from "./regexps";
 
 export function compareStrings<C extends true>(s1: string, s2: string, ignoreCase?: C): boolean
 export function compareStrings<C extends boolean>(s1: string, s2: string, ignoreCase: C): boolean
@@ -25,6 +26,8 @@ export function exists(o: unknown) {
   return o !== undefined && o !== null;
 }
 
+const ManyDiscordMentionPattern = RegExp(DiscordMentionPattern, "g");
+
 /**
  * This replaces special characters mentioning
  * `channel`, `command`, `emoji`, `member`, `role` or `user`
@@ -33,7 +36,7 @@ export function exists(o: unknown) {
  * https://discord.com/developers/docs/reference#message-formatting
  */
 export function replaceMentionCharacters(s: string) {
-  return s.replace(/<(?:(?:a?:|\/)\w{1,32}:|[@#][!&]?)(\d{17,})>/g, "$1");
+  return s.replace(ManyDiscordMentionPattern, "$1");
 }
 
 export function resolveEnum<T extends EnumLike<keyof T, T[keyof T]>>(enumLike: T, value: keyof T | T[keyof T]): T[keyof T];
