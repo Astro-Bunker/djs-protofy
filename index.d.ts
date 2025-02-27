@@ -5,7 +5,7 @@ import type { DiscordStringLimits } from "./src/@enum";
 import type { AwaitOptions } from "./src/@types";
 import type ApplicationCommandExtension from "./src/prototypes/ApplicationCommand";
 import type ApplicationCommandManagerExtension from "./src/prototypes/ApplicationCommandManager";
-import ApplicationEmojiManagerExtension from "./src/prototypes/ApplicationEmojiManager";
+import type ApplicationEmojiManagerExtension from "./src/prototypes/ApplicationEmojiManager";
 import type ArrayExtension from "./src/prototypes/Array";
 import type BaseGuildEmojiManagerExtension from "./src/prototypes/BaseGuildEmojiManager";
 import type BaseInteractionExtension from "./src/prototypes/BaseInteraction";
@@ -17,9 +17,11 @@ import type EmbedBuilderExtension from "./src/prototypes/EmbedBuilder";
 import type GuildBanManagerExtension from "./src/prototypes/GuildBanManager";
 import type GuildChannelManagerExtension from "./src/prototypes/GuildChannelManager";
 import type GuildEmojiManagerExtension from "./src/prototypes/GuildEmojiManager";
+import type GuildEmojiRoleManagerExtension from "./src/prototypes/GuildEmojiRoleManager";
 import type GuildManagerExtension from "./src/prototypes/GuildManager";
 import type GuildMemberExtension from "./src/prototypes/GuildMember";
 import type GuildMemberManagerExtension from "./src/prototypes/GuildMemberManager";
+import type GuildMemberRoleManagerExtension from "./src/prototypes/GuildMemberRoleManager";
 import type GuildMessageManagerExtension from "./src/prototypes/GuildMessageManager";
 import type MessageExtension from "./src/prototypes/Message";
 import type MessageManagerExtension from "./src/prototypes/MessageManager";
@@ -69,9 +71,13 @@ declare module "discord.js" {
 
   interface GuildEmojiManager extends GuildEmojiManagerExtension { }
 
+  interface GuildEmojiRoleManager extends GuildEmojiRoleManagerExtension { }
+
   interface GuildMember extends GuildMemberExtension { }
 
   interface GuildMemberManager extends GuildMemberManagerExtension { }
+
+  interface GuildMemberRoleManager extends GuildMemberRoleManagerExtension { }
 
   interface GuildMessageManager extends GuildMessageManagerExtension { }
 
