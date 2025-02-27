@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import test, { describe } from "node:test";
-import { ArrayExtension } from "../../prototypes/array";
+import { ArrayExtension } from "../../prototypes/Array";
 
 new ArrayExtension();
 

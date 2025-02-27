@@ -1,8 +1,8 @@
 import assert from "assert";
 import { codeBlock, EmbedBuilder } from "discord.js";
 import test, { describe } from "node:test";
-import { EmbedBuilderExtension } from "../../prototypes/embedBuilder";
-import { StringExtension } from "../../prototypes/string";
+import { EmbedBuilderExtension } from "../../prototypes/EmbedBuilder";
+import { StringExtension } from "../../prototypes/String";
 
 new StringExtension();
 new EmbedBuilderExtension();
