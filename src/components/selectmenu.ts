@@ -1,5 +1,6 @@
 import { type APIActionRowComponent, type APIActionRowComponentTypes, type APIMessageActionRowComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, type ActionRow, ActionRowBuilder, type ComponentBuilder, ComponentType, type JSONEncodable, type MessageActionRowComponent, type MessageActionRowComponentBuilder, type SelectMenuDefaultValueType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, createComponentBuilder } from "discord.js";
 import { isRegExp } from "util/types";
+import { DiscordLimits } from "../@enum";
 import { type APISelectMenuComponentWithDefaultValue } from "../@types";
 
 const selectMenuTypes = new Set([
@@ -29,6 +30,43 @@ export function getDefaultOptionFromSelectMenu(
   return optionDefault;
 }
 
+export function getDefaultOptionsFromSelectMenu(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  customId?: string | RegExp,
+) {
+  if (!Array.isArray(components)) throw TypeError("components is not a array");
+
+  const defaultOptions: APISelectMenuOption[] = [];
+
+  for (let i = 0; i < components.length; i++) {
+    const row = components[i].toJSON();
+
+    if (row.components.length > DiscordLimits.ActionRowSelectMenus) continue;
+
+    for (let j = 0; j < row.components.length; j++) {
+      const column = row.components[j];
+
+      if (!("options" in column) || column.options.length > DiscordLimits.SelectMenuOptions) continue;
+
+      if (customId) {
+        if (typeof customId === "string") {
+          if (customId !== column.custom_id) continue;
+        } else if (isRegExp(customId)) {
+          if (!customId.test(column.custom_id)) continue;
+        }
+      }
+
+      for (let k = 0; k < column.options.length; k++) {
+        const option = column.options[k];
+
+        if (option.default) defaultOptions.push(option);
+      }
+    }
+  }
+
+  return defaultOptions;
+}
+
 export function getDefaultValuesFromSelectMenu<D extends SelectMenuDefaultValueType>(
   components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
   callback: (selectMenu: APISelectMenuComponent, rowIndex: number) => boolean,
@@ -45,16 +83,39 @@ export function getDefaultValuesFromSelectMenu(
 
   if (typeof customId === "function") return getDefaultValuesFromSelectMenuWithCallback(components, customId);
 
-  let default_values;
+  const defaultValues: any[] = [];
 
-  components.some(row =>
-    row.toJSON().components.some(column =>
-      "default_values" in column &&
-      (typeof customId === "string" ? column.custom_id === customId
-        : isRegExp(customId) ? customId.test(column.custom_id) : true) &&
-      (default_values = column.default_values)));
+  for (let i = 0; i < components.length; i++) {
+    const row = components[i].toJSON();
 
-  return default_values ?? [];
+    if (row.components.length > DiscordLimits.ActionRowSelectMenus) continue;
+
+    for (let j = 0; j < row.components.length; j++) {
+      const column = row.components[j];
+
+      if (!("default_values" in column) || !Array.isArray(column.default_values)) continue;
+
+      if (customId) {
+        if (typeof customId === "string") {
+          if (customId === column.custom_id)
+            defaultValues.push(...column.default_values);
+          continue;
+        }
+
+        if (isRegExp(customId)) {
+          if (customId.test(column.custom_id))
+            defaultValues.push(...column.default_values);
+          continue;
+        }
+
+        continue;
+      }
+
+      defaultValues.push(...column.default_values);
+    }
+  }
+
+  return defaultValues;
 }
 
 function getDefaultValuesFromSelectMenuWithCallback<D extends SelectMenuDefaultValueType>(
@@ -72,6 +133,8 @@ function getDefaultValuesFromSelectMenuWithCallback(
 
   for (let i = 0; i < components.length; i++) {
     const row = components[i].toJSON();
+
+    if (row.components.length > DiscordLimits.ActionRowSelectMenus) continue;
 
     for (const column of row.components) {
       if (!("default_values" in column) || !Array.isArray(column.default_values) || !callback(column, i)) continue;
