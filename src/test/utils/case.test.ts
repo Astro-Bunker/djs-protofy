@@ -1,6 +1,44 @@
 import assert from "assert";
 import { describe, test } from "node:test";
-import { snakify } from "../../utils/case";
+import { camelify, snakify } from "../../utils/case";
+
+describe("Testing camelify", () => {
+  test("camelify(string)", () => {
+    assert(camelify("to_camel_case", "_") === "toCamelCase");
+  });
+
+  test("camelify(object)", () => {
+    const actual = {
+      name: "name",
+      server_id: "serverId",
+      user_id: "userId",
+    };
+
+    const expected = {
+      name: "name",
+      serverId: "serverId",
+      userId: "userId",
+    };
+
+    assert.deepStrictEqual(camelify(actual), expected);
+  });
+
+  test("snakify(array)", () => {
+    const actual = [{
+      name: "name",
+      server_id: "serverId",
+      user_id: "userId",
+    }, "this_is_a_test"];
+
+    const expected = [{
+      name: "name",
+      serverId: "serverId",
+      userId: "userId",
+    }, "this_is_a_test"];
+
+    assert.deepStrictEqual(camelify(actual), expected);
+  });
+});
 
 describe("Testing snakify", () => {
   test("snakify(string)", () => {
