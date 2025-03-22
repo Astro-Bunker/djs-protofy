@@ -1,4 +1,4 @@
-export type Camelify<T, Sep extends string = typeof defaultSnakeCaseSeparator, Shallow extends boolean = false> =
+export type Camelify<T, Sep extends string = typeof defaultCaseSeparator, Shallow extends boolean = false> =
   T extends string
   ? StringCamelify<T, Sep>
   : T extends object
@@ -16,7 +16,7 @@ type ObjectCamelify<O, Sep extends string, Shallow extends boolean = false> =
   ? { [K in keyof O as StringCamelify<string & K, Sep>]: Shallow extends true ? O[K] : ObjectCamelify<O[K], Sep, Shallow> }
   : O;
 
-export type Snakify<T, Sep extends string = typeof defaultSnakeCaseSeparator, Shallow extends boolean = false> =
+export type Snakify<T, Sep extends string = typeof defaultCaseSeparator, Shallow extends boolean = false> =
   T extends string
   ? StringSnakify<T, Sep>
   : T extends object
@@ -42,14 +42,14 @@ type ObjectSnakify<O, Sep extends string, Shallow extends boolean = false> =
   ? { [K in keyof O as StringSnakify<string & K, Sep>]: Shallow extends true ? O[K] : ObjectSnakify<O[K], Sep, Shallow> }
   : O;
 
-const defaultSnakeCaseSeparator = "_" as const;
+const defaultCaseSeparator = "_" as const;
 
 export function camelify<U, Sep extends string>(U: U, Sep?: Sep): Camelify<U, Sep>;
 export function camelify<U, Sep extends string, Shallow extends boolean>(U: U, Shallow: Shallow, Sep?: Sep): Camelify<U, Sep, Shallow>;
 export function camelify<S extends string, Sep extends string>(S: S, Sep?: Sep): Camelify<S, Sep>;
 export function camelify<O extends object, Sep extends string>(O: O, Sep?: Sep): Camelify<O, Sep>;
 export function camelify<O extends object, Sep extends string, Shallow extends boolean>(O: O, Shallow: Shallow, Sep?: Sep): Camelify<O, Sep, Shallow>;
-export function camelify(u: unknown, shallow: any = false, sep: any = defaultSnakeCaseSeparator) {
+export function camelify(u: unknown, shallow: any = false, sep: any = defaultCaseSeparator) {
   if (!u) return u;
 
   if (typeof shallow === "string") return camelify(u, false, shallow);
@@ -60,19 +60,18 @@ export function camelify(u: unknown, shallow: any = false, sep: any = defaultSna
   if (Array.isArray(u))
     return u.map(v => typeof v === "object" ? camelify(v, shallow, sep) : v);
 
-  return Object.entries(u)
-    .reduce((a, [k, v]) =>
-      Object.assign(a, { [camelify(k, sep)]: shallow ? v : typeof v === "object" ? camelify(v, shallow, sep) : v }), {});
+  return Object.entries(u).reduce((a, [k, v]) =>
+    Object.assign(a, { [camelify(k, sep)]: shallow ? v : typeof v === "object" ? camelify(v, shallow, sep) : v }), {});
 }
 
 const snakifyRegExp = /(^[A-Z])|([A-Z])/g;
 
-export function snakify<U, Sep extends string = typeof defaultSnakeCaseSeparator>(U: U, Sep?: Sep): Snakify<U, Sep>;
-export function snakify<U, Shallow extends boolean, Sep extends string = typeof defaultSnakeCaseSeparator>(U: U, Shallow: Shallow, Sep?: Sep): Snakify<U, Sep, Shallow>;
-export function snakify<S extends string, Sep extends string = typeof defaultSnakeCaseSeparator>(S: S, Sep?: Sep): Snakify<S, Sep>;
-export function snakify<O extends object, Sep extends string = typeof defaultSnakeCaseSeparator>(O: O, Sep?: Sep): Snakify<O, Sep>;
-export function snakify<O extends object, Shallow extends boolean, Sep extends string = typeof defaultSnakeCaseSeparator>(O: O, Shallow: Shallow, Sep?: Sep): Snakify<O, Sep, Shallow>;
-export function snakify(u: unknown, shallow: any = false, sep: any = defaultSnakeCaseSeparator) {
+export function snakify<U, Sep extends string = typeof defaultCaseSeparator>(U: U, Sep?: Sep): Snakify<U, Sep>;
+export function snakify<U, Shallow extends boolean, Sep extends string = typeof defaultCaseSeparator>(U: U, Shallow: Shallow, Sep?: Sep): Snakify<U, Sep, Shallow>;
+export function snakify<S extends string, Sep extends string = typeof defaultCaseSeparator>(S: S, Sep?: Sep): Snakify<S, Sep>;
+export function snakify<O extends object, Sep extends string = typeof defaultCaseSeparator>(O: O, Sep?: Sep): Snakify<O, Sep>;
+export function snakify<O extends object, Shallow extends boolean, Sep extends string = typeof defaultCaseSeparator>(O: O, Shallow: Shallow, Sep?: Sep): Snakify<O, Sep, Shallow>;
+export function snakify(u: unknown, shallow: any = false, sep: any = defaultCaseSeparator) {
   if (!u) return u;
 
   if (typeof shallow === "string") return snakify(u, false, shallow);
@@ -83,7 +82,6 @@ export function snakify(u: unknown, shallow: any = false, sep: any = defaultSnak
   if (Array.isArray(u))
     return u.map(v => typeof v === "object" ? snakify(v, shallow, sep) : v);
 
-  return Object.entries(u)
-    .reduce((a, [k, v]) =>
-      Object.assign(a, { [snakify(k, sep)]: shallow ? v : typeof v === "object" ? snakify(v, shallow, sep) : v }), {});
+  return Object.entries(u).reduce((a, [k, v]) =>
+    Object.assign(a, { [snakify(k, sep)]: shallow ? v : typeof v === "object" ? snakify(v, shallow, sep) : v }), {});
 }

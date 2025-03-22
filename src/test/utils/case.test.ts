@@ -4,7 +4,7 @@ import { camelify, snakify } from "../../utils/case";
 
 describe("Testing camelify", () => {
   test("camelify(string)", () => {
-    assert(camelify("to_camel_case", "_") === "toCamelCase");
+    assert.strictEqual(camelify("to_camel_case", "_"), "toCamelCase");
   });
 
   test("camelify(object)", () => {
@@ -42,7 +42,7 @@ describe("Testing camelify", () => {
 
 describe("Testing snakify", () => {
   test("snakify(string)", () => {
-    assert(snakify("ToSnakeCase") === "to_snake_case");
+    assert.strictEqual(snakify("ToSnakeCase"), "to_snake_case");
   });
 
   test("snakify(object)", () => {
