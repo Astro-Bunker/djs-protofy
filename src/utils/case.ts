@@ -1,4 +1,3 @@
-import { exists } from ".";
 
 export type Snakify<T, Sep extends string = typeof defaultSnakeCaseSeparator, Shallow extends boolean = false> =
   T extends string
@@ -34,7 +33,7 @@ export function snakify<S extends string, Sep extends string>(S: S, Sep?: Sep): 
 export function snakify<O extends object, Sep extends string>(O: O, Sep?: Sep): Snakify<O, Sep>;
 export function snakify<O extends object, Sep extends string, Shallow extends boolean>(O: O, Shallow: Shallow, Sep?: Sep): Snakify<O, Sep, Shallow>;
 export function snakify(u: unknown, shallow: any = false, sep: any = defaultSnakeCaseSeparator) {
-  if (!exists(u)) return u;
+  if (!u) return u;
 
   if (typeof shallow === "string") return snakify(u, sep, shallow);
 
@@ -45,5 +44,5 @@ export function snakify(u: unknown, shallow: any = false, sep: any = defaultSnak
     return u.map(v => typeof v === "object" ? snakify(v, shallow, sep) : v);
 
   return Object.entries(u)
-    .reduce((a, [k, v]) => Object.assign(a, { [snakify(k)]: shallow ? v : typeof v === "object" ? snakify(v, shallow) : v }), {});
+    .reduce((a, [k, v]) => Object.assign(a, { [snakify(k, sep)]: shallow ? v : typeof v === "object" ? snakify(v, shallow, sep) : v }), {});
 }
