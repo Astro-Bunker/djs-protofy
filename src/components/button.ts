@@ -1,28 +1,48 @@
-import { ActionRowBuilder, ButtonBuilder, ComponentType, type APIButtonComponent, type ActionRow, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
+import { type APIButtonComponent, type APIMessageComponent, ComponentType, createComponentBuilder, type JSONEncodable } from "discord.js";
 
-export function mapButtons<
-  T extends ActionRow<MessageActionRowComponent> | ActionRowBuilder<MessageActionRowComponentBuilder>
->(
+export function mapButtons<T extends JSONEncodable<APIMessageComponent>>(
   components: T[],
-  callback: (button: APIButtonComponent, rowIndex: number, buttonIndex: number) => APIButtonComponent | ButtonBuilder | null,
+  callback: (button: APIButtonComponent, rowIndex: number, buttonIndex: number)
+    => APIButtonComponent | JSONEncodable<APIButtonComponent> | null,
 ) {
   if (!Array.isArray(components)) throw TypeError("components is not a array");
   if (typeof callback !== "function") throw TypeError("callback is not a function");
 
-  return components.reduce<T[]>((accRows, row, rowIndex) => {
-    const rowJson = row.toJSON();
+  return components.reduce<T[]>((accComponents, component, componentIndex) => {
+    const componentJSON = component.toJSON();
 
-    if (!rowJson.components.length) return accRows;
-    if (rowJson.components[0].type !== ComponentType.Button) return accRows.concat(row);
+    if (!("components" in componentJSON)) return accComponents;
+    if (!componentJSON.components.length) return accComponents;
 
-    const buttons = rowJson.components.reduce<ButtonBuilder[]>((accButtons, button, buttonIndex) => {
-      const result = callback(button as APIButtonComponent, rowIndex, buttonIndex);
-      if (result) return accButtons.concat(ButtonBuilder.from(result));
-      return accButtons;
-    }, []);
+    componentJSON.components = recursiveMapAPIButtons<any>(componentJSON.components, componentIndex, callback);
 
-    if (buttons.length) return accRows.concat(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons) as T);
+    if (componentJSON.components.length) accComponents.push(createComponentBuilder<any>(componentJSON));
 
-    return accRows;
+    return accComponents;
+  }, []);
+}
+
+function recursiveMapAPIButtons<T extends APIMessageComponent>(
+  components: T[],
+  rowIndex: number,
+  callback: (button: APIButtonComponent, rowIndex: number, buttonIndex: number)
+    => APIButtonComponent | JSONEncodable<APIButtonComponent> | null,
+): T[] {
+  return components.reduce<T[]>((accComponents, component, componentIndex) => {
+    if ("components" in component) {
+      component.components = recursiveMapAPIButtons<any>(component.components, componentIndex, callback);
+
+      if (component.components.length) accComponents.push(component);
+
+      return accComponents;
+    }
+
+    if (component.type !== ComponentType.Button) return accComponents;
+
+    const result = callback(component, rowIndex, componentIndex);
+
+    if (result) accComponents.push(result as T);
+
+    return accComponents;
   }, []);
 }

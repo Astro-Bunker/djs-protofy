@@ -1,7 +1,7 @@
 import assert from "assert";
 import { ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, UserSelectMenuBuilder } from "discord.js";
 import test, { describe } from "node:test";
-import { getDefaultOptionFromSelectMenu, mapSelectMenuOptions, mapSelectMenus } from "../../components";
+import { getDefaultOptionsFromSelectMenus, mapSelectMenuOptions, mapSelectMenus } from "../../components";
 
 describe("Testing mapping select menus", () => {
   const components = Array.from({ length: 5 }).map((_, i) => new ActionRowBuilder<UserSelectMenuBuilder>({
@@ -67,10 +67,8 @@ describe("Testing mapping select menu options", () => {
         components: [
           new StringSelectMenuBuilder({
             custom_id: "stringSelectMenuId",
-            disabled: undefined,
             max_values: undefined,
             min_values: undefined,
-            placeholder: undefined,
             options: [{
               label: "edited",
               value: "value20",
@@ -114,10 +112,8 @@ describe("Testing mapping select menu options", () => {
         components: [
           new StringSelectMenuBuilder({
             custom_id: "stringSelectMenuId",
-            disabled: undefined,
             max_values: 1,
             min_values: 1,
-            placeholder: undefined,
             options: [{
               label: "edited",
               value: "value20",
@@ -131,7 +127,7 @@ describe("Testing mapping select menu options", () => {
   });
 });
 
-describe("Testing getting default select menu option", () => {
+describe("Testing getting default select menu options", () => {
   const components = [
     new ActionRowBuilder<StringSelectMenuBuilder>({
       components: [
@@ -148,14 +144,16 @@ describe("Testing getting default select menu option", () => {
   ];
 
   test("Getting default select menu option", () => {
-    const actual = getDefaultOptionFromSelectMenu(components);
+    const actual = getDefaultOptionsFromSelectMenus(components);
 
-    const expected = new StringSelectMenuOptionBuilder({
-      label: "label10",
-      value: "value10",
-      default: true,
-    });
+    const expected = [
+      new StringSelectMenuOptionBuilder({
+        label: "label10",
+        value: "value10",
+        default: true,
+      }).toJSON(),
+    ];
 
-    assert.deepStrictEqual(actual, expected.toJSON());
+    assert.deepStrictEqual(actual, expected);
   });
 });
