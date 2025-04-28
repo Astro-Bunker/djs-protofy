@@ -42,6 +42,6 @@ describe("Testing mapping buttons", () => {
       }),
     ];
 
-    assert.deepStrictEqual(actual, expected);
+    assert.deepStrictEqual(actual.map(r => r.toJSON()), expected.map(r => r.toJSON()));
   });
 });
