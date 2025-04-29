@@ -225,27 +225,27 @@ function recursiveGetDefaultValuesFromAPISelectMenuWithCallback(
   return defaultValues;
 }
 
-export function mapSelectMenus<T extends APIMessageComponent>(
-  components: (T | JSONEncodable<T>)[],
-  callback: (menu: T, menuIndex: number) => T | JSONEncodable<T> | null,
+export function mapSelectMenus(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (menu: APISelectMenuComponent, menuIndex: number) => APISelectMenuComponent | JSONEncodable<APISelectMenuComponent> | null,
 ) {
   return mapComponents(components, (component, index) => {
     if (!selectMenuTypes.has(component.type)) return component;
-    return callback(component, index);
+    return callback(component as any, index);
   });
 }
 
-export function mapSelectMenuOptions<T extends APIMessageComponent, O extends APISelectMenuOption>(
-  components: (T | JSONEncodable<T>)[],
-  callback: (option: O, optionIndex: number, menuIndex: number, menu: APIStringSelectComponent) => O | JSONEncodable<O> | null,
+export function mapSelectMenuOptions(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (option: APISelectMenuOption, optionIndex: number, menuIndex: number, menu: APIStringSelectComponent) => APISelectMenuOption | JSONEncodable<APISelectMenuOption> | null,
 ) {
   return mapComponents(components, (component, index) => {
     if (!("options" in component)) return component;
 
-    component.options = component.options.reduce<O[]>((accOptions, option, optionIndex) => {
-      const result = callback(option as O, optionIndex, index, component);
+    component.options = component.options.reduce<APISelectMenuOption[]>((accOptions, option, optionIndex) => {
+      const result = callback(option, optionIndex, index, component);
 
-      if (result) accOptions.push(result as O);
+      if (result) accOptions.push(result as any);
 
       return accOptions;
     }, []);
