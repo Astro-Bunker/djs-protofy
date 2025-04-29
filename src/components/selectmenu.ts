@@ -1,13 +1,14 @@
-import { type APIMessageComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, ComponentType, type JSONEncodable, type SelectMenuDefaultValueType, createComponentBuilder } from "discord.js";
+import { type APIMessageComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, ComponentType, type JSONEncodable, type SelectMenuDefaultValueType } from "discord.js";
 import { isRegExp } from "util/types";
+import { mapComponents } from "./components";
 
-const selectMenuTypes = new Set([
+const selectMenuTypes = Object.freeze(new Set([
   ComponentType.StringSelect,
   ComponentType.UserSelect,
   ComponentType.RoleSelect,
   ComponentType.MentionableSelect,
   ComponentType.ChannelSelect,
-]);
+]));
 
 export function getDefaultOptionsFromSelectMenus(
   components: JSONEncodable<APIMessageComponent>[],
@@ -224,112 +225,41 @@ function recursiveGetDefaultValuesFromAPISelectMenuWithCallback(
   return defaultValues;
 }
 
-export function mapSelectMenus<T extends JSONEncodable<APIMessageComponent>>(
-  components: T[],
-  callback: (selectMenu: APISelectMenuComponent, rowIndex: number) =>
-    APISelectMenuComponent | JSONEncodable<APISelectMenuComponent> | null,
+export function mapSelectMenus<T extends APIMessageComponent>(
+  components: (T | JSONEncodable<T>)[],
+  callback: (menu: T, menuIndex: number) => T | JSONEncodable<T> | null,
 ) {
-  if (!Array.isArray(components)) throw TypeError("components is not a array");
-  if (typeof callback !== "function") throw TypeError("callback is not a function");
-
-  return components.reduce<T[]>((accComponents, row, _rowIndex) => {
-    const componentJSON = row.toJSON();
-
-    if (!("components" in componentJSON)) return accComponents;
-    if (!componentJSON.components.length) return accComponents;
-
-    componentJSON.components = recursiveMapAPISelectMenus<any>(componentJSON.components, callback);
-
-    if (componentJSON.components.length) accComponents.push(createComponentBuilder<any>(componentJSON));
-
-    return accComponents;
-  }, []);
+  return mapComponents(components, (component, index) => {
+    if (!selectMenuTypes.has(component.type)) return component;
+    return callback(component, index);
+  });
 }
 
-function recursiveMapAPISelectMenus<T extends APIMessageComponent>(
-  components: T[],
-  callback: (selectMenu: APISelectMenuComponent, rowIndex: number) =>
-    APISelectMenuComponent | JSONEncodable<APISelectMenuComponent> | null,
-): T[] {
-  return components.reduce<T[]>((accComponents, component, componentIndex) => {
-    if ("components" in component) {
-      component.components = recursiveMapAPISelectMenus<any>(component.components as T[], callback);
-
-      if (component.components.length) accComponents.push(component);
-
-      return accComponents;
-    }
-
-    if (!selectMenuTypes.has(component.type)) return accComponents;
-
-    const result = callback(component as any, componentIndex);
-
-    if (result) accComponents.push(result as T);
-
-    return accComponents;
-  }, []);
-}
-
-export function mapSelectMenuOptions<T extends JSONEncodable<APIMessageComponent>>(
-  components: T[],
-  callback: (option: APISelectMenuOption, rowIndex: number, optionIndex: number, menu: APIStringSelectComponent) =>
-    APISelectMenuOption | JSONEncodable<APISelectMenuOption> | null,
+export function mapSelectMenuOptions<T extends APIMessageComponent, O extends APISelectMenuOption>(
+  components: (T | JSONEncodable<T>)[],
+  callback: (option: O, optionIndex: number, menuIndex: number, menu: APIStringSelectComponent) => O | JSONEncodable<O> | null,
 ) {
-  if (!Array.isArray(components)) throw TypeError("components is not a array");
-  if (typeof callback !== "function") throw TypeError("callback is not a function");
+  return mapComponents(components, (component, index) => {
+    if (!("options" in component)) return component;
 
-  return components.reduce<T[]>((accComponents, component, componentIndex) => {
-    const componentJSON = component.toJSON();
+    component.options = component.options.reduce<O[]>((accOptions, option, optionIndex) => {
+      const result = callback(option as O, optionIndex, index, component);
 
-    if (!("components" in componentJSON)) return accComponents;
-    if (!componentJSON.components.length) return accComponents;
-
-    componentJSON.components = recursiveMapAPISelectMenuOptions<any>(componentJSON.components, componentIndex, callback);
-
-    if (componentJSON.components.length) accComponents.push(createComponentBuilder<any>(componentJSON));
-
-    return accComponents;
-  }, []);
-}
-
-function recursiveMapAPISelectMenuOptions<T extends APIMessageComponent>(
-  components: T[],
-  rowIndex: number,
-  callback: (option: APISelectMenuOption, rowIndex: number, optionIndex: number, menu: APIStringSelectComponent) =>
-    APISelectMenuOption | JSONEncodable<APISelectMenuOption> | null,
-): T[] {
-  return components.reduce<T[]>((accComponents, component, componentIndex) => {
-    if ("components" in component) {
-      component.components = recursiveMapAPISelectMenuOptions<any>(component.components as T[], componentIndex, callback);
-
-      if (component.components.length) accComponents.push(component);
-
-      return accComponents;
-    }
-
-    if (!("options" in component)) return accComponents;
-    if (!component.options.length) return accComponents;
-
-    component.options = component.options.reduce<APISelectMenuOption[]>((accOptions, option, optionIndex) => {
-      const result = callback(option, rowIndex, optionIndex, component);
-
-      if (result) accOptions.push(result as APISelectMenuOption);
+      if (result) accOptions.push(result as O);
 
       return accOptions;
-    }, []) as any;
+    }, []);
 
-    if (component.options.length) {
-      component.max_values = typeof component.max_values === "number"
-        ? Math.min(component.options.length, component.max_values)
-        : undefined;
+    if (!component.options.length) return null;
 
-      component.min_values = typeof component.min_values === "number"
-        ? Math.min(component.options.length, component.min_values)
-        : undefined;
+    component.max_values = typeof component.max_values === "number"
+      ? Math.min(component.options.length, component.max_values)
+      : undefined;
 
-      accComponents.push(component);
-    }
+    component.min_values = typeof component.min_values === "number"
+      ? Math.min(component.options.length, component.min_values)
+      : undefined;
 
-    return accComponents;
-  }, []);
+    return component;
+  });
 }
