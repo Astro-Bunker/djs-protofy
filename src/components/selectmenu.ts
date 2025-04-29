@@ -248,7 +248,7 @@ function recursiveGetDefaultValuesFromAPISelectMenuWithCallback(
  *   component.placeholder = "modified"
  *   // Return modified component
  *   return component;
- * })
+ * });
  */
 export function mapSelectMenus(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],

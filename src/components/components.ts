@@ -25,12 +25,13 @@ import { createComponentBuilder, isJSONEncodable, type APIMessageComponent, type
  *   component.label = "modified"
  *   // Return modified component
  *   return component;
- * })
+ * });
  */
 export function mapComponents<T extends APIModalComponent | APIMessageComponent>(
   components: (T | JSONEncodable<T>)[],
   callback: (component: T, componentIndex: number) => T | JSONEncodable<T> | null,
 ): JSONEncodable<T>[];
+
 export function mapComponents<
   T extends APIModalComponent | APIMessageComponent,
   U extends APIModalComponent | APIMessageComponent = T,
@@ -38,11 +39,13 @@ export function mapComponents<
   components: (T | JSONEncodable<T>)[],
   callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
 ): JSONEncodable<T & U>[];
+
 export function mapComponents<T extends APIModalComponent | APIMessageComponent>(
   components: (T | JSONEncodable<T>)[],
   callback: <U extends APIModalComponent | APIMessageComponent = T>
     (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
 ): JSONEncodable<T>[];
+
 export function mapComponents(
   components: (APIModalComponent | APIMessageComponent | JSONEncodable<APIModalComponent | APIMessageComponent>)[],
   callback: (component: APIModalComponent | APIMessageComponent, componentIndex: number)
@@ -60,7 +63,7 @@ export function mapComponents<T extends APIModalComponent | APIMessageComponent>
     const componentJSON = isJSONEncodable(component) ? component.toJSON() : component;
 
     if ("components" in componentJSON) {
-      componentJSON.components = mapSubComponents<any>(componentJSON.components, callback);
+      componentJSON.components = mapSubComponents<any>(componentJSON.components, componentIndex, callback);
       if (!componentJSON.components.length) return accComponents;
     }
 
@@ -74,15 +77,16 @@ export function mapComponents<T extends APIModalComponent | APIMessageComponent>
 
 function mapSubComponents<T extends APIModalComponent | APIMessageComponent>(
   components: T[],
-  callback: (component: T, componentIndex: number) => T | JSONEncodable<T> | null,
+  rowIndex: number,
+  callback: (component: T, componentIndex: number, rowIndex: number) => T | JSONEncodable<T> | null,
 ) {
   return components.reduce<T[]>((accComponents, component, componentIndex) => {
     if ("components" in component) {
-      component.components = mapSubComponents<any>(component.components, callback);
+      component.components = mapSubComponents<any>(component.components, componentIndex, callback);
       if (!component.components.length) return accComponents;
     }
 
-    const result = callback(component, componentIndex);
+    const result = callback(component, componentIndex, rowIndex);
 
     if (result) accComponents.push(result as T);
 

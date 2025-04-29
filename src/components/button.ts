@@ -24,11 +24,12 @@ import { mapComponents } from "./components";
  *   component.label = "modified"
  *   // Return modified component
  *   return component;
- * })
+ * });
  */
 export function mapButtons(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
-  callback: (button: APIButtonComponent, buttonIndex: number) => APIMessageComponent | JSONEncodable<APIMessageComponent> | null,
+  callback: (button: APIButtonComponent, buttonIndex: number)
+    => APIMessageComponent | JSONEncodable<APIMessageComponent> | null,
 ) {
   return mapComponents(components, (component, index) => {
     if (component.type !== ComponentType.Button) return component;
