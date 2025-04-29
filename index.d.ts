@@ -40,11 +40,11 @@ declare module "discord.js" {
     ApplicationCommandScope = ApplicationCommand<{ guild: GuildResolvable; }>,
     PermissionsOptionsExtras = { guild: GuildResolvable; },
     PermissionsGuildType = null
-    > extends ApplicationCommandManagerExtension<
+  > extends ApplicationCommandManagerExtension<
     ApplicationCommandScope,
     PermissionsOptionsExtras,
     PermissionsGuildType,
-    > { }
+  > { }
 
   interface ApplicationEmojiManager extends ApplicationEmojiManagerExtension { }
 
@@ -54,7 +54,7 @@ declare module "discord.js" {
 
   interface ChannelManager extends ChannelManagerExtension { }
 
-  interface Client<Ready> extends ClientExtension<Ready> {
+  interface Client<Ready extends boolean = boolean> extends ClientExtension<Ready> {
     awaitReady(): Promise<this is Client<true>>;
     awaitReady(options: AwaitOptions): Promise<this is Client<true>>;
   }
