@@ -225,19 +225,46 @@ function recursiveGetDefaultValuesFromAPISelectMenuWithCallback(
   return defaultValues;
 }
 
+/**
+ * The sequence of mapping components from priority to sub components
+ *
+ * How it is received:
+ * `action row` -> `sub components`
+ *
+ * How it is mapped:
+ * `sub components` -> `action row`
+ * 
+ * @param callback - You can `return` the `modified component` or `delete it with null`.
+ * @returns A new modified array (the original structure will not be modified)
+ * 
+ * @example
+ * ```ts
+ * mapSelectMenus(components, (component, index) => {
+ *   // Delete a component
+ *   if (component.type !== ComponentType.StringSelect) return null;
+ *   // filter components
+ *   if (component.placeholder !== "example") return component
+ *   // Modify component
+ *   component.placeholder = "modified"
+ *   // Return modified component
+ *   return component;
+ * })
+ */
 export function mapSelectMenus(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
-  callback: (menu: APISelectMenuComponent, menuIndex: number) => APISelectMenuComponent | JSONEncodable<APISelectMenuComponent> | null,
+  callback: (menu: APISelectMenuComponent, menuIndex: number)
+    => APISelectMenuComponent | JSONEncodable<APISelectMenuComponent> | null,
 ) {
   return mapComponents(components, (component, index) => {
     if (!selectMenuTypes.has(component.type)) return component;
-    return callback(component as any, index);
+    return callback(component as APISelectMenuComponent, index);
   });
 }
 
 export function mapSelectMenuOptions(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
-  callback: (option: APISelectMenuOption, optionIndex: number, menuIndex: number, menu: APIStringSelectComponent) => APISelectMenuOption | JSONEncodable<APISelectMenuOption> | null,
+  callback: (option: APISelectMenuOption, optionIndex: number, menuIndex: number, menu: APIStringSelectComponent)
+    => APISelectMenuOption | JSONEncodable<APISelectMenuOption> | null,
 ) {
   return mapComponents(components, (component, index) => {
     if (!("options" in component)) return component;
