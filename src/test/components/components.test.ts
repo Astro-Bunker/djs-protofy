@@ -24,20 +24,23 @@ describe("Testing mapping components", () => {
 
   test("Mapping components", () => {
     const actual = mapComponents(components, (component) => {
-      /** Remove non matched components */
-      if (component.type !== ComponentType.Button) return null;
+      /** Removing a component by type */
+      if (component.type === ComponentType.UserSelect) return null;
 
-      /** Remove non matched components */
+      /** Skip non matched components */
+      if (component.type !== ComponentType.Button) return component;
+
+      /** Remove non matched buttons */
       if (!("custom_id" in component)) return null;
 
-      /** Editing matched components */
+      /** Editing matched buttons */
       if (component.custom_id === "buttonId") {
         component.label = "edited";
 
         return component;
       }
 
-      /** Remove another components */
+      /** Remove another buttons */
       return null;
     });
 
@@ -54,4 +57,30 @@ describe("Testing mapping components", () => {
 
     assert.deepStrictEqual(actual.map(r => r.toJSON()), expected.map(r => r.toJSON()));
   });
+
+  test("Mapping sequence components", () => {
+    const expected = getComponentsSequence(components);
+
+    const actual: number[] = [];
+
+    mapComponents(components, (component) => {
+      actual.push(component.type);
+      return component;
+    });
+
+    assert.deepStrictEqual(actual, expected);
+  });
+
+  function getComponentsSequence(components: any[]) {
+    return components.reduce<number[]>((acc, cur) => {
+      const json = cur.toJSON();
+
+      if (cur.components)
+        acc.push(...getComponentsSequence(cur.components));
+
+      acc.push(json.type);
+
+      return acc;
+    }, []);
+  }
 });
