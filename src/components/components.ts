@@ -28,11 +28,6 @@ import { type APIComponent } from "../@types";
  *   return component;
  * });
  */
-export function mapComponents<T extends APIComponent, U extends APIComponent = T>(
-  components: (APIComponent | JSONEncodable<APIComponent>)[],
-  callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
-): JSONEncodable<T | U>[];
-
 export function mapComponents<T extends APIMessageTopLevelComponent, U extends APIComponentInMessageActionRow>(
   components: (T | JSONEncodable<T>)[],
   callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
@@ -42,6 +37,11 @@ export function mapComponents<T extends APIModalComponent, U extends APIComponen
   components: (T | JSONEncodable<T>)[],
   callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
 ): JSONEncodable<T>[];
+
+export function mapComponents<T extends APIComponent, U extends APIComponent = T>(
+  components: (APIComponent | JSONEncodable<APIComponent>)[],
+  callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T | U>[];
 
 export function mapComponents<T extends APIComponent>(
   components: (APIComponent | JSONEncodable<APIComponent>)[],
