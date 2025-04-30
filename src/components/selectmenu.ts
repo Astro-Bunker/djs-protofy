@@ -272,6 +272,16 @@ export function mapSelectMenus(
 }
 
 export function mapSelectMenuOptions<
+  T extends APIMessageTopLevelComponent,
+  U extends APISelectMenuOption = APISelectMenuOption,
+  V extends Extract<APISelectMenuComponent, { options: U[] }> = Extract<APISelectMenuComponent, { options: U[] }>,
+>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (option: U, optionIndex: number, menuIndex: number, menu: V)
+    => U | JSONEncodable<U> | null
+): JSONEncodable<T>[];
+
+export function mapSelectMenuOptions<
   T extends APIMessageComponent,
   U extends APISelectMenuOption = APISelectMenuOption,
   V extends Extract<APISelectMenuComponent, { options: U[] }> = Extract<APISelectMenuComponent, { options: U[] }>,
