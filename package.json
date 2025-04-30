@@ -5,7 +5,7 @@
   "main": "out/index.js",
   "types": "index.d.ts",
   "scripts": {
-    "watch": "tsc -watch",
+    "watch": "tsc -w",
     "test:node": "node --test",
     "test": "npm run test:ts && npm run build && npm run test:node",
     "test:lint": "eslint",
