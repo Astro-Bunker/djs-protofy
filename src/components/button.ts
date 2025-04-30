@@ -1,29 +1,43 @@
-import { ActionRowBuilder, ButtonBuilder, ComponentType, type APIButtonComponent, type ActionRow, type MessageActionRowComponent, type MessageActionRowComponentBuilder } from "discord.js";
-import { exists } from "../utils";
+import { type APIButtonComponent, type APIMessageComponent, ComponentType, type JSONEncodable } from "discord.js";
+import { mapComponents } from "./components";
 
-export function mapButtons<
-  T extends ActionRow<MessageActionRowComponent> | ActionRowBuilder<MessageActionRowComponentBuilder>
->(
-  components: T[],
-  callback: (button: APIButtonComponent, rowIndex: number, buttonIndex: number) => APIButtonComponent | ButtonBuilder | null,
+/**
+ * The sequence of mapping components from priority to sub components
+ *
+ * How it is received:
+ * `action row` -> `sub components`
+ *
+ * How it is mapped:
+ * `sub components` -> `action row`
+ * 
+ * @param callback - You can `return` the `modified component` or `delete it with null`.
+ * @returns A new modified array (the original structure will not be modified)
+ * 
+ * @example
+ * ```ts
+ * mapButtons(components, (component, index) => {
+ *   // Delete a component
+ *   if (component.style !== ButtonStyle.Link) return null;
+ *   // filter components
+ *   if (component.label !== "example") return component
+ *   // Modify component
+ *   component.label = "modified"
+ *   // Return modified component
+ *   return component;
+ * });
+ */
+export function mapButtons<T extends APIMessageComponent, U extends APIButtonComponent = APIButtonComponent>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (button: U, buttonIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T>[];
+
+export function mapButtons(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (button: APIButtonComponent, buttonIndex: number)
+    => APIMessageComponent | JSONEncodable<APIMessageComponent> | null,
 ) {
-  if (!Array.isArray(components)) throw TypeError("components is not a array");
-  if (typeof callback !== "function") throw TypeError("callback is not a function");
-
-  return components.reduce<T[]>((accRows, row, rowIndex) => {
-    const rowJson = row.toJSON();
-
-    if (!rowJson.components.length) return accRows;
-    if (rowJson.components[0].type !== ComponentType.Button) return accRows.concat(row);
-
-    const buttons = rowJson.components.reduce<ButtonBuilder[]>((accButtons, button, buttonIndex) => {
-      const result = callback(button as APIButtonComponent, rowIndex, buttonIndex);
-      if (exists(result)) return accButtons.concat(ButtonBuilder.from(result));
-      return accButtons;
-    }, []);
-
-    if (buttons.length) return accRows.concat(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons) as T);
-
-    return accRows;
-  }, []);
+  return mapComponents(components, (component, index) => {
+    if (component.type !== ComponentType.Button) return component;
+    return callback(component, index);
+  });
 }

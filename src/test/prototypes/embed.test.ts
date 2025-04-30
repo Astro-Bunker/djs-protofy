@@ -1,11 +1,11 @@
 import assert from "assert";
 import { type APIEmbed, Embed } from "discord.js";
 import test, { describe } from "node:test";
-import { SEmbed } from "../../prototypes/embed";
-import { SString } from "../../prototypes/string";
+import EmbedExtension from "../../prototypes/Embed";
+import StringExtension from "../../prototypes/String";
 
-new SEmbed();
-new SString();
+new StringExtension();
+new EmbedExtension();
 
 describe("Testing Embed#getFieldIndexByName", () => {
   const apiEmbed: APIEmbed = {

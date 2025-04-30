@@ -1,11 +1,4 @@
 import { ChannelType, type CategoryChannelType, type GuildChannelType, type GuildTextChannelType, type TextChannelType, type ThreadChannelType } from "discord.js";
-import { readFileSync } from "fs";
-import { join } from "path";
-
-const packagePath = join(__dirname, "..", "..", "package.json");
-const packageJSON = JSON.parse(readFileSync(packagePath, "utf8"));
-
-export const suportedDJSVersion = Number(packageJSON.devDependencies["discord.js"].replace(/(^\D*)|(\D+.*$)/g, ""));
 
 export const categoryChannelTypes: readonly CategoryChannelType[] = [
   ChannelType.GuildText,
@@ -57,3 +50,10 @@ export const threadChannelTypes: readonly ThreadChannelType[] = [
   ChannelType.PublicThread,
   ChannelType.PrivateThread,
 ];
+
+/**
+ * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages but you **must send an initial response within 3 seconds of receiving the event**. If the 3 second deadline is exceeded, the token will be invalidated.
+ * 
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-callback
+ */
+export const InteractionTokenExpirationTime = 900_000;

@@ -1,7 +1,7 @@
 # ignore average files with this pattern
 **/.ignore.*
-/test*.js
-/test*.ts
+test*.[j|t]s
+test*.m[j|t]s
 *.zip
 
 # build

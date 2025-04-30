@@ -13,10 +13,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
       - name: Installing dependencies
         run: yarn
+
       - name: Running linter
         run: npx eslint --fix --max-warnings 0
+
       - name: Committing fix
         id: commit
         run: |
@@ -24,6 +27,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git commit -am "style: fix linter issues"
         continue-on-error: true
+
       - name: push
         if: steps.commit.outcome != 'failure'
         run: git push
