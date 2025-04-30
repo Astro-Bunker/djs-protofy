@@ -1,5 +1,5 @@
 import assert from "assert";
-import { ActionRowBuilder, ButtonBuilder, ComponentType, UserSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, type BaseMessageOptions, ButtonBuilder, ComponentType, UserSelectMenuBuilder } from "discord.js";
 import test, { describe } from "node:test";
 import { mapComponents } from "../../components";
 
@@ -63,7 +63,7 @@ describe("Testing mapping components", () => {
 
     const actual: number[] = [];
 
-    mapComponents(components, (component) => {
+    const _components: BaseMessageOptions["components"] = mapComponents(components, (component) => {
       actual.push(component.type);
       return component;
     });

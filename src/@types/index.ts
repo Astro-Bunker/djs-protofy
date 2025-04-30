@@ -1,5 +1,7 @@
 import { type APIChannelSelectComponent, type APIRoleSelectComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APIUserSelectComponent, type Channel, type ChannelType, type EnumLike, type GuildBasedChannel, type GuildChannelType, type SelectMenuDefaultValueType } from "discord.js";
 
+export * from "./components";
+
 export type EnumResolvable<E extends EnumLike<keyof E, unknown> = any, K extends keyof E = keyof E> = K | E[K];
 
 export type ChannelTypeString = keyof typeof ChannelType;

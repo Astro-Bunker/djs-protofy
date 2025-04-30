@@ -1,4 +1,5 @@
-import { createComponentBuilder, isJSONEncodable, type APIMessageComponent, type APIModalComponent, type JSONEncodable } from "discord.js";
+import { type APIComponentInMessageActionRow, type APIComponentInModalActionRow, type APIMessageTopLevelComponent, type APIModalComponent, createComponentBuilder, isJSONEncodable, type JSONEncodable } from "discord.js";
+import { type APIComponent } from "../@types";
 
 /**
  * The sequence of mapping components from priority to sub components
@@ -27,32 +28,27 @@ import { createComponentBuilder, isJSONEncodable, type APIMessageComponent, type
  *   return component;
  * });
  */
-export function mapComponents<T extends APIModalComponent | APIMessageComponent>(
-  components: (T | JSONEncodable<T>)[],
-  callback: (component: T, componentIndex: number) => T | JSONEncodable<T> | null,
-): JSONEncodable<T>[];
+export function mapComponents<T extends APIComponent, U extends APIComponent = T>(
+  components: (APIComponent | JSONEncodable<APIComponent>)[],
+  callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T | U>[];
 
-export function mapComponents<
-  T extends APIModalComponent | APIMessageComponent,
-  U extends APIModalComponent | APIMessageComponent = T,
->(
+export function mapComponents<T extends APIMessageTopLevelComponent, U extends APIComponentInMessageActionRow>(
   components: (T | JSONEncodable<T>)[],
   callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
-): JSONEncodable<T & U>[];
-
-export function mapComponents<T extends APIModalComponent | APIMessageComponent>(
-  components: (T | JSONEncodable<T>)[],
-  callback: <U extends APIModalComponent | APIMessageComponent = T>
-    (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
 ): JSONEncodable<T>[];
 
-export function mapComponents(
-  components: (APIModalComponent | APIMessageComponent | JSONEncodable<APIModalComponent | APIMessageComponent>)[],
-  callback: (component: APIModalComponent | APIMessageComponent, componentIndex: number)
-    => APIModalComponent | APIMessageComponent | JSONEncodable<APIModalComponent | APIMessageComponent> | null,
-): JSONEncodable<APIModalComponent | APIMessageComponent>[];
+export function mapComponents<T extends APIModalComponent, U extends APIComponentInModalActionRow>(
+  components: (T | JSONEncodable<T>)[],
+  callback: (component: U, componentIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T>[];
 
-export function mapComponents<T extends APIModalComponent | APIMessageComponent>(
+export function mapComponents<T extends APIComponent>(
+  components: (APIComponent | JSONEncodable<APIComponent>)[],
+  callback: (component: APIComponent, componentIndex: number) => APIComponent | JSONEncodable<APIComponent> | null,
+): JSONEncodable<T>[];
+
+export function mapComponents<T extends APIComponent>(
   components: (T | JSONEncodable<T>)[],
   callback: (component: T, componentIndex: number) => T | JSONEncodable<T> | null,
 ) {
@@ -75,7 +71,7 @@ export function mapComponents<T extends APIModalComponent | APIMessageComponent>
   }, []);
 }
 
-function mapSubComponents<T extends APIModalComponent | APIMessageComponent>(
+function mapSubComponents<T extends APIComponent>(
   components: T[],
   rowIndex: number,
   callback: (component: T, componentIndex: number, rowIndex: number) => T | JSONEncodable<T> | null,

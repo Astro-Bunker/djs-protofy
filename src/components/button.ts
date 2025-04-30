@@ -26,6 +26,11 @@ import { mapComponents } from "./components";
  *   return component;
  * });
  */
+export function mapButtons<T extends APIMessageComponent, U extends APIButtonComponent = APIButtonComponent>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (button: U, buttonIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T>[];
+
 export function mapButtons(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
   callback: (button: APIButtonComponent, buttonIndex: number)

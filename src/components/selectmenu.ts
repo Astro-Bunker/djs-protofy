@@ -250,6 +250,11 @@ function recursiveGetDefaultValuesFromAPISelectMenuWithCallback(
  *   return component;
  * });
  */
+export function mapSelectMenus<T extends APIMessageComponent, U extends APISelectMenuComponent = APISelectMenuComponent>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (menu: U, menuIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T>[];
+
 export function mapSelectMenus(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
   callback: (menu: APISelectMenuComponent, menuIndex: number)
@@ -260,6 +265,16 @@ export function mapSelectMenus(
     return callback(component as APISelectMenuComponent, index);
   });
 }
+
+export function mapSelectMenuOptions<
+  T extends APIMessageComponent,
+  U extends APISelectMenuOption = APISelectMenuOption,
+  V extends Extract<T, { options: U[] }> = Extract<T, { options: U[] }>,
+>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (option: U, optionIndex: number, menuIndex: number, menu: V)
+    => U | JSONEncodable<U> | null
+): JSONEncodable<T>[];
 
 export function mapSelectMenuOptions(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
