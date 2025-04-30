@@ -1,4 +1,4 @@
-import { type APIMessageComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, ComponentType, type JSONEncodable, type SelectMenuDefaultValueType } from "discord.js";
+import { type APIMessageComponent, type APIMessageTopLevelComponent, type APISelectMenuComponent, type APISelectMenuDefaultValue, type APISelectMenuOption, type APIStringSelectComponent, ComponentType, type JSONEncodable, type SelectMenuDefaultValueType } from "discord.js";
 import { isRegExp } from "util/types";
 import { mapComponents } from "./components";
 
@@ -250,6 +250,11 @@ function recursiveGetDefaultValuesFromAPISelectMenuWithCallback(
  *   return component;
  * });
  */
+export function mapSelectMenus<T extends APIMessageTopLevelComponent, U extends APISelectMenuComponent = APISelectMenuComponent>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (menu: U, menuIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T>[];
+
 export function mapSelectMenus<T extends APIMessageComponent, U extends APISelectMenuComponent = APISelectMenuComponent>(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
   callback: (menu: U, menuIndex: number) => U | JSONEncodable<U> | null,

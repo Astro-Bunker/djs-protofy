@@ -1,4 +1,4 @@
-import { type APIButtonComponent, type APIMessageComponent, ComponentType, type JSONEncodable } from "discord.js";
+import { type APIButtonComponent, type APIMessageComponent, type APIMessageTopLevelComponent, ComponentType, type JSONEncodable } from "discord.js";
 import { mapComponents } from "./components";
 
 /**
@@ -26,6 +26,11 @@ import { mapComponents } from "./components";
  *   return component;
  * });
  */
+export function mapButtons<T extends APIMessageTopLevelComponent, U extends APIButtonComponent = APIButtonComponent>(
+  components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
+  callback: (button: U, buttonIndex: number) => U | JSONEncodable<U> | null,
+): JSONEncodable<T>[];
+
 export function mapButtons<T extends APIMessageComponent, U extends APIButtonComponent = APIButtonComponent>(
   components: (APIMessageComponent | JSONEncodable<APIMessageComponent>)[],
   callback: (button: U, buttonIndex: number) => U | JSONEncodable<U> | null,
