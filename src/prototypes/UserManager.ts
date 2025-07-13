@@ -182,7 +182,7 @@ export default class UserManagerExtension {
     query = query.toLowerCase();
     return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        cached.displayName.toLowerCase(),
+        ...cached.displayName ? [cached.displayName.toLowerCase()] : [],
         ...cached.globalName ? [cached.globalName.toLowerCase()] : [],
         cached.username.toLowerCase(),
       ].includes(query));
