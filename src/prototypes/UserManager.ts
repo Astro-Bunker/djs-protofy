@@ -149,8 +149,6 @@ export default class UserManagerExtension {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.displayName === "string" && cached.displayName.equals(query.displayName, true) ||
-        isRegExp(query.displayName) && query.displayName.test(cached.displayName) ||
         typeof query.username === "string" && cached.username.equals(query.username, true) ||
         isRegExp(query.username) && query.username.test(cached.username) ||
         typeof cached.globalName === "string" && (
@@ -172,7 +170,6 @@ export default class UserManagerExtension {
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((cached) =>
-      query.test(cached.displayName) ||
       query.test(cached.username) ||
       (typeof cached.globalName === "string" && query.test(cached.globalName)));
   }
@@ -182,7 +179,6 @@ export default class UserManagerExtension {
     query = query.toLowerCase();
     return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        ...cached.displayName ? [cached.displayName.toLowerCase()] : [],
         ...cached.globalName ? [cached.globalName.toLowerCase()] : [],
         cached.username.toLowerCase(),
       ].includes(query));
@@ -191,7 +187,6 @@ export default class UserManagerExtension {
 
 interface Search {
   id?: string
-  displayName?: string | RegExp
   globalName?: string | RegExp
   username?: string | RegExp
 }

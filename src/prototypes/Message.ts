@@ -20,15 +20,15 @@ export default class MessageExtension<InGuild extends boolean = boolean> {
   /** @DJSProtofy */
   async parseMentions() {
     await Promise.allSettled([
-      new Promise(r => r(this.parseChannelMentions())),
-      new Promise(r => r(this.parseRoleMentions())),
+      this.parseChannelMentions(),
+      this.parseRoleMentions(),
       this.parseMemberMentions(),
       this.parseUserMentions(),
     ]);
   }
 
   /** @DJSProtofy */
-  parseChannelMentions(): Collection<string, Channel> {
+  async parseChannelMentions(): Promise<Collection<string, Channel>> {
     const queries = new Set(this.content.trim().split(/\s+/g));
 
     for (const query of queries) {
@@ -57,9 +57,15 @@ export default class MessageExtension<InGuild extends boolean = boolean> {
         this.guild._membersHasAlreadyBeenFetched = true;
       }
     } else {
-      const user = Array.from(new Set(this.content.match(ManyDiscordSnowflakesPattern)));
+      const users = Array.from(new Set(this.content.match(ManyDiscordSnowflakesPattern)));
 
-      if (user.length) await this.guild.members.fetch({ user, time: 1000 }).catch(() => null);
+      if (users.length) {
+        for (let i = 0; i < users.length;) {
+          const user = users.slice(i, i += 100);
+          // eslint-disable-next-line no-await-in-loop
+          await this.guild.members.fetch({ user, time: 1000 }).catch(() => null);
+        }
+      }
     }
 
     const queries = new Set(this.content.trim().split(/\s+/g));
@@ -78,7 +84,7 @@ export default class MessageExtension<InGuild extends boolean = boolean> {
   }
 
   /** @DJSProtofy */
-  parseRoleMentions(): Collection<string, Role> {
+  async parseRoleMentions(): Promise<Collection<string, Role>> {
     if (!this.guild) return this.mentions.roles;
 
     const queries = new Set(this.content.trim().split(/\s+/g));
@@ -98,10 +104,6 @@ export default class MessageExtension<InGuild extends boolean = boolean> {
 
   /** @DJSProtofy */
   async parseUserMentions(): Promise<Collection<string, User>> {
-    const ids = this.content.match(ManyDiscordSnowflakesPattern);
-
-    if (ids) await Promise.allSettled(ids.map(id => this.client.users.fetch(id)));
-
     const queries = new Set(this.content.trim().split(/\s+/g));
 
     for (const query of queries) {

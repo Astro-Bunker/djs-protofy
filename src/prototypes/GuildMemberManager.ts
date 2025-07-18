@@ -89,8 +89,6 @@ export default class GuildMemberManagerExtension {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.displayName === "string" && cached.displayName.equals(query.displayName, true) ||
-        isRegExp(query.displayName) && query.displayName.test(cached.displayName) ||
         typeof query.username === "string" && cached.user.username.equals(query.username, true) ||
         isRegExp(query.username) && query.username.test(cached.user.username) ||
         typeof cached.nickname === "string" && (
@@ -116,7 +114,6 @@ export default class GuildMemberManagerExtension {
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((cached) =>
-      query.test(cached.displayName) ||
       query.test(cached.user.username) ||
       (typeof cached.nickname === "string" && query.test(cached.nickname)) ||
       (typeof cached.user.globalName === "string" && query.test(cached.user.globalName)));
@@ -127,7 +124,6 @@ export default class GuildMemberManagerExtension {
     query = query.toLowerCase();
     return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        cached.displayName.toLowerCase(),
         ...cached.nickname ? [cached.nickname.toLowerCase()] : [],
         ...cached.user.globalName ? [cached.user.globalName.toLowerCase()] : [],
         cached.user.username.toLowerCase(),
@@ -137,7 +133,6 @@ export default class GuildMemberManagerExtension {
 
 interface Search {
   id?: string
-  displayName?: string | RegExp
   globalName?: string | RegExp
   nickname?: string | RegExp
   username?: string | RegExp

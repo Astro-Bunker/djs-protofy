@@ -27,8 +27,6 @@ export default class GuildBanManagerExtension {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.displayName === "string" && cached.user.displayName.equals(query.displayName, true) ||
-        isRegExp(query.displayName) && query.displayName.test(cached.user.displayName) ||
         typeof query.username === "string" && cached.user.username.equals(cached.user.username, true) ||
         isRegExp(query.username) && query.username.test(cached.user.username) ||
         typeof cached.user.globalName === "string" && (
@@ -50,7 +48,6 @@ export default class GuildBanManagerExtension {
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((cached) =>
-      query.test(cached.user.displayName) ||
       query.test(cached.user.username) ||
       (typeof cached.user.globalName === "string" && query.test(cached.user.globalName)));
   }
@@ -60,7 +57,6 @@ export default class GuildBanManagerExtension {
     query = query.toLowerCase();
     return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
-        cached.user.displayName.toLowerCase(),
         ...cached.user.globalName ? [cached.user.globalName.toLowerCase()] : [],
         cached.user.username.toLowerCase(),
       ].includes(query));
@@ -69,7 +65,6 @@ export default class GuildBanManagerExtension {
 
 interface Search {
   id?: string
-  displayName?: string | RegExp
   globalName?: string | RegExp
   username?: string | RegExp
 }
