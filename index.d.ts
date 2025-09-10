@@ -1,37 +1,37 @@
 /* eslint-disable no-var */
 import type { EnumLike, MessageFlags } from "discord.js";
 import type { setTimeout } from "timers/promises";
-import type { DiscordStringLimits } from "./src/@enum";
-import type { AwaitOptions } from "./src/@types";
-import type ApplicationCommandExtension from "./src/prototypes/ApplicationCommand";
-import type ApplicationCommandManagerExtension from "./src/prototypes/ApplicationCommandManager";
-import type ApplicationEmojiManagerExtension from "./src/prototypes/ApplicationEmojiManager";
-import type ArrayExtension from "./src/prototypes/Array";
-import type BaseGuildEmojiManagerExtension from "./src/prototypes/BaseGuildEmojiManager";
-import type BaseInteractionExtension from "./src/prototypes/BaseInteraction";
-import type ChannelManagerExtension from "./src/prototypes/ChannelManager";
-import type ClientExtension from "./src/prototypes/Client";
-import type CollectionExtension from "./src/prototypes/Collection";
-import type EmbedExtension from "./src/prototypes/Embed";
-import type EmbedBuilderExtension from "./src/prototypes/EmbedBuilder";
-import type GuildBanManagerExtension from "./src/prototypes/GuildBanManager";
-import type GuildChannelManagerExtension from "./src/prototypes/GuildChannelManager";
-import type GuildEmojiManagerExtension from "./src/prototypes/GuildEmojiManager";
-import type GuildEmojiRoleManagerExtension from "./src/prototypes/GuildEmojiRoleManager";
-import type GuildManagerExtension from "./src/prototypes/GuildManager";
-import type GuildMemberExtension from "./src/prototypes/GuildMember";
-import type GuildMemberManagerExtension from "./src/prototypes/GuildMemberManager";
-import type GuildMemberRoleManagerExtension from "./src/prototypes/GuildMemberRoleManager";
-import type GuildMessageManagerExtension from "./src/prototypes/GuildMessageManager";
-import type MessageExtension from "./src/prototypes/Message";
-import type MessageManagerExtension from "./src/prototypes/MessageManager";
-import type RoleManagerExtension from "./src/prototypes/RoleManager";
-import type SetExtension from "./src/prototypes/Set";
-import type ShardClientUtilExtension from "./src/prototypes/ShardClientUtil";
-import type StringExtension from "./src/prototypes/String";
-import type UserManagerExtension from "./src/prototypes/UserManager";
+import type { DiscordStringLimits } from "./typings/@enum";
+import type { AwaitOptions } from "./typings/@types";
+import type ApplicationCommandExtension from "./typings/prototypes/ApplicationCommand";
+import type ApplicationCommandManagerExtension from "./typings/prototypes/ApplicationCommandManager";
+import type ApplicationEmojiManagerExtension from "./typings/prototypes/ApplicationEmojiManager";
+import type ArrayExtension from "./typings/prototypes/Array";
+import type BaseGuildEmojiManagerExtension from "./typings/prototypes/BaseGuildEmojiManager";
+import type BaseInteractionExtension from "./typings/prototypes/BaseInteraction";
+import type ChannelManagerExtension from "./typings/prototypes/ChannelManager";
+import type ClientExtension from "./typings/prototypes/Client";
+import type CollectionExtension from "./typings/prototypes/Collection";
+import type EmbedExtension from "./typings/prototypes/Embed";
+import type EmbedBuilderExtension from "./typings/prototypes/EmbedBuilder";
+import type GuildBanManagerExtension from "./typings/prototypes/GuildBanManager";
+import type GuildChannelManagerExtension from "./typings/prototypes/GuildChannelManager";
+import type GuildEmojiManagerExtension from "./typings/prototypes/GuildEmojiManager";
+import type GuildEmojiRoleManagerExtension from "./typings/prototypes/GuildEmojiRoleManager";
+import type GuildManagerExtension from "./typings/prototypes/GuildManager";
+import type GuildMemberExtension from "./typings/prototypes/GuildMember";
+import type GuildMemberManagerExtension from "./typings/prototypes/GuildMemberManager";
+import type GuildMemberRoleManagerExtension from "./typings/prototypes/GuildMemberRoleManager";
+import type GuildMessageManagerExtension from "./typings/prototypes/GuildMessageManager";
+import type MessageExtension from "./typings/prototypes/Message";
+import type MessageManagerExtension from "./typings/prototypes/MessageManager";
+import type RoleManagerExtension from "./typings/prototypes/RoleManager";
+import type SetExtension from "./typings/prototypes/Set";
+import type ShardClientUtilExtension from "./typings/prototypes/ShardClientUtil";
+import type StringExtension from "./typings/prototypes/String";
+import type UserManagerExtension from "./typings/prototypes/UserManager";
 
-export * from "./src";
+export * from "./typings";
 
 declare module "discord.js" {
   interface ApplicationCommand<PermissionsFetchType = {}> extends ApplicationCommandExtension<PermissionsFetchType> { }

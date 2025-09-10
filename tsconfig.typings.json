@@ -1,0 +1,17 @@
+{
+  "exclude": ["node_modules", "out", "typings"],
+  "include": ["src", "*.d.ts"],
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "importHelpers": true,
+    "lib": ["ESNext"],
+    "module": "commonjs",
+    "newLine": "lf",
+    "noCheck": true,
+    "outDir": "typings",
+    "rootDir": "src",
+    "target": "ESNext",
+  }
+}
