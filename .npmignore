@@ -2,3 +2,4 @@
 **/tsconfig.json
 .github/**
 **/test/**
+src
