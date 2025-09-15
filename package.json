@@ -41,7 +41,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@types/node": "22",
+    "@types/node": "24",
     "@types/source-map-support": "^0.5.10",
     "discord.js": "^14.22.1",
     "eslint": "^9.35.0",
