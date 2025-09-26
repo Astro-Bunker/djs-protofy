@@ -87,17 +87,19 @@ export default class GuildMemberManagerExtension {
     if (typeof query === "string") return this._searchByString(query);
     if (isRegExp(query)) return this._searchByRegExp(query);
 
-    return typeof query.id === "string" && this.cache.get(query.id) ||
+    return query.id && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.username === "string" && cached.user.username.equals(query.username, true) ||
-        isRegExp(query.username) && query.username.test(cached.user.username) ||
-        typeof cached.nickname === "string" && (
+        cached.nickname && (
           typeof query.nickname === "string" && cached.nickname.equals(query.nickname, true) ||
           isRegExp(query.nickname) && query.nickname.test(cached.nickname)
         ) ||
-        typeof cached.user.globalName === "string" && (
+        cached.user.globalName && (
           typeof query.globalName === "string" && cached.user.globalName.equals(query.globalName, true) ||
           isRegExp(query.globalName) && query.globalName.test(cached.user.globalName)
+        ) ||
+        cached.user.username && (
+          typeof query.username === "string" && cached.user.username.equals(query.username, true) ||
+          isRegExp(query.username) && query.username.test(cached.user.username)
         ));
   }
 
@@ -114,9 +116,9 @@ export default class GuildMemberManagerExtension {
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((cached) =>
-      query.test(cached.user.username) ||
-      (typeof cached.nickname === "string" && query.test(cached.nickname)) ||
-      (typeof cached.user.globalName === "string" && query.test(cached.user.globalName)));
+      (cached.nickname && query.test(cached.nickname)) ||
+      (cached.user.globalName && query.test(cached.user.globalName)) ||
+      (cached.user.username && query.test(cached.user.username)));
   }
 
   /** @DJSProtofy */
@@ -126,7 +128,7 @@ export default class GuildMemberManagerExtension {
       this.cache.find((cached) => [
         ...cached.nickname ? [cached.nickname.toLowerCase()] : [],
         ...cached.user.globalName ? [cached.user.globalName.toLowerCase()] : [],
-        cached.user.username.toLowerCase(),
+        ...cached.user.username ? [cached.user.username.toLowerCase()] : [],
       ].includes(query));
   }
 }

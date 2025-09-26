@@ -149,11 +149,13 @@ export default class UserManagerExtension {
 
     return typeof query.id === "string" && this.cache.get(query.id) ||
       this.cache.find(cached =>
-        typeof query.username === "string" && cached.username.equals(query.username, true) ||
-        isRegExp(query.username) && query.username.test(cached.username) ||
-        typeof cached.globalName === "string" && (
+        cached.globalName && (
           typeof query.globalName === "string" && cached.globalName.equals(query.globalName, true) ||
           isRegExp(query.globalName) && query.globalName.test(cached.globalName)
+        ) ||
+        cached.username && (
+          typeof query.username === "string" && cached.username.equals(query.username, true) ||
+          isRegExp(query.username) && query.username.test(cached.username)
         ));
   }
 
@@ -170,8 +172,8 @@ export default class UserManagerExtension {
   /** @DJSProtofy */
   protected _searchByRegExp(query: RegExp) {
     return this.cache.find((cached) =>
-      query.test(cached.username) ||
-      (typeof cached.globalName === "string" && query.test(cached.globalName)));
+      (cached.globalName && query.test(cached.globalName)) ||
+      (cached.username && query.test(cached.username)));
   }
 
   /** @DJSProtofy */
@@ -180,7 +182,7 @@ export default class UserManagerExtension {
     return this.cache.get(replaceMentionCharacters(query)) ??
       this.cache.find((cached) => [
         ...cached.globalName ? [cached.globalName.toLowerCase()] : [],
-        cached.username.toLowerCase(),
+        ...cached.username ? [cached.username.toLowerCase()] : [],
       ].includes(query));
   }
 }
