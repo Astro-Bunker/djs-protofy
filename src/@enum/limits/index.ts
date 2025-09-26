@@ -110,6 +110,7 @@ export enum KickLimits {
 
 /** https://discord.com/developers/docs/resources/message */
 export enum MessageLimits {
+  Attachments = 10,
   /** contents of the message */
   Content = 2000,
   /** sent if the message contains components like buttons, action rows, or other interactive components */
